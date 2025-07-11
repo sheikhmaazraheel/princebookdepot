@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prince Book Depot</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+
+<body>
+<!-- ================ FOR NAVBAR ======================= -->
+<nav>
+  <div id="logo">
+    <div class="logo"></div>
+  </div>
+  <div id="hamburger" class="hamburger">&#9776;</div>
+  <div id="menu-overlay">
+    <div id="mobile-menu">
+      <div class="home-box hover-border">
+        <a href="index.html" class="home">
+          <div class="home-icon"></div>
+          <div class="Home-text">HOME</div>
+        </a>
+      </div>
+      <div class="empty"></div>
+      <div class="selector hover-border">
+        <select name="" class="classes">
+          <option value="" selected="selected">Categories</option>
+          <option value="">English Novels</option>
+          <option value="">Urud Novels</option>
+          <option value="">Academic Books</option>
+          <option value="">Poetry</option>
+        </select>
+      </div>
+      <div class="cart hover-border">
+        <a href="cart.html" class="cart-symbol-container">
+          <div class="cart-symbol"><span class="cart-count">0</span></div>
+          <div class="cart-text">
+            <p class="Cart-text-p">Cart</p>
+          </div>
+        </a>
+      </div>
+      <div class="about hover-border">
+        <a href="#ABOUT" class="about">
+          <p class="about-text">About</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="checkout-container">
+  <h2>Checkout</h2>
+  <form  id="checkout-form" action="https://script.google.com/macros/s/AKfycbz_dm6NXP5Dex2ZvxB6dnd5NcQ035hndRjZCBmzZCsttalPjQ0yAHZJYYxlbGWKgtQ/exec" method="POST" onsubmit="return handleCheckout();">
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="firstName" name="name" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="contact">Contact Number</label>
+      <input type="tel" id="contact" name="contact" required placeholder="e.g., 03xx-xxxxxxx">
+    </div>
+  
+    <div class="form-group">
+      <label for="city">City</label>
+      <select id="city" name="city" required>
+        <option value="" disabled selected>Select City</option>
+        <option value="Karachi">Karachi</option>
+      </select>
+    </div>
+  
+    <div class="form-group">
+      <label for="house">House Number</label>
+      <input type="text" id="house" name="house" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="block">Block Number</label>
+      <input type="text" id="block" name="block" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="landmark">Nearest Landmark</label>
+      <input type="text" id="landmark" name="landmark" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="area">Area</label>
+      <input type="text" id="area" name="area" required>
+    </div>
+  
+    <div class="form-group">
+      <label>Payment Method</label>
+      <div class="payment-options">
+        <div class="payment-box" data-method="Cash on Delivery">Cash on Delivery</div>
+        <div class="payment-box" data-method="Online Payment">Online Payment</div>
+      </div>
+    </div>
+    
+    <input type="hidden" id="paymentMethod" name="payment">
+    <input type="hidden" id="orderId" name="orderId">
+    <input type="hidden" id="cart-items" name="cartSummary">
+    <input type="hidden" id="total" name="total">
+
+    
+    <button type="submit" id="confirm-Order">Confirm Order</button>
+  </form>
+  
+</div>
+
+  <!-- =================== Footer Section ===================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p>&copy; 2025 Prince Book Depot. All rights reserved.</p>
+      <p>Designed by M. Maaz Raheel</p>
+    </div>
+  </footer>
+  <!-- ===================  Script =============== -->
+
+
+  <script src="JS/script.js"></script>
+  <script src="JS/checkout.js"></script>
+
+</body>
+
+</html>

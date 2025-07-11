@@ -1,0 +1,463 @@
+/* ===== Responsive Design for Prince Book Depot ===== */
+
+@media screen and (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  /*  ================ Navigation Bar  ================== */
+  nav {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    margin-right: 0;
+  }
+
+  #logo {
+    margin: 0;
+    padding: 0 10px;
+    align-self: flex-start;
+  }
+
+  .empty {
+    display: none;
+  }
+
+  nav,
+  #banner,
+  .about-section,
+  footer,
+  .categories {
+    width: 100%;
+    margin-right: 0;
+  }
+
+
+  .hover-border {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* =============== Banner =================== */
+  #banner {
+    flex-direction: column;
+    padding: 20px 10px;
+    height: auto;
+    width: 100%;
+    text-align: center;
+    margin-right: 0;
+  }
+
+  #Welcome-text-box {
+    width: 100%;
+    align-items: center;
+  }
+
+  #welcome-text {
+    font-size: 2.5em !important;
+  }
+
+  #banner-image {
+    height: 200px;
+    width: 100%;
+  }
+
+  #detail {
+    width: 100%;
+  }
+
+  #detail p {
+    width: 90%;
+    font-size: 1rem;
+  }
+
+  #detail button {
+    width: 80%;
+  }
+
+  /* ===================  Categories  ============== */
+  .categories {
+    width: 100%;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 100%;
+    align-items: center;
+  }
+
+  .category-card {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .category-btn {
+    width: 90%;
+  }
+
+  /* ====================== About Section ============= */
+  .about-section {
+    width: 100%;
+  }
+
+  .about-boxes {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .about-section h2 span {
+    display: block;
+  }
+
+  .about-box {
+    width: 85%;
+    text-align: center;
+  }
+
+  .about-support a {
+    width: 90%;
+  }
+
+  /*  ================= Footer ============== */
+  .site-footer {
+    padding: 30px 15px;
+    width: 100%;
+  }
+}
+
+/* HAMBURGER ICON (HIDDEN ON DESKTOP) */
+
+.hamburger {
+  display: none;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+@media screen and (max-width: 768px) {
+  nav {
+    position: relative;
+    height: 40px;
+    /* smaller height */
+    width: 100%;
+    padding: 2px 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .logo {
+    transform: scale(0.7);
+  }
+
+  .hamburger {
+    display: block;
+
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: 10px;
+    z-index: 1001;
+    align-self: flex-end;
+  }
+
+
+
+  #mobile-menu.hover-border {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+    align-items: center;
+    border: none;
+    padding: 10px 0;
+ 
+  }
+
+   /* ===== SLIDE-IN MOBILE MENU ===== */
+   #mobile-menu {
+    position: absolute;
+    top: 0;
+    right: -250px;
+    width: 220px;
+    height: 100%;
+    background-color: #2E5077;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    opacity: 0;
+    transition: right 0.3s ease, opacity 0.3s ease;
+    z-index: 999;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
+
+  }
+  
+  nav.show-nav #mobile-menu {
+    right: 0;
+    opacity: 1;
+  }
+  
+  #mobile-menu.closing {
+    right: -250px;
+    opacity: 0;
+  }
+  
+
+  /* ===== MOBILE MENU ITEMS ===== */
+  #mobile-menu .hover-border {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: right;
+  }
+
+  /* ===== For CART ======= */
+  #mobile-menu .cart {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 0;
+    border: none;
+    background: transparent;
+    width: 100%;
+    position: relative;
+  }
+
+  #mobile-menu .cart a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+    text-decoration: none;
+  }
+
+  #mobile-menu.cart-symbol {
+    margin: 0;
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    font-size: 16px;
+  }
+
+  #mobile-menu.cart-count {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  #mobile-menu.cart-text {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  #mobile-menu.cart-text-p {
+    line-height: 1;
+    color: white;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+
+  #mobile-menu.hover-border,
+  #mobile-menu .cart {
+    padding-right: 40px;
+    justify-content: flex-end;
+  }
+
+  #mobile-menu .home-box,
+  #mobile-menu .selector,
+  #mobile-menu .about {
+    padding: 0 20px 0 20px;
+  }
+
+  .empty {
+    display: none;
+  }
+
+ 
+}
+
+/* ===== DESKTOP NAV HIDE ON MOBILE ===== */
+@media screen and (max-width: 768px) {
+  #hamburger {
+    display: block;
+  }
+
+  #mobile-menu.about {
+    display: inline-block;
+    text-align: right;
+    width: auto;
+  }
+
+  nav>.home-box,
+  nav>.selector,
+  nav>.cart,
+  nav>.about {
+    display: none;
+  }
+}
+/*  Other Styling For Mobile Menu  */
+
+/* ===== MOBILE MENU CONTAINER & OVERLAY ===== */
+#menu-overlay {
+  display: contents;
+
+}
+
+nav.show-nav #menu-overlay {
+  display: block;
+  position: fixed;
+  top: 40px; /* below navbar */
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 60px);
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+}
+
+
+
+/* ================ PRODUCTS ================= */
+@media screen and (max-width: 768px) {
+  .Product {
+    transform: scale(0.9);
+  }
+
+  .Product-grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 15px;
+    max-width: 720px;
+  }
+
+  .heading {
+    font-size: 2.2rem;
+  }
+}
+
+/* Add to Cart button */
+@media screen and (max-width: 768px) {
+
+  .add-to-cart-button,
+  .quantity-controls button {
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 16px;
+  }
+
+  .quantity-controls {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .quantity-controls .quantity {
+    font-size: 15px;
+    min-width: 30px;
+  }
+
+  .Product {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .quantity-controls {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .add-to-cart-button {
+    width: 100%;
+    max-width: 220px;
+  }
+}
+
+
+/* ============= FOR CART ================== */
+@media screen and (max-width: 768px) {
+  .cart-page {
+    padding: 30px 5px;
+    max-width: 340px;
+  }
+  .cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-wrap: wrap;
+    align-self: center;
+  }
+  
+  .cart-table th, .cart-table td {
+    padding: 8px 8px;
+    text-align: center;
+    font-size: 16px;
+    text-overflow: ellipsis;
+  }
+  
+  .cart-table th {
+    font-size: 16px;
+  }
+
+  #place-order {
+    background-color: #2E5077;
+    width: 150px;
+    font-size: 14px;
+
+  }
+  .qty-btn{
+    transform: scale(1);
+    padding: 0 5px;
+    margin: 0;
+  }
+  .qty-cell{
+    gap: 2px;
+  }
+  #cart-summary{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+      text-wrap: nowrap;
+      align-self: center;
+      text-align: center;
+  }
+  #cart-headings{
+    text-align: right;
+  }
+
+  
+
+
+  #place-order {
+    width: 100%;
+    font-size: 15px;
+  }
+}
+
+/* ======= FOR Checkout */
+@media (max-width: 600px) {
+  .checkout-container {
+    padding: 20px;
+  }
+
+  input, select, textarea, button {
+    font-size: 0.95rem;
+  }
+}
