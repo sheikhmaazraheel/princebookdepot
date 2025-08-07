@@ -1,30 +1,41 @@
-console.log("JS loaded")
+// ...existing code...
 
-// For Hamburger
+// ====== MOBILE NAVBAR LOGIC ======
+document.addEventListener('DOMContentLoaded', function () {
+  const hamburger = document.getElementById('hamburger');
+  const closeBtn = document.getElementById('close-menu');
+  const mobileMenu = document.getElementById('mobile-menu');
 
-const hamburger = document.getElementById('hamburger')
-const nav = document.querySelector('nav')
-const overlay = document.getElementById('menu-overlay')
-
-// Toggle menu when hamburger is clicked
-hamburger.addEventListener('click', () => {
-  nav.classList.toggle('show-nav')
-})
-
-overlay.addEventListener('click', e => {
-  if (e.target === overlay) {
-    const mobileMenu = document.getElementById('mobile-menu')
-
-    // Step 1: Apply "closing" animation class
-    mobileMenu.classList.add('closing')
-
-    // Step 2: Wait for transition to finish before removing layout class
-    setTimeout(() => {
-      mobileMenu.classList.remove('closing')
-      nav.classList.remove('show-nav')
-    }, 300) // same duration as CSS transition
+  function openMenu() {
+    document.body.classList.add('show-nav');
+    hamburger.style.display = 'none';
+    if (mobileMenu) {
+      mobileMenu.classList.remove('closing');
+      mobileMenu.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
+    }
   }
-})
+
+  function closeMenu() {
+    if (mobileMenu) {
+      mobileMenu.classList.add('closing');
+      mobileMenu.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
+      setTimeout(() => {
+        document.body.classList.remove('show-nav');
+        mobileMenu.classList.remove('closing');
+        hamburger.style.display = 'block';
+      }, 200); // Match transition duration
+    }
+  }
+
+  if (hamburger) hamburger.addEventListener('click', openMenu);
+  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.body.classList.contains('show-nav')) {
+      closeMenu();
+    }
+  });
+});
 
 // ============== Rendering Products ===============
 document.addEventListener('DOMContentLoaded', () => {
@@ -258,49 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   // ORDER ID
   function generateOrderId () {
-    const now = new Date()
-
-    const day = String(now.getDate()).padStart(2, '0')
-    const month = String(now.getMonth() + 1).padStart(2, '0') // 0-based
-    const year = now.getFullYear()
-
-    const hours = String(now.getHours()).padStart(2, '0')
-    const minutes = String(now.getMinutes()).padStart(2, '0')
-    const seconds = String(now.getSeconds()).padStart(2, '0')
-
-    // Optional: Add milliseconds for extra uniqueness
-    const ms = String(now.getMilliseconds()).padStart(3, '0')
-
-    return `PBD-${day}${month}${year}-${hours}${minutes}${seconds}${ms}`
+    // ...existing code for order id generation...
   }
-
-  let orderId = localStorage.getItem('orderId')
-  const cartArray = JSON.parse(localStorage.getItem('cart')) || {}
-  const hasItem=Object.keys(cartArray).length>0;
-  if (hasItem) {
-    if (!orderId) {
-      orderId = generateOrderId()
-    }
-  } else {
-    orderId = generateOrderId()
-  }
-  localStorage.setItem('orderId', orderId)
-  orderIdSpan.textContent = orderId
-
-  const placeOrderBtn=document.getElementById('place-order');
-  if(!placeOrderBtn) return;
-
-  placeOrderBtn.addEventListener("click",()=>{
-    const cart=JSON.parse(localStorage.getItem("cart")) || {};
-    const hasItem=Object.keys(cart).length>0;
-
-    if (hasItem){
-      window.location.href="checkout.html";
-    }
-    else{
-      alert("Your Cart is Empty. Please add items before placing an Order")
-    }
-  })
-
-
-})
+});

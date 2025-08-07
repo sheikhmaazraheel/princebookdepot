@@ -1,0 +1,5 @@
+ #007bff;
+ linear-gradient(120deg, #e0eafc 0%, #f8fafc 60%, #00c6ff 100%)
+ linear-gradient(90deg, #2e5077 0%, #00c6ff 50%, #00e1ff 100%);
+ linear-gradient(45deg, #204d74, #2b6799, #2c68a8)
+  background: linear-gradient(90deg, #2e5077 0%, #00c6ff 100%);

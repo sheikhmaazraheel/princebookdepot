@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap");
 
 html {
   scroll-behavior: smooth !important;
@@ -12,7 +12,7 @@ html {
 }
 
 body {
-  background-color: #ddd;
+  background: linear-gradient(180deg, #E6F0FA 10%, #B3D4FF 100%);
 }
 
 html,
@@ -32,25 +32,22 @@ footer,
 /* ======================== For Nav Bar ============================*/
 nav {
   height: 60px;
-  background-color: #2E5077;
+   background: linear-gradient(90deg, #2E5077 0%, #1D3758 100%);
   font-size: 14px;
   display: flex;
-  justify-content: space-evenly;
-
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* For logo*/
 #logo {
   height: 56px;
   width: 115px;
-  margin: 0 0 0 11px;
+  margin: 0 0 0 50px;
   padding: 4px 0 0;
-  font-size: 14px;
-
 }
 
 .logo {
-  background-image: url("./images/PRINCE\ logo\ \(1\).png");
+  background-image: url("./images/PRINCE logo (1).png");
   background-size: cover;
   aspect-ratio: 2/1;
   margin: 1px;
@@ -58,44 +55,32 @@ nav {
   width: 99px;
   height: 49px;
   color: #007185;
-  position: static;
-  float: none;
 }
-
-/* For Mobile Menu */
-#mobile-menu {
-  display: contents;
-}
-
-/* Home Icon */
-a {
+#nav-link{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  justify-content: space-around;
   text-decoration: none;
+  flex-direction: row;
 }
-
 .home-box {
   width: 90px;
-  height: 50px;
+  height: 55px;
   display: flex;
+  text-decoration: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.home {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
 
 .home-icon {
   background-image: url("./images/Home-Icon.png");
   background-size: cover;
   width: 25px;
   height: 25px;
-  margin-top: 5px;
 }
 
 .Home-text {
@@ -103,12 +88,10 @@ a {
   font-size: 1rem;
   font-weight: bold;
   text-decoration: none;
-
 }
 
-/* For Classes */
 .selector {
-  width: 120px;
+  width: 150px;
   height: 50px;
   display: flex;
   padding: 0;
@@ -117,7 +100,7 @@ a {
 }
 
 .classes {
-  background-color: #2E5077;
+  background-color: transparent;
   border: none;
   color: white;
   font-size: 1rem;
@@ -125,31 +108,32 @@ a {
   font-weight: bold;
 }
 
-/* For Cart */
 .cart {
   margin: 0 11px 0 2px;
   padding: 0 9px 11px 9px;
   width: 100px;
+  text-decoration: none;
   height: 50px;
   display: flex;
 }
 
-.cart-symbol-container{
-    width: 100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+.cart-symbol-container {
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .cart-symbol {
   width: 38px;
   height: 38px;
   background-image: url(./images/Cart-symbol.png);
+  background-size: contain;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
-  text-align: center;
-
+  align-items: center;
   margin: 5px 0 0 0;
 }
 
@@ -158,15 +142,14 @@ a {
   height: 16px;
   cursor: pointer;
   display: flex;
-  float: none;
   justify-content: center;
   text-align: center;
   font-weight: 700;
   font-size: 18px;
   color: rgba(240, 136, 4, 1);
   position: absolute;
-  top: 8px;
-
+  top: 12px;
+  right: 300px;
 }
 
 .cart-text {
@@ -183,20 +166,15 @@ a {
   font-size: 16px;
   font-weight: 700;
   line-height: 15px;
-
 }
 
-/* For About */
 .about {
   width: 100px;
   height: 50px;
-}
-
-.about {
+  text-decoration: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
 .about-text {
@@ -205,32 +183,24 @@ a {
   font-weight: bold;
 }
 
-/* For Empty Space*/
-.empty {
-  width: 50%;
-  height: 100%;
-}
-
-/* For Nav Hover*/
 .hover-border {
   border: 2px solid transparent;
-  /* reserve space */
   padding: 0px 7px 0px 5px;
   margin-top: 5px;
   border-radius: 5px;
-  
   box-sizing: border-box;
   transition: all 0.1s ease;
-  /* smooth hover effect */
 }
 
 .hover-border:hover {
   border: 2px solid #fff;
   cursor: pointer;
   transform: scale(1.1);
-  /* corrected syntax */
 }
 
+#mobile-menu {
+  display: none;
+}
 /* ============================= For Banner ==================== */
 #banner {
   display: flex;
@@ -241,7 +211,7 @@ a {
   height: 600px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(45deg, #3D90D7, #4eb0f1, #4facfe);
+  background: linear-gradient(135deg, #2E5077 0%, #2B6799 30%, #00C6FF 70%, #0072FF 100%);
 }
 
 #banner::after {
@@ -262,17 +232,24 @@ a {
   width: 50%;
   display: flex;
   flex-direction: column;
-
 }
 
 #Welcome-text-box p {
+  background-image: linear-gradient(
+    139deg,
+    #a3d3ff 5%,
+    #f9a7e0 45%,
+    #ffb3a6 85%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-
   animation: fadeInUp 1.5s ease-out;
   font-family: "Caveat", cursive;
   /* A more elegant, slightly calligraphic font */
-  color: #f0f0f0;
   /* Slightly off-white for a softer look */
   font-size: 6em;
   /* Smaller than the main text */
@@ -321,7 +298,6 @@ a {
   animation: fadeInUp 1.5s ease-out;
   text-align: justify;
   padding-top: 0.5rem;
-
 }
 
 #detail button {
@@ -342,7 +318,6 @@ a {
 
 #detail button:hover {
   background-color: #004aad;
-  ;
   color: #fff;
   transition: all 0.3s ease;
   transform: scale(1.1);
@@ -356,17 +331,20 @@ a {
 /* =========================== Categories Section ======================= */
 .categories {
   padding: 60px 20px;
-  background-color: #f8f9fa;
   text-align: center;
 }
 
 .heading {
   font-size: 2.5rem;
   margin-bottom: 40px;
-  color: #004aad;
   text-align: center;
   margin: 20px 0;
   padding: 10px 0;
+    background: linear-gradient(90deg, #2E5077 0%, #00C6FF 50%, #0072FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .category-grid {
@@ -404,14 +382,14 @@ a {
 .category-card h3 {
   margin: 15px 0 10px;
   font-size: 1.3rem;
-  color: #004aad;
+  color: #007bff;
 }
 
 .category-btn {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #004aad;
+  background: linear-gradient(40deg, #2e5077 0%, #00c6ff 50%, #00e1ff 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -425,8 +403,33 @@ a {
 }
 
 /*  =========================== About Section ===================== */
+/* ----- Floating WA Icon */
+.floating-whatsapp-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-whatsapp-icon svg {
+  width: 64px;
+  height: 64px;
+}
+
+.floating-whatsapp-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
 .about-section {
-  background: linear-gradient(to bottom, #f2f6fc, #ffffff);
+  background:  linear-gradient(360deg, transparent 1%, #00c6ff 60%,#f8fafc 90%, transparent 100%);
   padding: 60px 20px;
   margin: 20px 0;
   display: flex;
@@ -441,12 +444,12 @@ a {
 
 .about-container h2 {
   font-size: 36px;
-  color: #003366;
   margin-bottom: 20px;
-}
-
-.about-container h2 span {
-  color: #007bff;
+  background: linear-gradient(90deg, #ff512f, #dd2476, #ff512f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .about-container p {
@@ -488,7 +491,6 @@ a {
 }
 
 .about-support {
-
   text-align: center;
   font-size: 17px;
 }
@@ -505,7 +507,7 @@ a {
 
 /* WhatsApp button */
 .whatsapp-button {
-  background-color: #25D366;
+  background-color: #25d366;
 }
 
 .whatsapp-button:hover {
@@ -514,7 +516,14 @@ a {
 
 /* Instagram button with gradient */
 .instagram-button {
-  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  background: linear-gradient(
+    45deg,
+    #f09433,
+    #e6683c,
+    #dc2743,
+    #cc2366,
+    #bc1888
+  );
 }
 
 /* ========================= Footer Section =================== */
@@ -524,7 +533,6 @@ a {
   text-align: center;
   padding: 40px 20px;
   margin-top: 60px;
-
 }
 
 .site-footer p {
@@ -671,23 +679,24 @@ a {
   pointer-events: auto;
 }
 
- /* CART STYLING */
- .cart-page{
+/* CART STYLING */
+.cart-page {
   max-width: 800px;
   margin: 50px auto;
   background-color: white;
   border-radius: 15px;
   padding: 60px 40px;
   text-align: center;
- }
- .cart-table {
+}
+.cart-table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 16px;
 }
 
-.cart-table th, .cart-table td {
+.cart-table th,
+.cart-table td {
   padding: 12px 10px;
   text-align: center;
   font-size: 18px;
@@ -696,18 +705,16 @@ a {
 .cart-table th {
   font-size: 20px;
   background-color: transparent;
-  color: #2E5077;
+  color: #2e5077;
   font-weight: bold;
 }
-.cart-heading{
+.cart-heading {
   color: #1d3758;
   margin: 10px 0;
 }
 
-
-
 #place-order {
-  background-color: #2E5077;
+  background-color: #2e5077;
   width: 250px;
   font-size: 16px;
   font-weight: bold;
@@ -743,7 +750,7 @@ a {
 }
 
 .qty-btn:hover {
-  background-color: rgba(0,0,0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .quantity {
@@ -759,7 +766,7 @@ a {
   font-weight: bold;
   align-self: center;
 }
-#summary-headings{
+#summary-headings {
   text-align: right;
 }
 
@@ -771,18 +778,13 @@ a {
   padding: 40px 20px;
   font-weight: bold;
   font-size: 1.1rem;
-  color: #2E5077;
+  color: #2e5077;
 }
 
 .shimmer-box {
   width: 200px;
   height: 120px;
-  background: linear-gradient(
-    110deg,
-    #f0f0f0 8%,
-    #e0e0e0 18%,
-    #f0f0f0 33%
-  );
+  background: linear-gradient(110deg, #f0f0f0 8%, #e0e0e0 18%, #f0f0f0 33%);
   background-size: 200% 100%;
   animation: shimmer 1.2s infinite;
   border-radius: 8px;
@@ -806,12 +808,12 @@ a {
   padding: 30px;
   margin: auto;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .checkout-container h2 {
   text-align: center;
-  color: #2E5077;
+  color: #2e5077;
   margin-bottom: 20px;
 }
 
@@ -825,7 +827,9 @@ label {
   font-weight: bold;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   padding: 10px;
   font-size: 1rem;
@@ -840,7 +844,7 @@ textarea {
 
 #confirm-Order {
   width: 100%;
-  background-color: #2E5077;
+  background-color: #2e5077;
   color: #fff;
   font-size: 1.1rem;
   border: none;
@@ -854,7 +858,7 @@ textarea {
 #confirm-Order:hover {
   background-color: #1d3758;
 }
-.payment-options{
+.payment-options {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -873,11 +877,10 @@ textarea {
   transition: 0.3s;
 }
 .payment-box:hover {
-  border-color: #2E5077;
+  border-color: #2e5077;
   background: #dbe6ff;
 }
 .payment-box.selected {
-  border-color: #1d3758;;
+  border-color: #1d3758;
   background: #dbe6ff;
 }
-

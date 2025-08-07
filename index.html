@@ -1,30 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prince Book Depot</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="responsive.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prince Book Depot</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="responsive.css">
-</head>
-
-<body>
-<!-- ================ FOR NAVBAR ======================= -->
-<nav>
-  <div id="logo">
-    <div class="logo"></div>
-  </div>
-  <div id="hamburger" class="hamburger">&#9776;</div>
-  <div id="menu-overlay">
-    <div id="mobile-menu">
-      <div class="home-box hover-border">
-        <a href="index.html" class="home">
+  <body>
+    <!-- ================ FOR NAVBAR ======================= -->
+    <nav>
+      <div id="hamburger" class="hamburger">&#9776;</div>
+      <div id="logo">
+        <div class="logo"></div>
+      </div>
+      <div id="nav-link">
+        <a href="index.html" class="home-box hover-border">
           <div class="home-icon"></div>
           <div class="Home-text">HOME</div>
         </a>
-      </div>
-      <div class="empty"></div>
+        <div class="selector hover-border">
+          <select name="Selector" class="classes">
+            <option value="" selected="selected">Categories</option>
+            <option value="">English Novels</option>
+            <option value="">Urud Novels</option>
+            <option value="">Academic Books</option>
+            <option value="">Poetry</option>
+          </select>
+        </div>
+        <a href="cart.html" class="cart hover-border">
+          <div class="cart-symbol"><span class="cart-count">0</span></div>
+          <div class="cart-text">
+            <p class="Cart-text-p">Cart</p>
+          </div>
+        </a>
+        <a href="#ABOUT" class="about hover-border">
+          <p class="about-text">About</p>
+        </a>
+      </div>  
+    </nav>
+    <aside id="mobile-menu">
+      <button id="close-menu" aria-label="Close menu" class="close-menu-btn">
+        &times;
+      </button>
+      <a href="index.html" class="home-box hover-border">
+        <div class="home-icon"></div>
+        <div class="Home-text">HOME</div>
+      </a>
       <div class="selector hover-border">
         <select name="" class="classes">
           <option value="" selected="selected">Categories</option>
@@ -34,164 +57,242 @@
           <option value="">Poetry</option>
         </select>
       </div>
-      <div class="cart hover-border">
-        <a href="cart.html" class="cart-symbol-container">
-          <div class="cart-symbol"><span class="cart-count">0</span></div>
-          <div class="cart-text">
-            <p class="Cart-text-p">Cart</p>
+      <a href="cart.html" class="cart hover-border">
+        <div class="cart-symbol"><span class="cart-count">0</span></div>
+        <div class="cart-text">
+          <p class="Cart-text-p">Cart</p>
+        </div>
+      </a>
+      <a href="#ABOUT" class="about hover-border">
+        <p class="about-text">About</p>
+      </a>
+    </aside>
+    <!-- ================== For Banner ========================= -->
+    <div id="banner">
+      <div id="Welcome-text-box">
+        <p id="welcome-text">WELCOME TO</p>
+        <div id="banner-image"></div>
+      </div>
+      <div id="detail">
+        <p style="padding-top: 1.5rem">
+          We offer a comprehensive collection of textbooks for all educational
+          levels, including the Federal Board, Aga Khan Board, and Punjab Board.
+        </p>
+        <p>
+          All subjects are available for Classes IX, X, XI, and XII, along with
+          specialized resources for MDCAT and ECAT preparation. We also stock a
+          wide range of Medical and Dental books.
+        </p>
+        <p>
+          All books are offered at wholesale prices with attractive discounts.
+        </p>
+
+        <p>
+          In addition, we feature a diverse selection of English novels at
+          highly affordable rates.
+        </p>
+        <button value="#Shop-Now"><a href="#Shop-Now">Shop Now</a></button>
+      </div>
+    </div>
+    <!-- ================== For Categories ===================== -->
+    <section id="Shop-Now" class="categories">
+      <h2 class="heading">Explore Categories</h2>
+      <div class="category-grid">
+        <div class="category-card">
+          <h3>English Novels</h3>
+          <img src="images/English-Novel-Main-Title.jpg" alt="English Novels" />
+          <a href="English-novels.html" class="category-btn">Explore</a>
+        </div>
+        <div class="category-card">
+          <h3>Urdu Novels</h3>
+          <img src="images/Urdu-Novel-Main-Title.jpg" alt="Urud Novels" />
+          <a href="Urdu-novels.html" class="category-btn">Explore</a>
+        </div>
+        <div class="category-card">
+          <h3>Poetry</h3>
+          <img src="images/Poetry-Main-Title.jpg" alt="Poetry Image" />
+          <a href="Poetry.html" class="category-btn">Explore</a>
+        </div>
+        <div class="category-card">
+          <h3>Academic Books</h3>
+          <img
+            src="images/Academic Books Main Title.jpg"
+            alt="Academic Books"
+          />
+          <a href="Academic-books.html" class="category-btn">Explore</a>
+        </div>
+        <div class="category-card">
+          <h3>Medical and Dental Books</h3>
+          <img
+            src="images/Meidcal-Books-Main-Title.jpg"
+            alt="Medical and Dental Books"
+          />
+          <a href="Medical.html" class="category-btn">Explore</a>
+        </div>
+        <div class="category-card">
+          <h3>MDCAT / ECAT</h3>
+          <img src="images/MDCAT title.jpg" alt="MDCAT / ECAT" />
+          <a href="Mdcat.html" class="category-btn">Explore</a>
+        </div>
+
+        <div class="category-card">
+          <h3>Referance Guides</h3>
+          <img src="images/Referance Guide Title.jpg" alt="Referance Guides" />
+          <a href="Referance-guide.html" class="category-btn">Explore</a>
+        </div>
+        <div class="category-card">
+          <h3>Past Papers</h3>
+          <img src="images/Past Papers Title.jpg" alt="Past Papers" />
+          <a href="Past-Papers.html" class="category-btn">Explore</a>
+        </div>
+        <div class="category-card">
+          <h3>Notes</h3>
+          <img src="images/Notes-Main-Title.jpg" alt="Notes" />
+          <a href="Notes.html" class="category-btn">Explore</a>
+        </div>
+        <!-- Add more cards here -->
+      </div>
+    </section>
+    <!-- ======================== Floating WA ICON -->
+    <a
+      href="https://wa.me/+923291148735?text=I want to ask you about ...."
+      class="floating-whatsapp-icon"
+      target="_blank"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 175.216 175.552"
+        class=""
+      >
+        <defs>
+          <linearGradient
+            id="b"
+            x1="85.915"
+            x2="86.535"
+            y1="32.567"
+            y2="137.092"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0" stop-color="#57d163"></stop>
+            <stop offset="1" stop-color="#23b33a"></stop>
+          </linearGradient>
+          <filter
+            id="a"
+            width="1.115"
+            height="1.114"
+            x="-.057"
+            y="-.057"
+            color-interpolation-filters="sRGB"
+          >
+            <feGaussianBlur stdDeviation="3.531"></feGaussianBlur>
+          </filter>
+        </defs>
+        <path
+          fill="#b3b3b3"
+          d="m54.532 138.45 2.235 1.324c9.387 5.571 20.15 8.518 31.126 8.523h.023c33.707 0 61.139-27.426 61.153-61.135.006-16.335-6.349-31.696-17.895-43.251A60.75 60.75 0 0 0 87.94 25.983c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.312-6.179 22.558zm-40.811 23.544L24.16 123.88c-6.438-11.154-9.825-23.808-9.821-36.772.017-40.556 33.021-73.55 73.578-73.55 19.681.01 38.154 7.669 52.047 21.572s21.537 32.383 21.53 52.037c-.018 40.553-33.027 73.553-73.578 73.553h-.032c-12.313-.005-24.412-3.094-35.159-8.954zm0 0"
+          filter="url(#a)"
+        ></path>
+        <path
+          fill="#fff"
+          d="m12.966 161.238 10.439-38.114a73.42 73.42 0 0 1-9.821-36.772c.017-40.556 33.021-73.55 73.578-73.55 19.681.01 38.154 7.669 52.047 21.572s21.537 32.383 21.53 52.037c-.018 40.553-33.027 73.553-73.578 73.553h-.032c-12.313-.005-24.412-3.094-35.159-8.954z"
+        ></path>
+        <path
+          fill="url(#linearGradient1780)"
+          d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.312-6.179 22.559 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.518 31.126 8.524h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.929z"
+        ></path>
+        <path
+          fill="url(#b)"
+          d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"
+        ></path>
+        <path
+          fill="#fff"
+          fill-rule="evenodd"
+          d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"
+        ></path>
+      </svg>
+    </a>
+    <!-- ================= About Section ===================== -->
+    <section id="ABOUT" class="about-section">
+      <div class="about-container">
+        <h2>About <span>Prince Book Depot</span></h2>
+        <p>
+          Prince Book Depot is your one-stop destination for academic, literary,
+          and entrance exam books. We are committed to providing quality,
+          affordability, and a wide variety of categories.
+        </p>
+
+        <div class="about-boxes">
+          <div class="about-box">
+            <h3>Contact</h3>
+            <p>📞 0312-XXXXXXX</p>
+            <p>📧 princebookdepot23@email.com</p>
           </div>
-        </a>
-      </div>
-      <div class="about hover-border">
-        <a href="#ABOUT" class="about">
-          <p class="about-text">About</p>
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
-  <!-- ================== For Banner ========================= -->
-  <div id="banner">
-    <div id="Welcome-text-box">
-      <p id="welcome-text">WELCOME TO </p>
-      <div id="banner-image"></div>
-    </div>
-    <div id="detail">
-      <p style="padding-top:1.5rem ;">We offer a comprehensive collection of textbooks for all educational levels,
-        including the Federal Board, Aga Khan Board, and Punjab Board.</p>
-      <p>
-        All subjects are available for Classes IX, X, XI, and XII, along with specialized resources for MDCAT and ECAT
-        preparation. We also stock a wide range of Medical and Dental books.
-      </p>
-      <p> All books are offered at wholesale prices with attractive discounts.</p>
 
-      <p>In addition, we feature a diverse selection of English novels at highly affordable rates.</p>
-      <button value="#Shop-Now"><a href="#Shop-Now">Shop Now</a></button>
-    </div>
-  </div>
-  <!-- ================== For Categories ===================== -->
-  <section id="Shop-Now" class="categories">
-    <h2 class="heading">Explore Categories</h2>
-    <div class="category-grid">
+          <div class="about-box">
+            <h3>Location</h3>
+            <p>📍 Urdu Bazar, Saddar, Karachi , Pakistan</p>
+            <p>Mon-Sat: 11:00am – 8:00pm</p>
+          </div>
 
-      <div class="category-card">
-        <h3> English Novels</h3>
-        <img src="images/English-Novel-Main-Title.jpg" alt="English Novels">
-        <a href="English-novels.html" class="category-btn">Browse Novels</a>
-      </div>
-      <div class="category-card">
-        <h3>Urdu Novels</h3>
-        <img src="images/Urdu-Novel-Main-Title.jpg" alt="Urud Novels">
-        <a href="Urdu-novels.html" class="category-btn">Explore Literature</a>
-      </div>
-      <div class="category-card">
-        <h3>Poetry</h3>
-        <img src="images/Poetry-Main-Title.jpg" alt="Poetry Image">
-        <a href="Poetry.html" class="category-btn">Explore Poetry</a>
-      </div>
-      <div class="category-card">
-        <h3>Academic Books</h3>
-        <img src="images/Academic Books Main Title.jpg" alt="Academic Books">
-        <a href="Academic-books.html" class="category-btn">Browse Your Course</a>
-      </div>
-      <div class="category-card">
-        <h3>Medical and Dental Books</h3>
-        <img src="images/Meidcal-Books-Main-Title.jpg" alt="Medical and Dental Books">
-        <a href="Medical.html" class="category-btn">Explore Medical Books</a>
-      </div>
-      <div class="category-card">
-        <h3>MDCAT / ECAT</h3>
-        <img src="images/MDCAT title.jpg" alt="MDCAT / ECAT">
-        <a href="Mdcat.html" class="category-btn">View Material</a>
-      </div>
+          <div class="about-box">
+            <h3>Home Delivery</h3>
+            <p>🚚 We offer fast, secure delivery all over Karachi.</p>
+            <p>Track your order with real-time updates.</p>
+          </div>
 
-      <div class="category-card">
-        <h3>Referance Guides</h3>
-        <img src="images/Referance Guide Title.jpg" alt="Referance Guides">
-        <a href="Referance-guide.html" class="category-btn">Explore resources</a>
-      </div>
-      <div class="category-card">
-        <h3>Past Papers</h3>
-        <img src="images/Past Papers Title.jpg" alt="Past Papers">
-        <a href="Past-Papers.html" class="category-btn">Browse Past Papers</a>
-      </div>
-      <div class="category-card">
-        <h3>Notes</h3>
-        <img src="images/Notes-Main-Title.jpg" alt="Notes">
-        <a href="Notes.html" class="category-btn">Browse Notes</a>
-      </div>
-      <!-- Add more cards here -->
+          <div class="about-box">
+            <h3>Customer Trust</h3>
+            <p>✔ Over 10,000 books delivered across Pakistan</p>
+            <p>✔ Trusted by students, teachers, and book lovers</p>
+            <p>✔ Rated 4.9/5 on customer satisfaction</p>
+          </div>
 
-    </div>
-  </section>
-  <!-- ================= About Section ===================== -->
-  <section id="ABOUT" class="about-section">
-    <div class="about-container">
-      <h2>About <span>Prince Book Depot</span></h2>
-      <p>
-        Prince Book Depot is your one-stop destination for academic, literary, and entrance exam books.
-        We are committed to providing quality, affordability, and a wide variety of categories.
-      </p>
+          <div class="about-box">
+            <h3>What People Say</h3>
+            <p>
+              “Best place in Karachi to get Federal board Books!” <br />
+              – Ali, Bahdurabad
+            </p>
+            <p>
+              “Quick service and wholeslae prices.” <br />
+              – Sara, Malir
+            </p>
+          </div>
 
-      <div class="about-boxes">
-        <div class="about-box">
-          <h3>Contact</h3>
-          <p>📞 0312-XXXXXXX</p>
-          <p>📧 princebookdepot23@email.com</p>
-        </div>
+          <div class="about-support about-box">
+            <h3>Support</h3>
+            <p>📱 Need help or want to place an order?</p>
+            <p>Place an Order on Whatsapp</p>
+            <a
+              href="https://wa.me/+923238083588?text=I want to ask you about ...."
+              class="whatsapp-button"
+              target="_blank"
+              >Chat on WhatsApp</a
+            >
 
-        <div class="about-box">
-          <h3>Location</h3>
-          <p>📍 Urdu Bazar, Saddar, Karachi , Pakistan</p>
-          <p>Mon-Sat: 11:00am – 8:00pm</p>
-        </div>
+            <br /><br />
 
-        <div class="about-box">
-          <h3>Home Delivery</h3>
-          <p>🚚 We offer fast, secure delivery all over Karachi.</p>
-          <p>Track your order with real-time updates.</p>
-        </div>
-
-        <div class="about-box">
-          <h3>Customer Trust</h3>
-          <p>✔ Over 10,000 books delivered across Pakistan</p>
-          <p>✔ Trusted by students, teachers, and book lovers</p>
-          <p>✔ Rated 4.9/5 on customer satisfaction</p>
-        </div>
-
-        <div class="about-box">
-          <h3>What People Say</h3>
-          <p>“Best place in Karachi to get Federal board Books!” <br> – Ali, Bahdurabad </p>
-          <p>“Quick service and wholeslae prices.” <br> – Sara, Malir</p>
-        </div>
-
-        <div class="about-support about-box">
-          <h3>Support</h3>
-          <p>📱 Need help or want to place an order?</p>
-          <p>Place an Order on Whatsapp</p>
-          <a href="https://wa.me/+923238083588?text=I want to ask you about ...." class="whatsapp-button"
-            target="_blank">Chat on WhatsApp</a>
-
-          <br><br>
-
-          <p>📷 Follow us on Instagram:</p>
-          <a href="https://instagram.com/princebook.depot" class="instagram-button" target="_blank">Follow on
-            Instagram</a>
+            <p>📷 Follow us on Instagram:</p>
+            <a
+              href="https://instagram.com/princebook.depot"
+              class="instagram-button"
+              target="_blank"
+              >Follow on Instagram</a
+            >
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- =================== Footer Section ===================== -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <p>&copy; 2025 Prince Book Depot. All rights reserved.</p>
-      <p>Designed by M. Maaz Raheel</p>
-    </div>
-  </footer>
-  <!-- ===================  Script =============== -->
+    <!-- =================== Footer Section ===================== -->
+    <footer class="site-footer">
+      <div class="footer-container">
+        <p>&copy; 2025 Prince Book Depot. All rights reserved.</p>
+        <p>Designed by M. Maaz Raheel</p>
+      </div>
+    </footer>
+    <!-- ===================  Script =============== -->
 
-  <script src="JS/script.js"></script>
-</body>
-
+    <script src="JS/script.js"></script>
+  </body>
 </html>
