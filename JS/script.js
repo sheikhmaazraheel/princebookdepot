@@ -128,23 +128,29 @@ document.addEventListener('DOMContentLoaded', () => {
         )
 
         filtered.forEach(product => {
-          console.log('Rendering Products', product)
-          const div = document.createElement('div')
+          console.log('Rendering Products')
+          const div = document.createElement("div");
+          const basePrice = parseFloat(product.price);
+          const discount = parseFloat(product.discount) || 0;
+          const finalPrice = Math.round(
+            basePrice - (basePrice * discount) / 100
+          );
           div.className = 'Product'
           div.dataset.id = product.id
           div.dataset.name = product.name
-          div.dataset.price = product.price
+          div.dataset.price = finalPrice
 
           div.innerHTML = `
-          <h3>${product.name}</h3>
-          <img src="${product.image}" alt="${product.name}">
-          <p class="book-price">Rs. ${product.price}</p>
-          <button class="add-to-cart-button">Add to Cart</button>
-          <div class="quantity-controls">
-            <button class="decrease">−</button>
-            <span class="quantity">1</span>
-            <button class="increase">+</button>
-          </div>
+          <div class="discount">${product.discount || 0}%</div>
+        <img src="${product.image}" alt="${product.name}" />
+        <div class="Product-name">${product.name}</div>
+        <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
+        <button class="add-to-cart-button">Add to Cart</button>
+        <div class="quantity-controls">
+          <button class="decrease">−</button>
+          <span class="quantity">1</span>
+          <button class="increase">+</button>
+        </div>
         `
 
           container.appendChild(div)
@@ -170,105 +176,267 @@ document.addEventListener('DOMContentLoaded', () => {
   
   let subtotal = 0
   let total = 0
-  cartItemsTbody.innerHTML = ''
+  if(cartItemsTbody){
+    cartItemsTbody.innerHTML = ''
 
-  Object.keys(cart).forEach(id => {
-    const item = cart[id]
-    const price = item.price || 0
-    const qty = item.quantity || 0
-    const amount = price * qty
-    subtotal += amount
-
-    const row = document.createElement('tr')
-    row.innerHTML = `
-      <td>${item.name || 'Unnamed'}</td>
-      <td>${price}</td>
-      <td class="qty-cell">
-        <button class="qty-btn decrease" data-id="${id}">−</button>
-        <span class="quantity" id="qty-${id}">${qty}</span>
-        <button class="qty-btn increase" data-id="${id}">+</button>
-      </td>
-      <td >${amount}</td>
-    `
-
-    cartItemsTbody.appendChild(row)
-  })
-  
-
-  // ======= SYNC COLUMNS WIDTH
-  function syncColumnWidths () {
-    // Get first row of cartTable
-    const cartTableRow = cartTable.rows[0]
-    // Sum width of first three columns
-    const width1 = cartTableRow.cells[0].getBoundingClientRect().width
-    const width2 = cartTableRow.cells[1].getBoundingClientRect().width
-    const width3 = cartTableRow.cells[2].getBoundingClientRect().width
-    const totalWidth = width1 + width2 + width3
-
-    // Apply the calculated width
-    cartHeadings.style.width = totalWidth + 'px'
-    totalColumn.style.width = totalWidth + 'px'
-  }
-
-  // Run on load and on resize
-  window.addEventListener('load', syncColumnWidths)
-  window.addEventListener('resize', syncColumnWidths)
-
-  //  ======== ADDING CART SUMMARY
-  let deliveryCharges = 0
-  if (subtotal != 0) {
-    deliveryCharges = 150
-  }
-  total = subtotal + deliveryCharges;
-  const deliveryCell = document.getElementById('delivery-charges')
-
-  const Summaryrow = document.createElement('tr')
-  Summaryrow.innerHTML = ` 
-        <td id="summary-headings">Sub-total :</td>
-        <td id="summary-data">Rs.${subtotal}</td>
-  `
-  deliveryCell.innerHTML = `Rs.${deliveryCharges}`
-  cartSummary.prepend(Summaryrow)
-  const Row = document.createElement('tr')
-  Row.innerHTML = ` 
-        <td id="summary-headings">Total :</td>
-        <td id="summary-data">Rs.${total}</td>
-      
-  `
-  totalRow.appendChild(Row)
-  const smallScreenQuery = window.matchMedia('(max-width:768px)')
-  function changeQuantityText () {
-    if (smallScreenQuery.matches) {
-      Quantity.textContent = 'Qty.'
-    }
-  }
-  changeQuantityText()
-  document.querySelectorAll('.qty-btn').forEach(button => {
-    button.addEventListener('click', () => {
-      const id = button.dataset.id
-      const isIncrease = button.classList.contains('increase')
-      const cart = JSON.parse(localStorage.getItem('cart')) || {}
+    Object.keys(cart).forEach(id => {
       const item = cart[id]
+      const price = item.price || 0
+      const qty = item.quantity || 0
+      const amount = price * qty
+      subtotal += amount
 
-      if (!item) return
+      const row = document.createElement('tr')
+      row.innerHTML = `
+        <td>${item.name || 'Unnamed'}</td>
+        <td>${price}</td>
+        <td class="qty-cell">
+          <button class="qty-btn decrease" data-id="${id}">−</button>
+          <span class="quantity" id="qty-${id}">${qty}</span>
+          <button class="qty-btn increase" data-id="${id}">+</button>
+        </td>
+        <td >${amount}</td>
+      `
 
-      // Update quantity
-      item.quantity += isIncrease ? 1 : -1
-
-      // If quantity is 0, remove item
-      if (item.quantity <= 0) {
-        delete cart[id]
-      } else {
-        cart[id] = item
-      }
-
-      // Save and reload
-      localStorage.setItem('cart', JSON.stringify(cart))
-      location.reload()
+      cartItemsTbody.appendChild(row)
     })
-  })
+    
+
+    // ======= SYNC COLUMNS WIDTH
+    function syncColumnWidths () {
+      // Get first row of cartTable
+      const cartTableRow = cartTable.rows[0]
+      // Sum width of first three columns
+      const width1 = cartTableRow.cells[0].getBoundingClientRect().width
+      const width2 = cartTableRow.cells[1].getBoundingClientRect().width
+      const width3 = cartTableRow.cells[2].getBoundingClientRect().width
+      const totalWidth = width1 + width2 + width3
+
+      // Apply the calculated width
+      cartHeadings.style.width = totalWidth + 'px'
+      totalColumn.style.width = totalWidth + 'px'
+    }
+
+    // Run on load and on resize
+    window.addEventListener('load', syncColumnWidths)
+    window.addEventListener('resize', syncColumnWidths)
+
+    //  ======== ADDING CART SUMMARY
+    let deliveryCharges = 0
+    if (subtotal != 0) {
+      deliveryCharges = 150
+    }
+    total = subtotal + deliveryCharges;
+    const deliveryCell = document.getElementById('delivery-charges')
+
+    const Summaryrow = document.createElement('tr')
+    Summaryrow.innerHTML = ` 
+          <td id="summary-headings">Sub-total :</td>
+          <td id="summary-data">Rs.${subtotal}</td>
+    `
+    deliveryCell.innerHTML = `Rs.${deliveryCharges}`
+    cartSummary.prepend(Summaryrow)
+    const Row = document.createElement('tr')
+    Row.innerHTML = ` 
+          <td id="summary-headings">Total :</td>
+          <td id="summary-data">Rs.${total}</td>
+        
+    `
+    totalRow.appendChild(Row)
+    const smallScreenQuery = window.matchMedia('(max-width:768px)')
+    function changeQuantityText () {
+      if (smallScreenQuery.matches) {
+        Quantity.textContent = 'Qty.'
+      }
+    }
+    changeQuantityText()
+    document.querySelectorAll('.qty-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const id = button.dataset.id
+        const isIncrease = button.classList.contains('increase')
+        const cart = JSON.parse(localStorage.getItem('cart')) || {}
+        const item = cart[id]
+
+        if (!item) return
+
+        // Update quantity
+        item.quantity += isIncrease ? 1 : -1
+
+        // If quantity is 0, remove item
+        if (item.quantity <= 0) {
+          delete cart[id]
+        } else {
+          cart[id] = item
+        }
+
+        // Save and reload
+        localStorage.setItem('cart', JSON.stringify(cart))
+        location.reload()
+      })
+    })
+  }
+
   // ORDER ID
   function generateOrderId () {
     // ...existing code for order id generation...
   }
+  
+// ...existing code...
+
+// ============== Search Functionality ===============
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+const CACHE_KEY = "prince_book_depot_products";
+const CACHE_EXPIRY_KEY = "prince_book_depot_cache_expiry";
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+async function fetchProducts() {
+  // Check if cached data exists and is not expired
+  const cachedData = localStorage.getItem(CACHE_KEY);
+  const cacheExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
+  const now = Date.now();
+
+  if (cachedData && cacheExpiry && now < parseInt(cacheExpiry)) {
+    try {
+      const products = JSON.parse(cachedData);
+      if (Array.isArray(products)) {
+        console.log("Using cached products");
+        return products;
+      }
+    } catch (err) {
+      console.error("Error parsing cached products:", err);
+    }
+  }
+
+  // Fetch new data if no valid cache
+  try {
+    const res = await fetch(
+      'https://script.google.com/macros/s/AKfycbxMoDKCh-ywDckfEeyLklRSSHO6932khQ5-DegVL0FqRwza98AgDrgSQAxgW10b31tm/exec',
+      {
+        method: "GET",
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`);
+    }
+    const products = await res.json();
+    console.log("Products fetched:", products);
+
+    if (!products || !Array.isArray(products)) {
+      throw new Error("Invalid product data received");
+    }
+
+    // Cache products and set expiry
+    localStorage.setItem(CACHE_KEY, JSON.stringify(products));
+    localStorage.setItem(CACHE_EXPIRY_KEY, now + CACHE_DURATION);
+    return products;
+  } catch (err) {
+    console.error("Fetch products error:", err);
+    const errorMsg = `<p class="no-results" style="color: #2E5077; font-weight: bold;">Error: Unable to load products. Please try again later.</p>`;
+    if (searchResults) searchResults.innerHTML = errorMsg;
+    if (searchResults) searchResults.classList.add("show");
+    return [];
+  }
+}
+
+function filterProducts(query, products) {
+  if (!products) return [];
+  return products.filter(
+    (product) =>
+      product.name?.toLowerCase().includes(query.toLowerCase()) ||
+      product.category?.toLowerCase().includes(query.toLowerCase())
+  );
+}
+
+function displayResults(products, resultsContainer) {
+  if (!resultsContainer) return;
+
+  if (products.length === 0) {
+    resultsContainer.innerHTML = `<p class="no-results" style="color: #2E5077; font-weight: bold;">No products found.</p>`;
+    resultsContainer.classList.add("show");
+    return;
+  }
+
+  resultsContainer.innerHTML = products
+    .map(
+      (product) => `
+        <a href="#${product.category}-${product.id}" class="block p-3 hover:bg-gradient-to-r hover:from-#E6F0FA hover:to-#B3D4FF flex items-center gap-3 border-b border-gray-200">
+          <img src="${product.image || ''}" alt="${product.name || 'Product'}" class="w-12 h-12 object-cover rounded" onerror="this.style.display='none'">
+          <div class="result-text">
+            <p class="result-name" style="color: #2E5077; font-weight: bold;">${product.name || 'Unnamed Product'}</p>
+            <p class="result-details" style="color: #1D3758; font-size: 0.9rem;">${product.category || 'Unknown'} - Rs. ${product.price?.toFixed(2) || 'N/A'}</p>
+          </div>
+        </a>
+      `
+    )
+    .join("");
+  resultsContainer.classList.add("show");
+}
+
+// Debounce function to limit search processing
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+async function handleSearch(query, resultsContainer) {
+  if (!resultsContainer) return;
+
+  if (query.length < 2) {
+    resultsContainer.classList.remove("show");
+    resultsContainer.innerHTML = "";
+    return;
+  }
+
+  const products = await fetchProducts(); // Use cached or fetch
+  const filteredProducts = filterProducts(query, products);
+  displayResults(filteredProducts, resultsContainer);
+}
+
+function setupSearch(input, results) {
+  if (!input || !results) return;
+
+  // Debounced search handler
+  const debouncedSearch = debounce((value) => handleSearch(value, results), 300);
+
+  input.addEventListener("input", (e) => debouncedSearch(e.target.value.trim()));
+  input.addEventListener("focus", () => {
+    if (input.value.trim().length >= 2) {
+      debouncedSearch(input.value.trim());
+    }
+  });
+  input.addEventListener("blur", () => {
+    // Delay hiding results to allow clicking
+    setTimeout(() => {
+      if (!input.contains(document.activeElement)) {
+        results.classList.remove("show");
+        results.innerHTML = "";
+      }
+    }, 200);
+  });
+}
+
+setupSearch(searchInput, searchResults);
+
+// Close results when clicking outside
+document.addEventListener("click", (e) => {
+  if (
+    searchInput &&
+    searchResults &&
+    !searchInput.contains(e.target) &&
+    !searchResults.contains(e.target)
+  ) {
+    searchResults.classList.remove("show");
+    searchResults.innerHTML = "";
+  }
+});
+
+// Pre-fetch products on page load
+document.addEventListener('DOMContentLoaded', () => {
+  fetchProducts(); // Cache products immediately
+});
+
 });

@@ -100,7 +100,7 @@
   }
 
   #banner-image {
-    height: 200px;
+    height: 150px;
     width: 100%;
   }
 
@@ -410,18 +410,36 @@ body.show-nav #menu-overlay {
 
 /* ================ PRODUCTS ================= */
 @media screen and (max-width: 768px) {
+  #searchInput {
+    width: 350px;
+  }
+  .search-results {
+    width: 350px;
+    top: 135px;
+  }
+    .Product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
   .Product {
-    transform: scale(0.9);
+    max-width: 100%;
+    transform: none;
+    padding: 10px;
+  }
+  .Product-name {
+    font-size: 1.1rem;
+  }
+  .discount {
+    right: 10px;
+    top: 10px;
   }
 
-  .Product-grid {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 15px;
-    max-width: 720px;
-  }
-
-  .heading {
-    font-size: 2.2rem;
+  .Product > img {
+    width: 100%;
+    height: auto;
   }
 }
 
