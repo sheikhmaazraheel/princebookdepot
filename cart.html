@@ -1,30 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prince Book Depot</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="responsive.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prince Book Depot</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="responsive.css">
-</head>
-
-<body>
-<!-- ================ FOR NAVBAR ======================= -->
-<nav>
-  <div id="logo">
-    <div class="logo"></div>
-  </div>
-  <div id="hamburger" class="hamburger">&#9776;</div>
-  <div id="menu-overlay">
-    <div id="mobile-menu">
-      <div class="home-box hover-border">
-        <a href="index.html" class="home">
+  <body>
+    <!-- ================ FOR NAVBAR ======================= -->
+    <!-- ================ FOR NAVBAR ======================= -->
+    <nav>
+      <div id="hamburger" class="hamburger">&#9776;</div>
+      <div id="logo">
+        <div class="logo"></div>
+      </div>
+      <div id="nav-link">
+        <a href="index.html" class="home-box hover-border">
           <div class="home-icon"></div>
           <div class="Home-text">HOME</div>
         </a>
+        <div class="selector hover-border">
+          <select name="Selector" class="classes">
+            <option value="" selected="selected">Categories</option>
+            <option value="">English Novels</option>
+            <option value="">Urud Novels</option>
+            <option value="">Academic Books</option>
+            <option value="">Poetry</option>
+          </select>
+        </div>
+        <a href="cart.html" class="cart hover-border">
+          <div class="cart-symbol"><span class="cart-count">0</span></div>
+          <div class="cart-text">
+            <p class="Cart-text-p">Cart</p>
+          </div>
+        </a>
+        <a href="#ABOUT" class="about hover-border">
+          <p class="about-text">About</p>
+        </a>
       </div>
-      <div class="empty"></div>
+    </nav>
+    <aside id="mobile-menu">
+      <button id="close-menu" aria-label="Close menu" class="close-menu-btn">
+        &times;
+      </button>
+      <a href="index.html" class="home-box hover-border">
+        <div class="home-icon"></div>
+        <div class="Home-text">HOME</div>
+      </a>
       <div class="selector hover-border">
         <select name="" class="classes">
           <option value="" selected="selected">Categories</option>
@@ -34,73 +58,63 @@
           <option value="">Poetry</option>
         </select>
       </div>
-      <div class="cart hover-border">
-        <a href="cart.html" class="cart-symbol-container">
-          <div class="cart-symbol"><span class="cart-count">0</span></div>
-          <div class="cart-text">
-            <p class="Cart-text-p">Cart</p>
-          </div>
-        </a>
+      <a href="cart.html" class="cart hover-border">
+        <div class="cart-symbol"><span class="cart-count">0</span></div>
+        <div class="cart-text">
+          <p class="Cart-text-p">Cart</p>
+        </div>
+      </a>
+      <a href="#ABOUT" class="about hover-border">
+        <p class="about-text">About</p>
+      </a>
+    </aside>
+
+    <main class="cart-page">
+      <p style="text-align: left; margin: 0 10px">
+        <strong>Order ID:</strong> <span id="order-id"></span>
+      </p>
+      <h1 class="cart-heading">Your Cart</h1>
+
+      <table class="cart-table" id="cart-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price (Rs.)</th>
+            <th id="Quantity-heading">Quantity</th>
+            <th>Amount (Rs.)</th>
+          </tr>
+        </thead>
+
+        <tbody id="cart-items">
+          <hr />
+        </tbody>
+      </table>
+      <hr />
+      <table id="cart-summary" class="cart-summary">
+        <tr>
+          <td id="summary-headings">Delivery Charges :</td>
+          <td id="delivery-charges">Rs 150</td>
+        </tr>
+      </table>
+      <hr />
+      <table id="total" class="cart-summary">
+        <tr>
+          <td id="totalColumn"></td>
+          <td></td>
+        </tr>
+      </table>
+      <button id="place-order" href="checkout.html">Place Order</button>
+    </main>
+
+    <!-- =================== Footer Section ===================== -->
+    <footer class="site-footer">
+      <div class="footer-container">
+        <p>&copy; 2025 Prince Book Depot. All rights reserved.</p>
+        <p>Designed by M. Maaz Raheel</p>
       </div>
-      <div class="about hover-border">
-        <a href="#ABOUT" class="about">
-          <p class="about-text">About</p>
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+    </footer>
+    <!-- ===================  Script =============== -->
 
-
-<main class="cart-page">
-  <p style="text-align: left;margin:0 10px;"><strong>Order ID:</strong> <span id="order-id"></span></p>
-  <h1 class="cart-heading">Your Cart</h1>
-
-  <table class="cart-table" id="cart-table">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Price (Rs.)</th>
-        <th id="Quantity-heading">Quantity</th>
-        <th>Amount (Rs.)</th>
-      </tr>
-    </thead>
-    
-    <tbody id="cart-items">
-      <hr>
-    </tbody>
-  </table>
-  <hr>
-  <table id="cart-summary" class="cart-summary">
-    <tr>
-      <td id="summary-headings"> Delivery Charges :</td>
-      <td id="delivery-charges"> Rs 150</td>
-    </tr>
-  </table>
-  <hr>
-     <table id="total" class="cart-summary">
-      <tr>
-        <td id="totalColumn"></td>
-        <td></td>
-      </tr>
-    
-  </table>
-    <button id="place-order" href="checkout.html">Place Order</button>
-</main>
-
-
-  <!-- =================== Footer Section ===================== -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <p>&copy; 2025 Prince Book Depot. All rights reserved.</p>
-      <p>Designed by M. Maaz Raheel</p>
-    </div>
-  </footer>
-  <!-- ===================  Script =============== -->
-
-
-  <script src="JS/script.js"></script>
-   
-</body>
-
+    <script src="JS/script.js"></script>
+  </body>
 </html>

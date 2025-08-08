@@ -114,7 +114,7 @@
   }
 
   #detail button {
-    width: 80%;
+    width: 50%;
   }
 
   /* ===================  Categories  ============== */
@@ -136,6 +136,7 @@
     max-width: 98%;
     margin: 0 0 10px 0;
     min-width: 0;
+    padding: 15px;
     box-sizing: border-box;
   }
 
@@ -237,7 +238,7 @@
   .logo {
     transform: scale(0.7);
   }
-#nav-link{
+  #nav-link {
     display: none;
   }
 

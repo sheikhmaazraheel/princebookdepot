@@ -12,7 +12,7 @@ html {
 }
 
 body {
-  background: linear-gradient(180deg, #E6F0FA 10%, #B3D4FF 100%);
+  background: linear-gradient(180deg, #e6f0fa 10%, #b3d4ff 100%);
 }
 
 html,
@@ -32,7 +32,7 @@ footer,
 /* ======================== For Nav Bar ============================*/
 nav {
   height: 60px;
-   background: linear-gradient(90deg, #2E5077 0%, #1D3758 100%);
+  background: linear-gradient(90deg, #2e5077 0%, #1d3758 100%);
   font-size: 14px;
   display: flex;
   justify-content: space-between;
@@ -56,7 +56,7 @@ nav {
   height: 49px;
   color: #007185;
 }
-#nav-link{
+#nav-link {
   display: flex;
   align-items: center;
   height: 100%;
@@ -74,7 +74,6 @@ nav {
   align-items: center;
   justify-content: center;
 }
-
 
 .home-icon {
   background-image: url("./images/Home-Icon.png");
@@ -211,7 +210,13 @@ nav {
   height: 600px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #2E5077 0%, #2B6799 30%, #00C6FF 70%, #0072FF 100%);
+  background: linear-gradient(
+    160deg,
+    #2e5077 0%,
+    #2b6799 30%,
+    #00c6ff 70%,
+    #0072ff 100%
+  );
 }
 
 #banner::after {
@@ -219,7 +224,7 @@ nav {
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 100px;
+  height: 50px;
   /* fade height */
   width: 100%;
   background: linear-gradient(to bottom, transparent, #ddd);
@@ -236,10 +241,10 @@ nav {
 
 #Welcome-text-box p {
   background-image: linear-gradient(
-    139deg,
-    #a3d3ff 5%,
-    #f9a7e0 45%,
-    #ffb3a6 85%
+    90deg,
+    #e63585 0%,
+    #f5f5f5 50%,
+    #ffc107 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -299,26 +304,32 @@ nav {
   text-align: justify;
   padding-top: 0.5rem;
 }
-
+/* Button in Banner */
 #detail button {
   margin: 25px;
-  background-color: transparent;
+  background: linear-gradient(90deg, #ff99cc 0%, #f5f5f5 50%, #ffe082 100%);
   border-radius: 8px;
-  color: #fff;
-  border: 2px solid transparent;
+  color: #2e5077; /* Dark blue text for contrast and theme cohesion */
+  border: none;
   height: 30px;
-  width: 100px;
+  width: 70px;
   font-size: 18px;
   animation: fadeInUp 1.5s ease-out;
 }
 
 #detail button a {
-  color: white;
+  color: #2e5077; /* Matches text color */
+  text-decoration: none;
 }
 
 #detail button:hover {
-  background-color: #004aad;
-  color: #fff;
+  background: linear-gradient(
+    90deg,
+    #f28cb8 0%,
+    #e8e8e8 50%,
+    #ffd166 100%
+  ); /* Slightly deeper tones for hover */
+  color: #2e5077;
   transition: all 0.3s ease;
   transform: scale(1.1);
   cursor: pointer;
@@ -340,7 +351,7 @@ nav {
   text-align: center;
   margin: 20px 0;
   padding: 10px 0;
-    background: linear-gradient(90deg, #2E5077 0%, #00C6FF 50%, #0072FF 100%);
+  background: linear-gradient(90deg, #2e5077 0%, #00c6ff 50%, #0072ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -389,8 +400,8 @@ nav {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 16px;
-  background: linear-gradient(40deg, #2e5077 0%, #00c6ff 50%, #00e1ff 100%);
-  color: white;
+  background: linear-gradient(50deg, #4fc3f7 0%, #e6f0fa 50%, #ffd740 100%);
+  color: #2e5077; /* Dark blue text for contrast and theme cohesion */
   border: none;
   border-radius: 8px;
   text-decoration: none;
@@ -399,9 +410,19 @@ nav {
 }
 
 .category-btn:hover {
-  background-color: #002f6c;
+  background: linear-gradient(
+    90deg,
+    #29b6f6 0%,
+    #d5e8fa 50%,
+    #ffc107 100%
+  ); /* Slightly deeper tones for hover */
+  transform: scale(1.05);
+  cursor: pointer;
 }
 
+.category-btn:active {
+  transform: scale(1);
+}
 /*  =========================== About Section ===================== */
 /* ----- Floating WA Icon */
 .floating-whatsapp-icon {
@@ -429,7 +450,13 @@ nav {
 }
 
 .about-section {
-  background:  linear-gradient(360deg, transparent 1%, #00c6ff 60%,#f8fafc 90%, transparent 100%);
+  background: linear-gradient(
+    360deg,
+    transparent 1%,
+    #00c6ff 60%,
+    #f8fafc 90%,
+    transparent 100%
+  );
   padding: 60px 20px;
   margin: 20px 0;
   display: flex;
