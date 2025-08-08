@@ -1,5 +1,4 @@
-// ...existing code...
-
+const githubURL='https://sheikhmaazraheel.github.io/princebookdepot'
 // ====== MOBILE NAVBAR LOGIC ======
 document.addEventListener('DOMContentLoaded', function () {
   const hamburger = document.getElementById('hamburger');
@@ -136,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             basePrice - (basePrice * discount) / 100
           );
           div.className = 'Product'
+          div.id = `${product.id}`
           div.dataset.id = product.id
           div.dataset.name = product.name
           div.dataset.price = finalPrice
@@ -360,7 +360,7 @@ function displayResults(products, resultsContainer) {
   resultsContainer.innerHTML = products
     .map(
       (product) => `
-        <a href="#${product.category}-${product.id}" class="block p-3 hover:bg-gradient-to-r hover:from-#E6F0FA hover:to-#B3D4FF flex items-center gap-3 border-b border-gray-200">
+        <a href="${githubURL}/${product.category}#${product.id}" class="block p-3 hover:bg-gradient-to-r hover:from-#E6F0FA hover:to-#B3D4FF flex items-center gap-3 border-b border-gray-200">
           <img src="${product.image || ''}" alt="${product.name || 'Product'}" class="w-12 h-12 object-cover rounded" onerror="this.style.display='none'">
           <div class="result-text">
             <p class="result-name" style="color: #2E5077; font-weight: bold;">${product.name || 'Unnamed Product'}</p>
@@ -385,7 +385,7 @@ function debounce(func, wait) {
 async function handleSearch(query, resultsContainer) {
   if (!resultsContainer) return;
 
-  if (query.length < 2) {
+  if (query.length < 1) {
     resultsContainer.classList.remove("show");
     resultsContainer.innerHTML = "";
     return;
@@ -404,7 +404,7 @@ function setupSearch(input, results) {
 
   input.addEventListener("input", (e) => debouncedSearch(e.target.value.trim()));
   input.addEventListener("focus", () => {
-    if (input.value.trim().length >= 2) {
+    if (input.value.trim().length >= 1) {
       debouncedSearch(input.value.trim());
     }
   });

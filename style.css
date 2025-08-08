@@ -592,7 +592,7 @@ nav {
 }
 .search-results {
   position: absolute;
-  top: 155px;
+  top: 115px;
   width: 500px;
   max-height: 300px;
   overflow-y: auto;

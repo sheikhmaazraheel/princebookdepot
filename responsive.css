@@ -415,7 +415,7 @@ body.show-nav #menu-overlay {
   }
   .search-results {
     width: 350px;
-    top: 135px;
+    top: 105px;
   }
     .Product-grid {
     grid-template-columns: repeat(2, 1fr);
