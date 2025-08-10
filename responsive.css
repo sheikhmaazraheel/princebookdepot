@@ -481,6 +481,9 @@ body.show-nav #menu-overlay {
 
 /* ============= FOR CART ================== */
 @media screen and (max-width: 768px) {
+  #cart-popup{
+    width: 96%;
+  }
   .cart-page {
     padding: 30px 5px;
     max-width: 340px;
