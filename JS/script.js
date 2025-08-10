@@ -39,10 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============== Rendering Products ===============
 document.addEventListener("DOMContentLoaded", () => {
   let cart = JSON.parse(localStorage.getItem("cart")) || {};
+  const cartCount = document.querySelector(".cart-count");
+  // Get Cart Product Count
   function getCartProductCount() {
     return Object.keys(cart).length;
   }
-
+  // Get Cart Total
   function getCartTotal() {
     let popupSubtotal = 0;
     Object.keys(cart).forEach((id) => {
@@ -107,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         popupCount.textContent = getCartProductCount();
         popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
       }
+      cartCount.textContent = getCartProductCount();
     });
 
     // ➕ Increase Quantity
@@ -125,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       popupCount.textContent = getCartProductCount();
       popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
+      cartCount.textContent = getCartProductCount();
     });
 
     // ➖ Decrease Quantity
@@ -164,9 +168,10 @@ document.addEventListener("DOMContentLoaded", () => {
         popupCount.textContent = getCartProductCount();
         popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
       }
+      cartCount.textContent = getCartProductCount();
     });
   }
-
+  cartCount.textContent = getCartProductCount();
   // ✅ PRODUCT PAGES
   if (document.body.dataset.category) {
     const category = document.body.dataset.category;
@@ -341,6 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Save and reload
         localStorage.setItem("cart", JSON.stringify(cart));
+        cartCount.textContent = getCartProductCount();
         location.reload();
       });
     });
