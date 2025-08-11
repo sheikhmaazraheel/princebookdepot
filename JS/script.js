@@ -203,8 +203,8 @@ document.addEventListener("DOMContentLoaded", () => {
           div.dataset.id = product.id;
           div.dataset.name = product.name;
           div.dataset.price = finalPrice;
-          if(product.discount>0){          
-          div.innerHTML = `
+          if (product.discount > 0) {
+            div.innerHTML = `
             <div class="discount">${product.discount || 0}%</div>
             <img src="${product.image}" alt="${product.name}" />
             <div class="Product-name">${product.name}</div>
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <button class="increase">+</button>
             </div>
             `;
-          } else{
+          } else {
             div.innerHTML = `
             <img src="${product.image}" alt="${product.name}" />
             <div class="Product-name">${product.name}</div>
@@ -432,7 +432,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return products.filter(
       (product) =>
         product.name?.toLowerCase().includes(query.toLowerCase()) &&
-        product.category.trim().toLowerCase() === document.body.dataset.category.trim().toLocaleLowerCase()
+        product.category.trim().toLowerCase() ===
+          document.body.dataset.category.trim().toLocaleLowerCase()
     );
   }
 
@@ -448,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resultsContainer.innerHTML = products
       .map(
         (product) => `
-        <a href="${githubURL}/${product.category}#${
+        <a href="#${
           product.id
         }" class="block p-3 hover:bg-gradient-to-r hover:from-#E6F0FA hover:to-#B3D4FF flex items-center gap-3 border-b border-gray-200">
           <img src="${product.image || ""}" alt="${
