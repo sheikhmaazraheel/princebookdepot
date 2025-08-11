@@ -203,20 +203,32 @@ document.addEventListener("DOMContentLoaded", () => {
           div.dataset.id = product.id;
           div.dataset.name = product.name;
           div.dataset.price = finalPrice;
-
+          if(product.discount>0){          
           div.innerHTML = `
-          <div class="discount">${product.discount || 0}%</div>
-        <img src="${product.image}" alt="${product.name}" />
-        <div class="Product-name">${product.name}</div>
-        <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
-        <button class="add-to-cart-button">Add to Cart</button>
-        <div class="quantity-controls">
-          <button class="decrease">−</button>
-          <span class="quantity">1</span>
-          <button class="increase">+</button>
-        </div>
-        `;
-
+            <div class="discount">${product.discount || 0}%</div>
+            <img src="${product.image}" alt="${product.name}" />
+            <div class="Product-name">${product.name}</div>
+            <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
+            <button class="add-to-cart-button">Add to Cart</button>
+            <div class="quantity-controls">
+              <button class="decrease">−</button>
+              <span class="quantity">1</span>
+              <button class="increase">+</button>
+            </div>
+            `;
+          } else{
+            div.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" />
+            <div class="Product-name">${product.name}</div>
+            <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
+            <button class="add-to-cart-button">Add to Cart</button>
+            <div class="quantity-controls">
+              <button class="decrease">−</button>
+              <span class="quantity">1</span>
+              <button class="increase">+</button>
+            </div>
+            `;
+          }
           container.appendChild(div);
           setupCartForProduct(div); // Hook cart logic
           document.querySelectorAll(".Product").forEach(setupCartForProduct);
