@@ -419,8 +419,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!products) return [];
     return products.filter(
       (product) =>
-        product.name?.toLowerCase().includes(query.toLowerCase()) ||
-        product.category?.toLowerCase().includes(query.toLowerCase())
+        product.name?.toLowerCase().includes(query.toLowerCase()) &&
+        product.category === document.body.dataset.category
     );
   }
 
