@@ -1070,4 +1070,7 @@ textarea {
 .popupCartTotal{
   justify-self: flex-end;
 }
-
+input:focus{
+  border-color: #2e5077;
+  outline: 1px solid #2e5077;
+}

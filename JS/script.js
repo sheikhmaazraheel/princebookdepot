@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return products.filter(
       (product) =>
         product.name?.toLowerCase().includes(query.toLowerCase()) &&
-        product.category === document.body.dataset.category
+        product.category.trim().toLowerCase() === document.body.dataset.category.trim().toLocaleLowerCase()
     );
   }
 
