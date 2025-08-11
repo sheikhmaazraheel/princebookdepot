@@ -483,6 +483,7 @@ body.show-nav #menu-overlay {
 @media screen and (max-width: 768px) {
   #cart-popup{
     width: 96%;
+    margin: 0;
   }
   .cart-page {
     padding: 30px 5px;
