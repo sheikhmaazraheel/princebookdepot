@@ -38,17 +38,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ============== Rendering Products ===============
 document.addEventListener("DOMContentLoaded", () => {
-  let cart = JSON.parse(localStorage.getItem("cart")) || {};
+  let pbdcart = JSON.parse(localStorage.getItem("pbdcart")) || {};
   const cartCount = document.querySelector(".cart-count");
   // Get Cart Product Count
   function getCartProductCount() {
-    return Object.keys(cart).length;
+    return Object.keys(pbdcart).length;
   }
   // Get Cart Total
   function getCartTotal() {
     let popupSubtotal = 0;
-    Object.keys(cart).forEach((id) => {
-      const item = cart[id];
+    Object.keys(pbdcart).forEach((id) => {
+      const item = pbdcart[id];
       const price = item.price || 0;
       const qty = item.quantity || 0;
       const amount = price * qty;
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ✅ Load cart from localStorage
 
-    let quantity = cart[productId]?.quantity || 0;
+    let quantity = pbdcart[productId]?.quantity || 0;
 
     // ✅ If product is already in cart, show quantity controls
     if (quantity > 0) {
@@ -83,8 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // ➕ Add to Cart
     addToCartBtn.addEventListener("click", () => {
       quantity = 1;
-      cart[productId] = { name: productName, price: productPrice, quantity };
-      localStorage.setItem("cart", JSON.stringify(cart));
+      pbdcart[productId] = { name: productName, price: productPrice, quantity };
+      localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
 
       addToCartBtn.style.display = "none";
       qtyControls.classList.add("active");
@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // ➕ Increase Quantity
     increaseBtn.addEventListener("click", () => {
       quantity++;
-      cart[productId].quantity = quantity;
-      localStorage.setItem("cart", JSON.stringify(cart));
+      pbdcart[productId].quantity = quantity;
+      localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
 
       qtyDisplay.textContent = quantity;
       qtyDisplay.style.transform = "scale(1.2)";
@@ -136,11 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
       quantity--;
 
       if (quantity <= 0) {
-        delete cart[productId];
-        localStorage.setItem("cart", JSON.stringify(cart));
+        delete pbdcart[productId];
+        localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
         addToCartBtn.style.display = "inline-block";
         qtyControls.classList.remove("active");
-        if (Object.keys(cart).length === 0) {
+        if (Object.keys(pbdcart).length === 0) {
           const cartPopup = document.getElementById("cart-popup");
           if (cartPopup.classList.contains("show")) {
             cartPopup.classList.remove("show");
@@ -153,8 +153,8 @@ document.addEventListener("DOMContentLoaded", () => {
           popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
         }
       } else {
-        cart[productId].quantity = quantity;
-        localStorage.setItem("cart", JSON.stringify(cart));
+        pbdcart[productId].quantity = quantity;
+        localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
         qtyDisplay.textContent = quantity;
 
         qtyDisplay.style.transform = "scale(1.2)";
@@ -251,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
   }
-  console.log("Hello");
   // ✅ CART PAGE
   const cartItemsTbody = document.getElementById("cart-items");
   const orderIdSpan = document.getElementById("order-id");
@@ -267,8 +266,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (cartItemsTbody) {
     cartItemsTbody.innerHTML = "";
 
-    Object.keys(cart).forEach((id) => {
-      const item = cart[id];
+    Object.keys(pbdcart).forEach((id) => {
+      const item = pbdcart[id];
       const price = item.price || 0;
       const qty = item.quantity || 0;
       const amount = price * qty;
@@ -341,8 +340,8 @@ document.addEventListener("DOMContentLoaded", () => {
       button.addEventListener("click", () => {
         const id = button.dataset.id;
         const isIncrease = button.classList.contains("increase");
-        const cart = JSON.parse(localStorage.getItem("cart")) || {};
-        const item = cart[id];
+        const pbdcart = JSON.parse(localStorage.getItem("pbdcart")) || {};
+        const item = pbdcart[id];
 
         if (!item) return;
 
@@ -351,22 +350,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // If quantity is 0, remove item
         if (item.quantity <= 0) {
-          delete cart[id];
+          delete pbdcart[id];
         } else {
-          cart[id] = item;
+          pbdcart[id] = item;
         }
 
         // Save and reload
-        localStorage.setItem("cart", JSON.stringify(cart));
+        localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
         cartCount.textContent = getCartProductCount();
         location.reload();
       });
     });
+    let pbdorderId = localStorage.getItem("pbdorderId");
+  if (Object.keys(pbdcart).length) {
+    if (!pbdorderId) {
+      pbdorderId = generateOrderId();
+    }
+    localStorage.setItem("pbdorderId", pbdorderId);
+  }
+  orderIdSpan.textContent = pbdorderId;
   }
 
   // ORDER ID
   function generateOrderId() {
-    // ...existing code for order id generation...
+    const now = new Date();
+    const pad = (val) => String(val).padStart(2, "0");
+    return `PBD-${pad(now.getDate())}${pad(
+      now.getMonth() + 1
+    )}${now.getFullYear()}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(
+      now.getSeconds()
+    )}${String(now.getMilliseconds()).padStart(3, "0")}`;
   }
 
   // ...existing code...
