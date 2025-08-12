@@ -56,6 +56,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     return popupSubtotal;
   }
+  // Change Quantity Text
+  function changeQuantityText(query, QuantityHeader) {
+      if (query) {
+        QuantityHeader.textContent = "Qty.";
+      }
+    }
+    // PopUp Update
+    function updateCartPopup() {
+      const popupCount = document.querySelector(".popupCartCount");
+      const popupTotal = document.querySelector(".popupCartTotal");
+
+      popupCount.textContent = getCartProductCount();
+      popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
+    }
+
+      // ORDER ID
+  function generateOrderId() {
+    const now = new Date();
+    const pad = (val) => String(val).padStart(2, "0");
+    return `PBD-${pad(now.getDate())}${pad(
+      now.getMonth() + 1
+    )}${now.getFullYear()}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(
+      now.getSeconds()
+    )}${String(now.getMilliseconds()).padStart(3, "0")}`;
+  }
 
   // Shared Cart Logic Setup
   function setupCartForProduct(product) {
@@ -92,22 +117,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const cartPopup = document.getElementById("cart-popup");
       if (!cartPopup.classList.contains("show")) {
         cartPopup.classList.add("show-before");
-        const popupCount = document.querySelector(".popupCartCount");
-        const popupTotal = document.querySelector(".popupCartTotal");
-
-        popupCount.textContent = getCartProductCount();
-        popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
+        updateCartPopup();
 
         setTimeout(() => {
           cartPopup.classList.remove("show-before");
           cartPopup.classList.add("show");
         }, 200);
       } else {
-        const popupCount = document.querySelector(".popupCartCount");
-        const popupTotal = document.querySelector(".popupCartTotal");
-
-        popupCount.textContent = getCartProductCount();
-        popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
+        updateCartPopup();
       }
       cartCount.textContent = getCartProductCount();
     });
@@ -123,11 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         qtyDisplay.style.transform = "scale(1)";
       }, 150);
-      const popupCount = document.querySelector(".popupCartCount");
-      const popupTotal = document.querySelector(".popupCartTotal");
-
-      popupCount.textContent = getCartProductCount();
-      popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
+      updateCartPopup();
       cartCount.textContent = getCartProductCount();
     });
 
@@ -146,11 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cartPopup.classList.remove("show");
           }
         } else {
-          const popupCount = document.querySelector(".popupCartCount");
-          const popupTotal = document.querySelector(".popupCartTotal");
-
-          popupCount.textContent = getCartProductCount();
-          popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
+          updateCartPopup();
         }
       } else {
         pbdcart[productId].quantity = quantity;
@@ -161,17 +170,13 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           qtyDisplay.style.transform = "scale(1)";
         }, 150);
-
-        const popupCount = document.querySelector(".popupCartCount");
-        const popupTotal = document.querySelector(".popupCartTotal");
-
-        popupCount.textContent = getCartProductCount();
-        popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
+        updateCartPopup();
       }
       cartCount.textContent = getCartProductCount();
     });
   }
   cartCount.textContent = getCartProductCount();
+
   // ✅ PRODUCT PAGES
   if (document.body.dataset.category) {
     const category = document.body.dataset.category;
@@ -191,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         filtered.forEach((product) => {
-          console.log("Rendering Products");
+          // console.log("Rendering Products");
           const div = document.createElement("div");
           const basePrice = parseFloat(product.price);
           const discount = parseFloat(product.discount) || 0;
@@ -233,16 +238,12 @@ document.addEventListener("DOMContentLoaded", () => {
           setupCartForProduct(div); // Hook cart logic
           document.querySelectorAll(".Product").forEach(setupCartForProduct);
         });
+        // Show cart popup if cart contains items
         if (Object.keys(cart).length > 0 && document.body.dataset.category) {
           const cartPopup = document.getElementById("cart-popup");
           if (!cartPopup.classList.contains("show")) {
             cartPopup.classList.add("show-before");
-            const popupCount = document.querySelector(".popupCartCount");
-            const popupTotal = document.querySelector(".popupCartTotal");
-
-            popupCount.textContent = getCartProductCount();
-            popupTotal.textContent = `Rs.${getCartTotal().toFixed(2)}`;
-
+            updateCartPopup();
             setTimeout(() => {
               cartPopup.classList.remove("show-before");
               cartPopup.classList.add("show");
@@ -265,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let total = 0;
   if (cartItemsTbody) {
     cartItemsTbody.innerHTML = "";
-
+// Loop through cart items and create rows
     Object.keys(pbdcart).forEach((id) => {
       const item = pbdcart[id];
       const price = item.price || 0;
@@ -329,13 +330,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
     `;
     totalRow.appendChild(Row);
-    const smallScreenQuery = window.matchMedia("(max-width:768px)");
-    function changeQuantityText() {
-      if (smallScreenQuery.matches) {
-        Quantity.textContent = "Qty.";
-      }
-    }
-    changeQuantityText();
+
+    const smallScreenQuery = window.matchMedia("(max-width:768px)").matches;
+    // Update quantity text based on screen size
+    changeQuantityText(smallScreenQuery, Quantity);
+    // Cart quantity buttons
     document.querySelectorAll(".qty-btn").forEach((button) => {
       button.addEventListener("click", () => {
         const id = button.dataset.id;
@@ -370,20 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   orderIdSpan.textContent = pbdorderId;
   }
-
-  // ORDER ID
-  function generateOrderId() {
-    const now = new Date();
-    const pad = (val) => String(val).padStart(2, "0");
-    return `PBD-${pad(now.getDate())}${pad(
-      now.getMonth() + 1
-    )}${now.getFullYear()}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(
-      now.getSeconds()
-    )}${String(now.getMilliseconds()).padStart(3, "0")}`;
-  }
-
-  // ...existing code...
-
+  
   // ============== Search Functionality ===============
   const searchInput = document.getElementById("searchInput");
   const searchResults = document.getElementById("searchResults");
