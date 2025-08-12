@@ -1,4 +1,5 @@
 const githubURL = "https://sheikhmaazraheel.github.io/princebookdepot";
+let allProducts = [];
 // ====== MOBILE NAVBAR LOGIC ======
 document.addEventListener("DOMContentLoaded", function () {
   const hamburger = document.getElementById("hamburger");
@@ -190,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((products) => {
         loader.style.display = "none";
         container.style.display = "grid";
-
+        allProducts = products;
         const filtered = products.filter(
           (p) => p.category === category && !!p.availible
         );
@@ -373,58 +374,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============== Search Functionality ===============
   const searchInput = document.getElementById("searchInput");
   const searchResults = document.getElementById("searchResults");
-  const CACHE_KEY = "prince_book_depot_products";
-  const CACHE_EXPIRY_KEY = "prince_book_depot_cache_expiry";
-  const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
-  async function fetchProducts() {
-    // Check if cached data exists and is not expired
-    const cachedData = localStorage.getItem(CACHE_KEY);
-    const cacheExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
-    const now = Date.now();
-
-    if (cachedData && cacheExpiry && now < parseInt(cacheExpiry)) {
-      try {
-        const products = JSON.parse(cachedData);
-        if (Array.isArray(products)) {
-          console.log("Using cached products");
-          return products;
-        }
-      } catch (err) {
-        console.error("Error parsing cached products:", err);
-      }
-    }
-
-    // Fetch new data if no valid cache
-    try {
-      const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbxMoDKCh-ywDckfEeyLklRSSHO6932khQ5-DegVL0FqRwza98AgDrgSQAxgW10b31tm/exec",
-        {
-          method: "GET",
-        }
-      );
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-      const products = await res.json();
-      console.log("Products fetched:", products);
-
-      if (!products || !Array.isArray(products)) {
-        throw new Error("Invalid product data received");
-      }
-
-      // Cache products and set expiry
-      localStorage.setItem(CACHE_KEY, JSON.stringify(products));
-      localStorage.setItem(CACHE_EXPIRY_KEY, now + CACHE_DURATION);
-      return products;
-    } catch (err) {
-      console.error("Fetch products error:", err);
-      const errorMsg = `<p class="no-results" style="color: #2E5077; font-weight: bold;">Error: Unable to load products. Please try again later.</p>`;
-      if (searchResults) searchResults.innerHTML = errorMsg;
-      if (searchResults) searchResults.classList.add("show");
-      return [];
-    }
-  }
 
   function filterProducts(query, products) {
     if (!products) return [];
@@ -486,10 +435,8 @@ document.addEventListener("DOMContentLoaded", () => {
       resultsContainer.innerHTML = "";
       return;
     }
-
-    const products = await fetchProducts(); // Use cached or fetch
-    const filteredProducts = filterProducts(query, products);
-    displayResults(filteredProducts, resultsContainer);
+    // const filteredProducts = filterProducts(query, allProducts);
+    displayResults(filteredProducts(query, allProducts), resultsContainer);
   }
 
   function setupSearch(input, results) {
@@ -498,7 +445,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Debounced search handler
     const debouncedSearch = debounce(
       (value) => handleSearch(value, results),
-      300
+      100
     );
 
     input.addEventListener("input", (e) =>
@@ -533,10 +480,5 @@ document.addEventListener("DOMContentLoaded", () => {
       searchResults.classList.remove("show");
       searchResults.innerHTML = "";
     }
-  });
-
-  // Pre-fetch products on page load
-  document.addEventListener("DOMContentLoaded", () => {
-    fetchProducts(); // Cache products immediately
   });
 });
