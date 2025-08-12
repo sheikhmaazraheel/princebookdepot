@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
           document.querySelectorAll(".Product").forEach(setupCartForProduct);
         });
         // Show cart popup if cart contains items
-        if (Object.keys(cart).length > 0 && document.body.dataset.category) {
+        if (Object.keys(pbdcart).length > 0 && document.body.dataset.category) {
           const cartPopup = document.getElementById("cart-popup");
           if (!cartPopup.classList.contains("show")) {
             cartPopup.classList.add("show-before");
@@ -435,8 +435,8 @@ document.addEventListener("DOMContentLoaded", () => {
       resultsContainer.innerHTML = "";
       return;
     }
-    // const filteredProducts = filterProducts(query, allProducts);
-    displayResults(filteredProducts(query, allProducts), resultsContainer);
+    const filteredProducts = filterProducts(query, allProducts);
+    displayResults(filteredProducts, resultsContainer);
   }
 
   function setupSearch(input, results) {
