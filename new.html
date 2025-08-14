@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Message for You My Only Love</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.10/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .heart-pulse {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes particleBurst {
+      0% { transform: scale(1) translate(0, 0); opacity: 1; }
+      100% { transform: scale(0.5) translate(var(--tx), var(--ty)); opacity: 0; }
+    }
+    .particle {
+      position: absolute;
+      animation: particleBurst 1.5s ease-out forwards;
+    }
+    @keyframes type {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    .typing {
+      overflow: hidden;
+      animation: type 2s steps(40, end) forwards;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .popup {
+      animation: fadeIn 0.5s ease-in forwards;
+    }
+    @keyframes parallax {
+      0% { background-position: 0 0; }
+      100% { background-position: 400px 400px; }
+    }
+    body {
+      background: linear-gradient(135deg, #f9a8d4, #c4b5fd, #93c5fd);
+      animation: parallax 20s linear infinite;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    @media (max-width: 640px) {
+      .glass {
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+      .popup .glass {
+        width: 90%;
+        padding: 1rem;
+      }
+      .popup p {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body class="flex flex-col">
+  <div id="root"></div>
+  <div id="fallback" style="display: none;" class="text-center p-4">
+    <h1 class="text-4xl font-bold text-purple-600">A Special Message for You My Only Love</h1>
+    <p class="text-lg text-gray-700 mt-4">Hey, my love! Just wanted to remind you how beautiful and Amazing you are. Your smile lights up my world, and by my world I mean You My princess because you are my whole world.</p>
+    <p class="text-lg text-gray-700 mt-4">No matter what’s going on, you’ve always got me, and I will always be by your side in every situation!</p>
+    <p class="text-lg text-gray-700 mt-4">You are my Rasmalai, So eatable and lickable👅🫣🫣</p>
+  </div>
+  <script type="text/babel">
+    function App() {
+      const [showSurprise, setShowSurprise] = React.useState(false);
+      const [particles, setParticles] = React.useState([]);
+      const [playSound, setPlaySound] = React.useState(false);
+
+      const handleSurprise = () => {
+        setShowSurprise(true);
+        // Generate full-screen heart particles
+        const newParticles = Array.from({ length: 50 }, (_, i) => {
+          const angle = Math.random() * 2 * Math.PI;
+          const distance = 200 + Math.random() * 300;
+          return {
+            id: i,
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            tx: Math.cos(angle) * distance,
+            ty: Math.sin(angle) * distance,
+            symbol: '😘',
+            color: ['text-pink-500', 'text-red-500', 'text-purple-400'][Math.floor(Math.random() * 3)],
+            size: 20 + Math.random() * 20,
+          };
+        });
+        setParticles(newParticles);
+        setTimeout(() => setParticles([]), 1500);
+
+        // Play sound if enabled
+        if (playSound) {
+          const audio = new Audio('https://freesound.org/data/previews/387/387232_5121236-lq.mp3');
+          audio.play().catch(e => console.log("Audio playback failed:", e));
+        }
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col items-center py-6 px-4">
+          <div className="max-w-3xl w-full text-center">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-8 animate-pulse">
+              A Special Message for You My Only Love
+            </h1>
+            <div className="glass rounded-xl shadow-2xl p-6 md:p-10 mb-8 transform transition hover:scale-105">
+              <p className="text-lg md:text-2xl text-gray-800 mb-4 font-medium">
+                Hey, my love! Just wanted to remind you how beautiful and Amazing you are. Your smile lights up my world, and by my world I mean You My princess because you are my whole world.
+              </p>
+              <p className="text-lg md:text-2xl text-gray-800 mb-4 font-medium">
+                No matter what’s going on, you’ve always got me, and I will always be by your side in every situation!
+              </p>
+              <p className="text-lg md:text-2xl text-gray-800 mb-4 font-medium">
+                You are my Rasmalai, So eatable and lickable👅🫣🫣
+              </p>
+            </div>
+            <div className="flex justify-center space-x-6 mb-8">
+              <div className="text-5xl heart-pulse">💋</div>
+              <div className="text-5xl float-animation">😘</div>
+              <div className="text-5xl heart-pulse">💋</div>
+            </div>
+            <div className="flex justify-center items-center space-x-4">
+              <button
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full hover:from-purple-600 hover:to-pink-600 transition duration-300 text-lg font-semibold shadow-lg"
+                onClick={handleSurprise}
+              >
+                 Click to Unleash the Magic
+              </button>
+            </div>
+            {showSurprise && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 popup z-50">
+                <div className="glass rounded-xl p-6 max-w-lg text-center">
+                  <p className="text-xl text-wrap md:text-2xl font-bold text-blue-200 typing">
+                    You’re my only love, my everything, My Mohabbat My Ishq💖. I just want to see you and hear your voice badly 😩😩.
+                  </p>
+                  <button
+                    className="mt-4 bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
+                    onClick={() => setShowSurprise(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+            {particles.map(particle => (
+              <div
+                key={particle.id}
+                className={`particle ${particle.color}`}
+                style={{
+                  left: particle.x,
+                  top: particle.y,
+                  fontSize: `${particle.size}px`,
+                  '--tx': `${particle.tx}px`,
+                  '--ty': `${particle.ty}px`,
+                }}
+              >
+                {particle.symbol}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    try {
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    } catch (e) {
+      console.error("React rendering failed:", e);
+    }
+  </script>
+</body>
+</html>
