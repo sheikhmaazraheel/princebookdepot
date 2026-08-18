@@ -9,65 +9,116 @@
   </head>
 
   <body>
-    <!-- ================ FOR NAVBAR ======================= -->
-    <!-- ================ FOR NAVBAR ======================= -->
-    <nav>
-      <div id="hamburger" class="hamburger">&#9776;</div>
-      <div id="logo">
-        <div class="logo"></div>
-      </div>
-      <div id="nav-link">
-        <a href="index.html" class="home-box hover-border">
-          <div class="home-icon"></div>
-          <div class="Home-text">HOME</div>
+            <!-- ================ NAVBAR ======================= -->
+    <header class="site-header" id="site-header">
+      <nav class="navbar" aria-label="Main navigation">
+        <button
+          type="button"
+          class="nav-toggle"
+          id="nav-toggle"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-drawer"
+        >
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+    
+        <a href="index.html" class="navbar-brand" aria-label="Prince Book Depot home">
+          <div class="logo"></div>
         </a>
-        <div class="selector hover-border">
-          <select name="Selector" class="classes">
-            <option value="" selected="selected">Categories</option>
-            <option value="">English Novels</option>
-            <option value="">Urud Novels</option>
-            <option value="">Academic Books</option>
-            <option value="">Poetry</option>
-          </select>
-        </div>
-        <a href="cart.html" class="cart hover-border">
-          <div class="cart-symbol"><span class="cart-count">0</span></div>
-          <div class="cart-text">
-            <p class="Cart-text-p">Cart</p>
+    
+        <div class="navbar-menu" id="navbar-menu">
+          <a href="index.html" class="nav-link" data-nav="home">Home</a>
+    
+          <div class="nav-dropdown">
+            <button
+              type="button"
+              class="nav-link nav-dropdown-trigger"
+              aria-expanded="false"
+              aria-haspopup="true"
+            >
+              Categories
+              <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-dropdown-panel" role="menu">
+              <a href="English-novels.html" class="nav-dropdown-item" role="menuitem">
+                <span class="nav-dropdown-icon" aria-hidden="true">📖</span>
+                <span class="nav-dropdown-text">
+                  <strong>English Novels</strong>
+                  <small>Fiction &amp; bestsellers</small>
+                </span>
+              </a>
+              <a href="Urdu-novels.html" class="nav-dropdown-item" role="menuitem">
+                <span class="nav-dropdown-icon" aria-hidden="true">📚</span>
+                <span class="nav-dropdown-text">
+                  <strong>Urdu Novels</strong>
+                  <small>Classic &amp; modern Urdu</small>
+                </span>
+              </a>
+              <a href="Academic-books.html" class="nav-dropdown-item" role="menuitem">
+                <span class="nav-dropdown-icon" aria-hidden="true">🎓</span>
+                <span class="nav-dropdown-text">
+                  <strong>Academic Books</strong>
+                  <small>Textbooks &amp; guides</small>
+                </span>
+              </a>
+              <a href="Poetry.html" class="nav-dropdown-item" role="menuitem">
+                <span class="nav-dropdown-icon" aria-hidden="true">✒️</span>
+                <span class="nav-dropdown-text">
+                  <strong>Poetry</strong>
+                  <small>Urdu &amp; English verse</small>
+                </span>
+              </a>
+            </div>
           </div>
-        </a>
-        <a href="#ABOUT" class="about hover-border">
-          <p class="about-text">About</p>
-        </a>
-      </div>
-    </nav>
-    <aside id="mobile-menu">
-      <button id="close-menu" aria-label="Close menu" class="close-menu-btn">
-        &times;
-      </button>
-      <a href="index.html" class="home-box hover-border">
-        <div class="home-icon"></div>
-        <div class="Home-text">HOME</div>
-      </a>
-      <div class="selector hover-border">
-        <select name="" class="classes">
-          <option value="" selected="selected">Categories</option>
-          <option value="">English Novels</option>
-          <option value="">Urud Novels</option>
-          <option value="">Academic Books</option>
-          <option value="">Poetry</option>
-        </select>
-      </div>
-      <a href="cart.html" class="cart hover-border">
-        <div class="cart-symbol"><span class="cart-count">0</span></div>
-        <div class="cart-text">
-          <p class="Cart-text-p">Cart</p>
+    
+          <a href="index.html#ABOUT" class="nav-link" data-nav="about">About</a>
         </div>
-      </a>
-      <a href="#ABOUT" class="about hover-border">
-        <p class="about-text">About</p>
-      </a>
-    </aside>
+    
+        <a href="cart.html" class="floating-cart" aria-label="View shopping cart">
+          <svg class="floating-cart-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6h15l-1.5 9h-12L6 6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M6 6L5 3H2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="20" r="1.5" fill="currentColor"/>
+            <circle cx="18" cy="20" r="1.5" fill="currentColor"/>
+          </svg>
+          <span class="cart-count" aria-live="polite">0</span>
+        </a>
+      </nav>
+    
+      <div class="nav-overlay" id="nav-overlay" hidden></div>
+    
+      <aside
+        class="mobile-drawer"
+        id="mobile-drawer"
+        aria-hidden="true"
+        aria-label="Mobile navigation"
+      >
+        <div class="mobile-drawer-header">
+          <span class="mobile-drawer-title">Menu</span>
+          <button type="button" class="mobile-drawer-close" id="nav-close" aria-label="Close menu">
+            &times;
+          </button>
+        </div>
+        <nav class="mobile-drawer-nav">
+          <a href="index.html" class="mobile-nav-link" data-nav="home">Home</a>
+          <div class="mobile-nav-section">
+            <p class="mobile-nav-label">Categories</p>
+            <div class="mobile-category-grid">
+              <a href="English-novels.html" class="mobile-category-card" data-nav="english-novels">English Novels</a>
+              <a href="Urdu-novels.html" class="mobile-category-card" data-nav="urdu-novels">Urdu Novels</a>
+              <a href="Academic-books.html" class="mobile-category-card" data-nav="academic-books">Academic Books</a>
+              <a href="Poetry.html" class="mobile-category-card" data-nav="poetry">Poetry</a>
+            </div>
+          </div>
+          <a href="index.html#ABOUT" class="mobile-nav-link" data-nav="about">About</a>
+        </nav>
+      </aside>
+    </header>
 
     <main class="cart-page">
       <p style="text-align: left; margin: 0 10px">

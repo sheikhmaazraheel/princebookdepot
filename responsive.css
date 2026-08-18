@@ -1,83 +1,66 @@
-#mobile-menu .close-menu-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 2rem;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  cursor: pointer;
-  z-index: 2;
-  padding: 0;
-  line-height: 1;
-  transition: color 0.2s;
+/* ===== Responsive Navbar ===== */
+
+@media screen and (max-width: 900px) {
+  .navbar {
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    min-height: 64px;
+  }
+
+  .nav-toggle {
+    display: flex;
+    order: 1;
+  }
+
+  .navbar-brand {
+    order: 2;
+    justify-self: center;
+  }
+
+  .navbar-menu {
+    display: none;
+  }
+
+  .floating-cart {
+    order: 3;
+    margin-left: 0;
+  }
+
+  .logo {
+    width: 96px;
+    height: 46px;
+  }
+
+  .nav-dropdown-panel {
+    display: none;
+  }
 }
-#mobile-menu .close-menu-btn:hover {
-  color: #ffb347;
+
+@media screen and (min-width: 901px) {
+  .navbar {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .nav-toggle,
+  .mobile-drawer,
+  .nav-overlay {
+    display: none;
+  }
 }
-/* ===== Responsive Design for Prince Book Depot ===== */
 
 @media screen and (max-width: 768px) {
   body {
     overflow-x: hidden;
   }
 
-  /*  ================ Navigation Bar  ================== */
-  nav {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-    width: 100%;
-    margin-right: 0;
-    position: relative;
-  }
-
-  #hamburger {
-    order: 1;
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1200;
-    font-size: 2.2rem;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0 8px;
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-
-  #logo {
-    order: 2;
-    margin: 0 auto;
-    padding: 0;
-    display: flex;
-    flex: 1 1 auto;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .empty {
-    display: none;
-  }
-
-  nav,
+  .site-header,
   #banner,
   .about-section,
   footer,
   .categories {
     width: 100%;
     margin-right: 0;
-  }
-
-  .hover-border {
-    width: 100%;
-    text-align: center;
   }
 
   /* =============== Banner =================== */
@@ -191,222 +174,7 @@
   }
 }
 
-/* HAMBURGER ICON (HIDDEN ON DESKTOP) */
-
-.hamburger {
-  display: none;
-  font-size: 30px;
-  color: white;
-  cursor: pointer;
-  margin: 0 10px;
-}
-
-@media screen and (max-width: 768px) {
-  nav {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    width: 100%;
-    padding: 2px 10px;
-  }
-
-  #hamburger {
-    display: block;
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2.2rem;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0 8px;
-  }
-
-  #logo {
-    margin: 0 auto;
-    padding: 0;
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .logo {
-    transform: scale(0.7);
-  }
-  #nav-link {
-    display: none;
-  }
-
-  #mobile-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 240px;
-    height: 100vh;
-    background-color: #2e5077;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 20px;
-    padding: 50px 30px 20px 20px;
-    transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1101;
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
-  }
-
-  body.show-nav #mobile-menu {
-    transform: translateX(0);
-  }
-
-  #mobile-menu.closing {
-    transform: translateX(-100%);
-  }
-
-  #mobile-menu .close-menu-btn {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 3rem;
-    position: absolute;
-    top: -5px;
-    left: -135px;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    transition: color 0.2s;
-  }
-  #mobile-menu .home-box {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-  }
-
-  #mobile-menu .close-menu-btn:hover {
-    color: #ffb347;
-  }
-
-  #mobile-menu .hover-border {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 10px 20px;
-  }
-
-  #mobile-menu .cart {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px 20px;
-    border: none;
-    gap: 20px;
-    background: transparent;
-    width: 100%;
-  }
-
-  #mobile-menu .cart a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    justify-content: flex-start;
-    text-decoration: none;
-  }
-
-  #mobile-menu .cart-symbol {
-    margin: 0;
-    width: 24px;
-    height: 24px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-
-  #mobile-menu .cart-count {
-    position: absolute;
-    top: 215px;
-    left: 40px;
-    font-size: 12px;
-    font-weight: bold;
-  }
-
-  #mobile-menu .cart-text {
-    margin: 0;
-    padding: 0;
-    height: 15px;
-    font-size: 16px;
-  }
-
-  #mobile-menu .cart-text-p {
-    line-height: 1;
-    color: white;
-    font-size: 16px;
-    margin: 0;
-    padding: 0;
-  }
-  .Home-text {
-    padding-top: 10px;
-  }
-  #mobile-menu .home-box,
-  #mobile-menu .selector,
-  #mobile-menu .about {
-    padding: 10px 20px;
-  }
-}
-/* ===== DESKTOP NAV HIDE ON MOBILE ===== */
-@media screen and (max-width: 768px) {
-  #hamburger {
-    display: block;
-  }
-
-  #mobile-menu.about {
-    display: inline-block;
-    text-align: right;
-    width: auto;
-  }
-
-  nav > .home-box,
-  nav > .selector,
-  nav > .cart,
-  nav > .about {
-    display: none;
-  }
-}
-/*  Other Styling For Mobile Menu  */
-
-/* ===== MOBILE MENU CONTAINER & OVERLAY ===== */
-#menu-overlay {
-  display: contents;
-}
-
-#menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1100;
-  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-body.show-nav #menu-overlay {
-  opacity: 1;
-  pointer-events: auto;
-}
+/* ===== Responsive Design for Prince Book Depot ===== */
 
 /* ================ PRODUCTS ================= */
 @media screen and (max-width: 768px) {
@@ -415,7 +183,7 @@ body.show-nav #menu-overlay {
   }
   .search-results {
     width: 350px;
-    top: 105px;
+    top: 76px;
   }
     .Product-grid {
     grid-template-columns: repeat(2, 1fr);

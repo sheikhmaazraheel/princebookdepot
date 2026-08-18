@@ -1,46 +1,114 @@
 const githubURL = "https://sheikhmaazraheel.github.io/princebookdepot";
 let allProducts = [];
-// ====== MOBILE NAVBAR LOGIC ======
+// ====== MODERN NAVBAR ======
 document.addEventListener("DOMContentLoaded", function () {
-  const hamburger = document.getElementById("hamburger");
-  const closeBtn = document.getElementById("close-menu");
-  const mobileMenu = document.getElementById("mobile-menu");
+  const siteHeader = document.getElementById("site-header");
+  const navToggle = document.getElementById("nav-toggle");
+  const navClose = document.getElementById("nav-close");
+  const navOverlay = document.getElementById("nav-overlay");
+  const mobileDrawer = document.getElementById("mobile-drawer");
+  const dropdowns = document.querySelectorAll(".nav-dropdown");
 
-  function openMenu() {
-    document.body.classList.add("show-nav");
-    hamburger.style.display = "none";
-    if (mobileMenu) {
-      mobileMenu.classList.remove("closing");
-      mobileMenu.style.transition = "transform 0.3s cubic-bezier(0.4,0,0.2,1)";
-    }
+  function setNavOpen(isOpen) {
+    if (!siteHeader) return;
+    siteHeader.classList.toggle("nav-open", isOpen);
+    document.body.classList.toggle("nav-locked", isOpen);
+    if (navToggle) navToggle.setAttribute("aria-expanded", String(isOpen));
+    if (mobileDrawer) mobileDrawer.setAttribute("aria-hidden", String(!isOpen));
+    if (navOverlay) navOverlay.hidden = !isOpen;
   }
 
-  function closeMenu() {
-    if (mobileMenu) {
-      mobileMenu.classList.add("closing");
-      mobileMenu.style.transition = "transform 0.3s cubic-bezier(0.4,0,0.2,1)";
-      setTimeout(() => {
-        document.body.classList.remove("show-nav");
-        mobileMenu.classList.remove("closing");
-        hamburger.style.display = "block";
-      }, 200); // Match transition duration
-    }
+  function openNav() {
+    setNavOpen(true);
   }
 
-  if (hamburger) hamburger.addEventListener("click", openMenu);
-  if (closeBtn) closeBtn.addEventListener("click", closeMenu);
+  function closeNav() {
+    setNavOpen(false);
+    dropdowns.forEach((dropdown) => {
+      dropdown.classList.remove("is-open");
+      const trigger = dropdown.querySelector(".nav-dropdown-trigger");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  if (navToggle) navToggle.addEventListener("click", openNav);
+  if (navClose) navClose.addEventListener("click", closeNav);
+  if (navOverlay) navOverlay.addEventListener("click", closeNav);
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && document.body.classList.contains("show-nav")) {
-      closeMenu();
+    if (e.key === "Escape" && siteHeader?.classList.contains("nav-open")) {
+      closeNav();
     }
   });
+
+  mobileDrawer?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeNav);
+  });
+
+  dropdowns.forEach((dropdown) => {
+    const trigger = dropdown.querySelector(".nav-dropdown-trigger");
+    if (!trigger) return;
+
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const willOpen = !dropdown.classList.contains("is-open");
+      dropdowns.forEach((item) => {
+        item.classList.remove("is-open");
+        const btn = item.querySelector(".nav-dropdown-trigger");
+        if (btn) btn.setAttribute("aria-expanded", "false");
+      });
+      dropdown.classList.toggle("is-open", willOpen);
+      trigger.setAttribute("aria-expanded", String(willOpen));
+    });
+  });
+
+  document.addEventListener("click", () => {
+    dropdowns.forEach((dropdown) => {
+      dropdown.classList.remove("is-open");
+      const trigger = dropdown.querySelector(".nav-dropdown-trigger");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  const pageKey = (() => {
+    const path = window.location.pathname.split("/").pop() || "index.html";
+    const map = {
+      "index.html": "home",
+      "English-novels.html": "english-novels",
+      "Urdu-novels.html": "urdu-novels",
+      "Academic-books.html": "academic-books",
+      "Poetry.html": "poetry",
+      "cart.html": "cart",
+      "checkout.html": "checkout",
+    };
+    return map[path] || "";
+  })();
+
+  document.querySelectorAll("[data-nav]").forEach((el) => {
+    if (el.dataset.nav === pageKey) {
+      el.classList.add("is-active");
+    }
+  });
+
+  window.addEventListener("scroll", () => {
+    if (!siteHeader) return;
+    siteHeader.classList.toggle("is-scrolled", window.scrollY > 8);
+  });
 });
+
+function updateCartCountDisplay(count) {
+  document.querySelectorAll(".cart-count").forEach((el) => {
+    el.textContent = count;
+    el.dataset.count = String(count);
+    el.classList.remove("cart-count--pop");
+    void el.offsetWidth;
+    if (count > 0) el.classList.add("cart-count--pop");
+  });
+}
 
 // ============== Rendering Products ===============
 document.addEventListener("DOMContentLoaded", () => {
   let pbdcart = JSON.parse(localStorage.getItem("pbdcart")) || {};
-  const cartCount = document.querySelector(".cart-count");
   // Get Cart Product Count
   function getCartProductCount() {
     return Object.keys(pbdcart).length;
@@ -127,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         updateCartPopup();
       }
-      cartCount.textContent = getCartProductCount();
+      updateCartCountDisplay(getCartProductCount());
     });
 
     // ➕ Increase Quantity
@@ -142,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         qtyDisplay.style.transform = "scale(1)";
       }, 150);
       updateCartPopup();
-      cartCount.textContent = getCartProductCount();
+      updateCartCountDisplay(getCartProductCount());
     });
 
     // ➖ Decrease Quantity
@@ -173,10 +241,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 150);
         updateCartPopup();
       }
-      cartCount.textContent = getCartProductCount();
+      updateCartCountDisplay(getCartProductCount());
     });
   }
-  cartCount.textContent = getCartProductCount();
+  updateCartCountDisplay(getCartProductCount());
 
   // Builds one product card (with cart logic already hooked up).
   // idPrefix lets the same product be rendered into more than one
@@ -397,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Save and reload
         localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
-        cartCount.textContent = getCartProductCount();
+        updateCartCountDisplay(getCartProductCount());
         location.reload();
       });
     });
