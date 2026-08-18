@@ -203,80 +203,7 @@ nav {
 #mobile-menu {
   display: none;
 }
-/* ============================= For Banner ==================== */
-#banner {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  color: white;
-  height: 600px;
-  overflow: hidden;
-  position: relative;
-  background: linear-gradient(
-    160deg,
-    #2e5077 0%,
-    #2b6799 30%,
-    #00c6ff 70%,
-    #0072ff 100%
-  );
-}
-
-#banner::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 50px;
-  /* fade height */
-  width: 100%;
-  background: linear-gradient(to bottom, transparent, #ddd);
-  /* blending */
-  pointer-events: none;
-  /* allow clicks to pass through */
-}
-
-#Welcome-text-box {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-}
-
-#Welcome-text-box p {
-  background-image: linear-gradient(
-    40deg,
-    #e63585 0%,
-    #f8fafc 50%,
-    #ffc107 70%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  animation: fadeInUp 1.5s ease-out;
-  font-family: "Caveat", cursive;
-  /* A more elegant, slightly calligraphic font */
-  /* Slightly off-white for a softer look */
-  font-size: 6em;
-  /* Smaller than the main text */
-  font-weight: 10000;
-  /* Regular weight */
-  letter-spacing: 0.01em;
-  /* Slight letter spacing for elegance */
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-  /* Subtle shadow for depth */
-}
-
-#banner-image {
-  background-image: url("./images/PRINCE\ logo.png");
-  background-size: cover;
-  height: 300px;
-  width: auto;
-  animation: fadeInUp 1.5s ease-out;
-}
-
+/* ============================= For Hero Section ==================== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -289,56 +216,118 @@ nav {
   }
 }
 
-#detail {
-  width: auto;
-  color: #fff;
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  min-height: 340px;
+  max-height: 560px;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-}
-
-#detail p {
-  font-family: "Roboto", sans-serif;
-  width: 400px;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  animation: fadeInUp 1.5s ease-out;
-  text-align: justify;
-  padding-top: 0.5rem;
-}
-/* Button in Banner */
-#detail button {
-  margin: 25px;
-  background: linear-gradient(90deg, #ff99cc 0%, #f5f5f5 50%, #ffe082 100%);
-  border-radius: 8px;
-  color: #2e5077; /* Dark blue text for contrast and theme cohesion */
-  border: none;
-  height: 30px;
-  width: 70px;
-  font-size: 18px;
-  animation: fadeInUp 1.5s ease-out;
-}
-
-#detail button a {
-  color: #2e5077; /* Matches text color */
-  text-decoration: none;
-}
-
-#detail button:hover {
+  /* Layered so the section still looks fully designed even before a real
+     promo photo is added at images/hero-banner.jpg (see notes) */
   background: linear-gradient(
-    90deg,
-    #f28cb8 0%,
-    #e8e8e8 50%,
-    #ffd166 100%
-  ); /* Slightly deeper tones for hover */
-  color: #2e5077;
-  transition: all 0.3s ease;
-  transform: scale(1.1);
-  cursor: pointer;
+      115deg,
+      rgba(17, 32, 56, 0.88) 10%,
+      rgba(29, 55, 88, 0.6) 45%,
+      rgba(0, 198, 255, 0.35) 100%
+    ), url("./images/hero-banner.jpg") center/cover no-repeat,
+    linear-gradient(135deg, #1d3758 0%, #2e5077 45%, #00c6ff 100%);
 }
 
-#detail button:active {
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 85% 20%,
+    rgba(255, 209, 102, 0.25),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.hero-badge {
+  position: absolute;
+  top: clamp(16px, 4vw, 36px);
+  right: clamp(16px, 4vw, 48px);
+  background: linear-gradient(135deg, #ffd166, #ff9f43);
+  color: #1d3758;
+  font-weight: 800;
+  font-size: clamp(0.75rem, 1.6vw, 1rem);
+  padding: 10px 18px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transform: rotate(4deg);
+  z-index: 2;
+  animation: floatBadge 3s ease-in-out infinite;
+}
+
+@keyframes floatBadge {
+  0%,
+  100% {
+    transform: rotate(4deg) translateY(0);
+  }
+  50% {
+    transform: rotate(4deg) translateY(-8px);
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  padding: 0 clamp(20px, 6vw, 80px);
+  color: #fff;
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-eyebrow {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: clamp(0.75rem, 1.4vw, 0.95rem);
+  color: #ffd166;
+  margin-bottom: 10px;
+}
+
+.hero-title {
+  font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.12;
+  margin-bottom: 14px;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+.hero-subtext {
+  font-family: "Roboto", sans-serif;
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  line-height: 1.55;
+  opacity: 0.92;
+  margin-bottom: 24px;
+  max-width: 480px;
+}
+
+.hero-cta {
+  display: inline-block;
+  background: linear-gradient(90deg, #ff99cc 0%, #f5f5f5 50%, #ffe082 100%);
+  color: #1d3758;
+  font-weight: 800;
+  padding: 14px 32px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.hero-cta:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+
+.hero-cta:active {
   transform: scale(1);
 }
 
@@ -361,70 +350,128 @@ nav {
   color: transparent;
 }
 
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  justify-items: center;
-  max-width: 1200px;
+/* Horizontal circular category navigation */
+.category-circles {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  justify-content: flex-start;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 10px 20px 26px;
 }
 
-.category-card {
-  background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  padding: 20px;
-  width: 100%;
-  max-width: 300px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+@media (min-width: 700px) {
+  .category-circles {
+    justify-content: center;
+  }
 }
 
-.category-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+.category-circles::-webkit-scrollbar {
+  height: 6px;
 }
 
-.category-card img {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  border-radius: 12px;
+.category-circles::-webkit-scrollbar-thumb {
+  background: rgba(46, 80, 119, 0.25);
+  border-radius: 10px;
 }
 
-.category-card h3 {
-  margin: 15px 0 10px;
-  font-size: 1.3rem;
-  color: #007bff;
-}
-
-.category-btn {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 16px;
-  background: linear-gradient(50deg, #4fc3f7 0%, #e6f0fa 50%, #ffd740 100%);
-  color: #2e5077; /* Dark blue text for contrast and theme cohesion */
-  border: none;
-  border-radius: 8px;
+.category-circle {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 130px;
   text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  scroll-snap-align: start;
+  transition: transform 0.25s ease;
 }
 
-.category-btn:hover {
-  background: linear-gradient(
-    90deg,
-    #29b6f6 0%,
-    #d5e8fa 50%,
-    #ffc107 100%
-  ); /* Slightly deeper tones for hover */
-  transform: scale(1.05);
-  cursor: pointer;
+.category-circle:hover {
+  transform: translateY(-6px);
 }
 
-.category-btn:active {
-  transform: scale(1);
+.circle-img {
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-color: #dbe6ff;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 25px rgba(29, 55, 88, 0.18),
+    0 0 0 3px rgba(0, 198, 255, 0.25);
+  transition: box-shadow 0.25s ease;
+}
+
+.category-circle:hover .circle-img {
+  box-shadow: 0 14px 30px rgba(29, 55, 88, 0.28),
+    0 0 0 4px rgba(0, 198, 255, 0.45);
+}
+
+.circle-label {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #1d3758;
+  text-align: center;
+}
+
+/* ============== Home page: Popular / Best Seller product rails =========== */
+.home-section {
+  max-width: 1400px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.home-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-section-header .heading {
+  margin: 20px 0 6px;
+  text-align: left;
+}
+
+.see-all-link {
+  flex-shrink: 0;
+  color: #0072ff;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.see-all-link:hover {
+  color: #1d3758;
+}
+
+.product-scroller {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding: 10px 4px 20px;
+}
+
+.product-scroller::-webkit-scrollbar {
+  height: 6px;
+}
+
+.product-scroller::-webkit-scrollbar-thumb {
+  background: rgba(46, 80, 119, 0.25);
+  border-radius: 10px;
+}
+
+.product-scroller .Product {
+  flex: 0 0 auto;
+  width: 230px;
+  scroll-snap-align: start;
 }
 /*  =========================== About Section ===================== */
 /* ----- Floating WA Icon */

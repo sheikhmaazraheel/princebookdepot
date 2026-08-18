@@ -178,70 +178,110 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   cartCount.textContent = getCartProductCount();
 
-  // ✅ PRODUCT PAGES
-  if (document.body.dataset.category) {
+  // Builds one product card (with cart logic already hooked up).
+  // idPrefix lets the same product be rendered into more than one
+  // section on a page (e.g. "Most Popular" and "Best Sellers" on the
+  // homepage) without ending up with duplicate element ids.
+  function createProductCard(product, idPrefix = "") {
+    const div = document.createElement("div");
+    const basePrice = parseFloat(product.price);
+    const discount = parseFloat(product.discount) || 0;
+    const finalPrice = Math.round(basePrice - (basePrice * discount) / 100);
+    div.className = "Product";
+    div.id = `${idPrefix}${product.id}`;
+    div.dataset.id = product.id;
+    div.dataset.name = product.name;
+    div.dataset.price = finalPrice;
+    if (product.discount > 0) {
+      div.innerHTML = `
+      <div class="discount">${product.discount || 0}%</div>
+      <img src="${product.image}" alt="${product.name}" />
+      <div class="Product-name">${product.name}</div>
+      <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
+      <button class="add-to-cart-button">Add to Cart</button>
+      <div class="quantity-controls">
+        <button class="decrease">−</button>
+        <span class="quantity">1</span>
+        <button class="increase">+</button>
+      </div>
+      `;
+    } else {
+      div.innerHTML = `
+      <img src="${product.image}" alt="${product.name}" />
+      <div class="Product-name">${product.name}</div>
+      <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
+      <button class="add-to-cart-button">Add to Cart</button>
+      <div class="quantity-controls">
+        <button class="decrease">−</button>
+        <span class="quantity">1</span>
+        <button class="increase">+</button>
+      </div>
+      `;
+    }
+    setupCartForProduct(div); // Hook cart logic
+    return div;
+  }
+
+  // ✅ PRODUCT PAGES + HOME PAGE PRODUCT RAILS
+  const popularContainer = document.getElementById("popular-products");
+  const bestsellerContainer = document.getElementById("bestseller-products");
+  const popularLoader = document.getElementById("popular-loader");
+  const bestsellerLoader = document.getElementById("bestseller-loader");
+
+  if (document.body.dataset.category || popularContainer || bestsellerContainer) {
     const category = document.body.dataset.category;
     const loader = document.getElementById("loader");
     const container = document.getElementById("Product-grid");
-    container.style.display = "none";
+    if (container) container.style.display = "none";
+
     fetch(
       "https://script.google.com/macros/s/AKfycbxMoDKCh-ywDckfEeyLklRSSHO6932khQ5-DegVL0FqRwza98AgDrgSQAxgW10b31tm/exec"
     )
       .then((res) => res.json())
       .then((products) => {
-        loader.style.display = "none";
-        container.style.display = "grid";
         allProducts = products;
-        const filtered = products.filter(
-          (p) => p.category === category && !!p.availible
-        );
 
-        filtered.forEach((product) => {
-          // console.log("Rendering Products");
-          const div = document.createElement("div");
-          const basePrice = parseFloat(product.price);
-          const discount = parseFloat(product.discount) || 0;
-          const finalPrice = Math.round(
-            basePrice - (basePrice * discount) / 100
+        // ----- Category listing pages (English/Urdu novels, Poetry, Academic) -----
+        if (category && container) {
+          loader.style.display = "none";
+          container.style.display = "grid";
+          const filtered = products.filter(
+            (p) => p.category === category && !!p.availible
           );
-          div.className = "Product";
-          div.id = `${product.id}`;
-          div.dataset.id = product.id;
-          div.dataset.name = product.name;
-          div.dataset.price = finalPrice;
-          if (product.discount > 0) {
-            div.innerHTML = `
-            <div class="discount">${product.discount || 0}%</div>
-            <img src="${product.image}" alt="${product.name}" />
-            <div class="Product-name">${product.name}</div>
-            <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <div class="quantity-controls">
-              <button class="decrease">−</button>
-              <span class="quantity">1</span>
-              <button class="increase">+</button>
-            </div>
-            `;
-          } else {
-            div.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" />
-            <div class="Product-name">${product.name}</div>
-            <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
-            <button class="add-to-cart-button">Add to Cart</button>
-            <div class="quantity-controls">
-              <button class="decrease">−</button>
-              <span class="quantity">1</span>
-              <button class="increase">+</button>
-            </div>
-            `;
+          filtered.forEach((product) => {
+            container.appendChild(createProductCard(product));
+          });
+        }
+
+        // ----- Home page: Most Popular Novels / This Week's Best Sellers -----
+        // TODO: once the sheet has real "popular"/"bestseller" flags, filter
+        // on those instead. For now both rails show all English novels.
+        if (popularContainer || bestsellerContainer) {
+          const englishNovels = products.filter(
+            (p) => p.category === "English-novels" && !!p.availible
+          );
+          if (popularLoader) popularLoader.style.display = "none";
+          if (bestsellerLoader) bestsellerLoader.style.display = "none";
+
+          if (popularContainer) {
+            popularContainer.style.display = "flex";
+            englishNovels.forEach((product) => {
+              popularContainer.appendChild(createProductCard(product, "popular-"));
+            });
           }
-          container.appendChild(div);
-          setupCartForProduct(div); // Hook cart logic
-          document.querySelectorAll(".Product").forEach(setupCartForProduct);
-        });
-        // Show cart popup if cart contains items
-        if (Object.keys(pbdcart).length > 0 && document.body.dataset.category) {
-          const cartPopup = document.getElementById("cart-popup");
+          if (bestsellerContainer) {
+            bestsellerContainer.style.display = "flex";
+            englishNovels.forEach((product) => {
+              bestsellerContainer.appendChild(
+                createProductCard(product, "bestseller-")
+              );
+            });
+          }
+        }
+
+        // Show cart popup if cart contains items and this page has one
+        const cartPopup = document.getElementById("cart-popup");
+        if (Object.keys(pbdcart).length > 0 && cartPopup) {
           if (!cartPopup.classList.contains("show")) {
             cartPopup.classList.add("show-before");
             updateCartPopup();

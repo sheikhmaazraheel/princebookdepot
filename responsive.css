@@ -554,3 +554,68 @@ body.show-nav #menu-overlay {
     font-size: 0.95rem;
   }
 }
+
+/* ======= FOR Hero Section (mobile) ======= */
+@media screen and (max-width: 768px) {
+  .hero {
+    aspect-ratio: 4 / 5;
+    min-height: 420px;
+    max-height: 620px;
+    align-items: flex-end;
+    padding-bottom: 36px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-badge {
+    top: 16px;
+    right: 16px;
+  }
+
+  .hero-cta {
+    width: 100%;
+    text-align: center;
+    padding: 14px 0;
+  }
+}
+
+/* ======= FOR Category Circles (mobile) ======= */
+@media screen and (max-width: 768px) {
+  .category-circles {
+    gap: 18px;
+    padding: 8px 16px 20px;
+  }
+
+  .circle-img {
+    width: 84px;
+    height: 84px;
+    border-width: 3px;
+  }
+
+  .circle-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* ======= FOR Home Product Rails (mobile) ======= */
+@media screen and (max-width: 768px) {
+  .home-section {
+    margin: 34px auto;
+    padding: 0 12px;
+  }
+
+  .home-section-header .heading {
+    font-size: 1.4rem;
+    margin: 14px 0 6px;
+  }
+
+  .see-all-link {
+    font-size: 0.85rem;
+  }
+
+  .product-scroller .Product {
+    width: 168px;
+  }
+}

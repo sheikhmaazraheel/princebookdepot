@@ -67,63 +67,81 @@
         <p class="about-text">About</p>
       </a>
     </aside>
-    <!-- ================== For Banner ========================= -->
-    <div id="banner">
-      <div id="Welcome-text-box">
-        <p id="welcome-text">WELCOME TO</p>
-        <div id="banner-image"></div>
+    <!-- ================== For Hero Section ========================= -->
+    <header class="hero" id="hero">
+      <div class="hero-badge">Up to 40% OFF</div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">📚 Prince Book Depot</p>
+        <h1 class="hero-title">This Season's<br />Best Reads,<br />Best Prices</h1>
+        <p class="hero-subtext">
+          Novels, academic books &amp; poetry at wholesale prices — delivered
+          fast, all across Karachi.
+        </p>
+        <a href="#Shop-Now" class="hero-cta">Shop Now</a>
       </div>
-      <div id="detail">
-        <p style="padding-top: 1.5rem">
-          We offer a comprehensive collection of textbooks for all educational
-          levels, including the Federal Board, Aga Khan Board, and Punjab Board.
-        </p>
-        <p>
-          All subjects are available for Classes IX, X, XI, and XII, along with
-          specialized resources for MDCAT and ECAT preparation. We also stock a
-          wide range of Medical and Dental books.
-        </p>
-        <p>
-          All books are offered at wholesale prices with attractive discounts.
-        </p>
-
-        <p>
-          In addition, we feature a diverse selection of English novels at
-          highly affordable rates.
-        </p>
-        <button value="#Shop-Now"><a href="#Shop-Now">Shop Now</a></button>
-      </div>
-    </div>
+    </header>
     <!-- ================== For Categories ===================== -->
     <section id="Shop-Now" class="categories">
-      <h2 class="heading">Explore Categories</h2>
-      <div class="category-grid">
-        <div class="category-card">
-          <h3>English Novels</h3>
-          <img src="images/English-Novel-Main-Title.jpg" alt="English Novels" />
-          <a href="English-novels.html" class="category-btn">Explore</a>
-        </div>
-        <div class="category-card">
-          <h3>Urdu Novels</h3>
-          <img src="images/Urdu-Novel-Main-Title.jpg" alt="Urud Novels" />
-          <a href="Urdu-novels.html" class="category-btn">Explore</a>
-        </div>
-        <div class="category-card">
-          <h3>Poetry</h3>
-          <img src="images/Poetry-Main-Title.jpg" alt="Poetry Image" />
-          <a href="Poetry.html" class="category-btn">Explore</a>
-        </div>
-        <div class="category-card">
-          <h3>Academic Books</h3>
-          <img
-            src="images/Academic Books Main Title.jpg"
-            alt="Academic Books"
-          />
-          <a href="Academic-books.html" class="category-btn">Explore</a>
-        </div>
-        
-        <!-- Add more cards here -->
+      <h2 class="heading">Shop by Category</h2>
+      <div class="category-circles">
+        <a href="English-novels.html" class="category-circle">
+          <div
+            class="circle-img"
+            style="background-image: url('images/English-Novel-Main-Title.jpg')"
+          ></div>
+          <span class="circle-label">English Novels</span>
+        </a>
+        <a href="Urdu-novels.html" class="category-circle">
+          <div
+            class="circle-img"
+            style="background-image: url('images/Urdu-Novel-Main-Title.jpg')"
+          ></div>
+          <span class="circle-label">Urdu Novels</span>
+        </a>
+        <a href="Poetry.html" class="category-circle">
+          <div
+            class="circle-img"
+            style="background-image: url('images/Poetry-Main-Title.jpg')"
+          ></div>
+          <span class="circle-label">Poetry</span>
+        </a>
+        <a href="Academic-books.html" class="category-circle">
+          <div
+            class="circle-img"
+            style="background-image: url('images/Academic Books Main Title.jpg')"
+          ></div>
+          <span class="circle-label">Academic Books</span>
+        </a>
+        <!-- Add more circles here -->
       </div>
+    </section>
+    <!-- ================== Most Popular Novels ===================== -->
+    <section class="home-section" id="popular-section">
+      <div class="home-section-header">
+        <h2 class="heading">Most Popular Novels</h2>
+        <a href="English-novels.html" class="see-all-link">See All →</a>
+      </div>
+      <div id="popular-loader" class="shimmer-loader">
+        <div class="shimmer-box"></div>
+        <div class="shimmer-box"></div>
+        <div class="shimmer-box"></div>
+        <p>Loading Products...</p>
+      </div>
+      <div class="product-scroller" id="popular-products"></div>
+    </section>
+    <!-- ================== This Week's Best Sellers ===================== -->
+    <section class="home-section" id="bestseller-section">
+      <div class="home-section-header">
+        <h2 class="heading">This Week's Best Sellers</h2>
+        <a href="English-novels.html" class="see-all-link">See All →</a>
+      </div>
+      <div id="bestseller-loader" class="shimmer-loader">
+        <div class="shimmer-box"></div>
+        <div class="shimmer-box"></div>
+        <div class="shimmer-box"></div>
+        <p>Loading Products...</p>
+      </div>
+      <div class="product-scroller" id="bestseller-products"></div>
     </section>
     <!-- ======================== Floating WA ICON -->
     <a
@@ -263,6 +281,11 @@
         <p>Designed by M. Maaz Raheel</p>
       </div>
     </footer>
+    <a href="cart.html" id="cart-popup" class="cart-popup">
+      <div class="popupCartCount"></div>
+      <div class="view-cart-btn">View Cart</div>
+      <div class="popupCartTotal"></div>
+    </a>
     <!-- ===================  Script =============== -->
 
     <script src="JS/script.js"></script>
