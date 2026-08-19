@@ -1,5 +1,101 @@
 const githubURL = "https://sheikhmaazraheel.github.io/princebookdepot";
 let allProducts = [];
+
+// Cards fade/slide into view the first time they enter the viewport.
+// One shared observer for the whole page (cheaper than one per card).
+const revealObserver =
+  "IntersectionObserver" in window
+    ? new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      )
+    : null;
+
+// Auto-advances a horizontally-scrolling product rail (Most Popular /
+// Best Sellers) while it is visible on screen, pausing when the user
+// scrolls/touches it themselves and resuming a few seconds after they
+// stop, and pausing entirely while it's off-screen. Respects
+// prefers-reduced-motion.
+function initAutoScrollRail(container) {
+  if (!container) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const INTERVAL_MS = 3500; // time to "look" at each set of products
+  const RESUME_DELAY_MS = 4000; // wait this long after user interaction
+  let timer = null;
+  let resumeTimer = null;
+  let isVisible = false;
+
+  function getStep() {
+    const firstCard = container.querySelector(".Product");
+    if (!firstCard) return container.clientWidth;
+    const gap = parseFloat(getComputedStyle(container).columnGap) || 0;
+    return firstCard.getBoundingClientRect().width + gap;
+  }
+
+  function advance() {
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    if (maxScroll <= 4) return; // nothing to scroll
+    const step = getStep();
+    const next = container.scrollLeft + step;
+    container.scrollTo({
+      left: next >= maxScroll - 4 ? 0 : next, // loop back to the start
+      behavior: "smooth",
+    });
+  }
+
+  function start() {
+    if (timer) return;
+    timer = setInterval(advance, INTERVAL_MS);
+  }
+
+  function stop() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  function pauseThenResume() {
+    stop();
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => {
+      if (isVisible) start();
+    }, RESUME_DELAY_MS);
+  }
+
+  container.addEventListener("pointerdown", pauseThenResume);
+  container.addEventListener("touchstart", pauseThenResume, { passive: true });
+  container.addEventListener("wheel", pauseThenResume, { passive: true });
+  container.addEventListener("mouseenter", stop);
+  container.addEventListener("mouseleave", () => {
+    if (isVisible) start();
+  });
+
+  if ("IntersectionObserver" in window) {
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible) start();
+          else stop();
+        });
+      },
+      { threshold: 0.35 }
+    );
+    visibilityObserver.observe(container);
+  } else {
+    isVisible = true;
+    start();
+  }
+}
 // ====== MODERN NAVBAR ======
 document.addEventListener("DOMContentLoaded", function () {
   const siteHeader = document.getElementById("site-header");
@@ -287,6 +383,11 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
     setupCartForProduct(div); // Hook cart logic
+
+    div.classList.add("reveal");
+    if (revealObserver) revealObserver.observe(div);
+    else div.classList.add("is-visible");
+
     return div;
   }
 
@@ -302,11 +403,55 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("Product-grid");
     if (container) container.style.display = "none";
 
-    fetch(
-      "https://script.google.com/macros/s/AKfycbxMoDKCh-ywDckfEeyLklRSSHO6932khQ5-DegVL0FqRwza98AgDrgSQAxgW10b31tm/exec"
-    )
-      .then((res) => res.json())
-      .then((products) => {
+    const productApiUrl =
+      "https://script.google.com/macros/s/AKfycbxMoDKCh-ywDckfEeyLklRSSHO6932khQ5-DegVL0FqRwza98AgDrgSQAxgW10b31tm/exec";
+    const productCacheKey = "pbd-products-cache";
+
+    function showProductLoadError() {
+      if (loader) {
+        loader.innerHTML = "<p>Products are temporarily unavailable. Please refresh and try again.</p>";
+      }
+      [popularLoader, bestsellerLoader].forEach((productLoader) => {
+        if (productLoader) {
+          productLoader.innerHTML = "<p>Products are temporarily unavailable. Please refresh and try again.</p>";
+        }
+      });
+    }
+
+    function readCachedProducts() {
+      try {
+        const cachedProducts = JSON.parse(localStorage.getItem(productCacheKey));
+        return Array.isArray(cachedProducts) ? cachedProducts : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function fetchProducts(attempt = 1) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
+      return fetch(productApiUrl, { signal: controller.signal })
+        .then((res) => {
+          if (!res.ok) throw new Error(`Product API returned ${res.status}`);
+          return res.json();
+        })
+        .finally(() => clearTimeout(timeout))
+        .catch((error) => {
+          if (attempt < 2) {
+            return new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
+              fetchProducts(attempt + 1)
+            );
+          }
+          throw error;
+        });
+    }
+
+    function renderProducts(products) {
+      if (container) container.innerHTML = "";
+      if (popularContainer) popularContainer.innerHTML = "";
+      if (bestsellerContainer) bestsellerContainer.innerHTML = "";
+
         allProducts = products;
 
         // ----- Category listing pages (English/Urdu novels, Poetry, Academic) -----
@@ -332,19 +477,28 @@ document.addEventListener("DOMContentLoaded", () => {
           if (bestsellerLoader) bestsellerLoader.style.display = "none";
 
           if (popularContainer) {
-            popularContainer.style.display = "flex";
+            popularContainer.style.display = "grid";
             englishNovels.forEach((product) => {
               popularContainer.appendChild(createProductCard(product, "popular-"));
             });
           }
           if (bestsellerContainer) {
-            bestsellerContainer.style.display = "flex";
-            englishNovels.forEach((product) => {
-              bestsellerContainer.appendChild(
-                createProductCard(product, "bestseller-")
-              );
-            });
+            bestsellerContainer.style.display = "grid";
+            // Best Sellers rail shows the same novels in reverse order for
+            // now, so it doesn't look identical to Most Popular. TODO:
+            // swap for a real bestseller list/flag once available.
+            englishNovels
+              .slice()
+              .reverse()
+              .forEach((product) => {
+                bestsellerContainer.appendChild(
+                  createProductCard(product, "bestseller-")
+                );
+              });
           }
+
+          initAutoScrollRail(popularContainer);
+          initAutoScrollRail(bestsellerContainer);
         }
 
         // Show cart popup if cart contains items and this page has one
@@ -359,6 +513,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 200);
           }
         }
+    }
+
+    const cachedProducts = readCachedProducts();
+    if (cachedProducts) renderProducts(cachedProducts);
+
+    fetchProducts()
+      .then((products) => {
+        localStorage.setItem(productCacheKey, JSON.stringify(products));
+        renderProducts(products);
+      })
+      .catch((error) => {
+        console.error("Unable to load products:", error);
+        if (!cachedProducts) showProductLoadError();
       });
   }
   // ✅ CART PAGE
