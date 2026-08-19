@@ -1,1 +1,110 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Prince Book Depot - Add Product</title><link rel="stylesheet" href="./style.css"></head><body><main class="page"><section class="panel"><span class="eyebrow">PRINCE BOOK DEPOT</span><h1>Add Product</h1><p class="muted">Store product data and its image in the backend.</p><form id="product-form" enctype="multipart/form-data"><div class="grid"><label>Product ID<input name="id" required placeholder="PBD-001"></label><label>Product Name<input name="name" required placeholder="Book title"></label><label>Price<input name="price" type="number" min="0" step="0.01" required></label><label>Discount %<input name="discount" type="number" min="0" max="100" step="0.01" value="0"></label><label>Category<select name="category" required><option value="">Select category</option><option value="English-novels">English Novels</option><option value="Urdu-novels">Urdu Novels</option><option value="Poetry">Poetry</option><option value="Academic-books">Academic Books</option></select></label><label>Colors<input name="colors" placeholder="Red, Blue"></label><label>Sizes<input name="sizes" placeholder="Small, Medium, Large"></label><label class="check"><input name="mostSell" type="checkbox"> Most Seller</label><label class="check"><input name="available" type="checkbox" checked> Available</label><label class="full">Description<textarea name="description" rows="4"></textarea></label><label class="full">Product Image<input name="image" type="file" accept="image/*" required></label></div><div class="preview"><span>Preview</span><img id="preview-img" alt="Image preview"></div><button id="submit-button">Save Product</button><div id="status" role="status" aria-live="polite"></div></form></section></main><script src="./script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prince Book Depot — Add Product</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <main class="page">
+      <section class="panel">
+        <span class="eyebrow">PRINCE BOOK DEPOT</span>
+        <h1>Add Product</h1>
+        <p class="muted">
+          Add a product, assign its category and choose where it should appear on the store.
+        </p>
+
+        <form id="product-form" enctype="multipart/form-data" novalidate>
+          <div class="grid">
+            <label>
+              Product ID
+              <input name="id" required placeholder="PBD-001" autocomplete="off" />
+            </label>
+
+            <label>
+              Product Name
+              <input name="name" required placeholder="Book title" autocomplete="off" />
+            </label>
+
+            <label>
+              Price (Rs.)
+              <input name="price" type="number" min="0" step="0.01" required placeholder="1200" />
+            </label>
+
+            <label>
+              Discount (%)
+              <input name="discount" type="number" min="0" max="100" step="0.01" value="0" />
+            </label>
+
+            <label class="full">
+              Category
+              <select name="category" required>
+                <option value="">Select category</option>
+                <option value="English-novels">English Novels</option>
+                <option value="Urdu-novels">Urdu Novels</option>
+                <option value="Poetry">Poetry</option>
+                <option value="Academic-books">Academic Books</option>
+                <option value="Bundle">Bundle</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="section-block">
+            <div class="section-title">Store Placement</div>
+            <div class="flag-grid">
+              <label class="check-card">
+                <input name="mostPopular" type="checkbox" />
+                <span>
+                  <strong>Most Popular</strong>
+                  <small>Show in popular products</small>
+                </span>
+              </label>
+
+              <label class="check-card">
+                <input name="thisWeekBest" type="checkbox" />
+                <span>
+                  <strong>This Week's Best</strong>
+                  <small>Show in weekly best section</small>
+                </span>
+              </label>
+
+              <label class="check-card">
+                <input name="featured" type="checkbox" />
+                <span>
+                  <strong>Featured</strong>
+                  <small>Mark as a featured product</small>
+                </span>
+              </label>
+
+              <label class="check-card">
+                <input name="available" type="checkbox" checked />
+                <span>
+                  <strong>Available</strong>
+                  <small>Allow the storefront to display it</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <label class="image-field">
+            Product Image
+            <input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required />
+            <small>Maximum file size is controlled by the server.</small>
+          </label>
+
+          <div class="preview" id="preview-box" hidden>
+            <span>Image Preview</span>
+            <img id="preview-img" alt="Product image preview" />
+          </div>
+
+          <button id="submit-button" type="submit">Save Product</button>
+          <div id="status" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
