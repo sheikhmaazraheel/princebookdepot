@@ -1,4 +1,4 @@
-const API_BASE ="https://princebookdepot-backend.onrender.com/";
+const API_BASE = "https://princebookdepot-backend.onrender.com";
 
 const form = document.getElementById("product-form");
 const imageInput = form.elements.image;
