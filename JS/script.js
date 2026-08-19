@@ -359,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (product.discount > 0) {
       div.innerHTML = `
       <div class="discount">${product.discount || 0}%</div>
-      <img src="${product.image}" alt="${product.name}" />
+      <img src="${product.imageUrl || product.image || ""}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
       <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
       <button class="add-to-cart-button">Add to Cart</button>
@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     } else {
       div.innerHTML = `
-      <img src="${product.image}" alt="${product.name}" />
+      <img src="${product.imageUrl || product.image || ""}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
       <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
       <button class="add-to-cart-button">Add to Cart</button>
@@ -403,9 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("Product-grid");
     if (container) container.style.display = "none";
 
-    const productApiUrl =
-      "https://script.google.com/macros/s/AKfycbxMoDKCh-ywDckfEeyLklRSSHO6932khQ5-DegVL0FqRwza98AgDrgSQAxgW10b31tm/exec";
-    const productCacheKey = "pbd-products-cache";
+    const productApiUrl = "https://princebookdepot-backend.onrender.com/api/products";
 
     function showProductLoadError() {
       if (loader) {
@@ -418,83 +416,74 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    function readCachedProducts() {
+    async function fetchProducts(params, attempt = 1) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      const query = new URLSearchParams({ available: "true", ...params });
+
       try {
-        const cachedProducts = JSON.parse(localStorage.getItem(productCacheKey));
-        return Array.isArray(cachedProducts) ? cachedProducts : null;
-      } catch {
-        return null;
+        const response = await fetch(`${productApiUrl}?${query}`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Product API returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!data.success || !Array.isArray(data.products)) {
+          throw new Error("Product API returned an invalid response.");
+        }
+
+        return data.products;
+      } catch (error) {
+        if (attempt < 2) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          return fetchProducts(params, attempt + 1);
+        }
+        throw error;
+      } finally {
+        clearTimeout(timeout);
       }
     }
 
-    function fetchProducts(attempt = 1) {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 15000);
-
-      return fetch(productApiUrl, { signal: controller.signal })
-        .then((res) => {
-          if (!res.ok) throw new Error(`Product API returned ${res.status}`);
-          return res.json();
-        })
-        .finally(() => clearTimeout(timeout))
-        .catch((error) => {
-          if (attempt < 2) {
-            return new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
-              fetchProducts(attempt + 1)
-            );
-          }
-          throw error;
-        });
-    }
-
-    function renderProducts(products) {
+    function renderProducts(categoryProducts, popularProducts, bestsellerProducts) {
       if (container) container.innerHTML = "";
       if (popularContainer) popularContainer.innerHTML = "";
       if (bestsellerContainer) bestsellerContainer.innerHTML = "";
 
-        allProducts = products;
+        allProducts = categoryProducts || [
+          ...(popularProducts || []),
+          ...(bestsellerProducts || []),
+        ];
 
         // ----- Category listing pages (English/Urdu novels, Poetry, Academic) -----
         if (category && container) {
           loader.style.display = "none";
           container.style.display = "grid";
-          const filtered = products.filter(
-            (p) => p.category === category && !!p.availible
-          );
-          filtered.forEach((product) => {
+          categoryProducts.forEach((product) => {
             container.appendChild(createProductCard(product));
           });
         }
 
         // ----- Home page: Most Popular Novels / This Week's Best Sellers -----
-        // TODO: once the sheet has real "popular"/"bestseller" flags, filter
-        // on those instead. For now both rails show all English novels.
         if (popularContainer || bestsellerContainer) {
-          const englishNovels = products.filter(
-            (p) => p.category === "English-novels" && !!p.availible
-          );
           if (popularLoader) popularLoader.style.display = "none";
           if (bestsellerLoader) bestsellerLoader.style.display = "none";
 
           if (popularContainer) {
             popularContainer.style.display = "grid";
-            englishNovels.forEach((product) => {
+            popularProducts.forEach((product) => {
               popularContainer.appendChild(createProductCard(product, "popular-"));
             });
           }
           if (bestsellerContainer) {
             bestsellerContainer.style.display = "grid";
-            // Best Sellers rail shows the same novels in reverse order for
-            // now, so it doesn't look identical to Most Popular. TODO:
-            // swap for a real bestseller list/flag once available.
-            englishNovels
-              .slice()
-              .reverse()
-              .forEach((product) => {
-                bestsellerContainer.appendChild(
-                  createProductCard(product, "bestseller-")
-                );
-              });
+            bestsellerProducts.forEach((product) => {
+              bestsellerContainer.appendChild(
+                createProductCard(product, "bestseller-")
+              );
+            });
           }
 
           initAutoScrollRail(popularContainer);
@@ -515,17 +504,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const cachedProducts = readCachedProducts();
-    if (cachedProducts) renderProducts(cachedProducts);
+    const requests = category
+      ? [fetchProducts({ category })]
+      : [
+          fetchProducts({ category: "English-novels", mostPopular: "true" }),
+          fetchProducts({ category: "English-novels", thisWeekBest: "true" }),
+        ];
 
-    fetchProducts()
-      .then((products) => {
-        localStorage.setItem(productCacheKey, JSON.stringify(products));
-        renderProducts(products);
+    Promise.all(requests)
+      .then((results) => {
+        if (category) {
+          renderProducts(results[0], [], []);
+          return;
+        }
+
+        renderProducts([], results[0], results[1]);
       })
       .catch((error) => {
         console.error("Unable to load products:", error);
-        if (!cachedProducts) showProductLoadError();
+        showProductLoadError();
       });
   }
   // ✅ CART PAGE
@@ -675,7 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <a href="#${
           product.id
         }" class="block p-3 hover:bg-gradient-to-r hover:from-#E6F0FA hover:to-#B3D4FF flex items-center gap-3 border-b border-gray-200">
-          <img src="${product.image || ""}" alt="${
+          <img src="${product.imageUrl || product.image || ""}" alt="${
           product.name || "Product"
         }" class="w-12 h-12 object-cover rounded" onerror="this.style.display='none'">
           <div class="result-text">
