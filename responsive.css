@@ -1,5 +1,11 @@
 /* ===== Responsive Navbar ===== */
 
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+  .about-boxes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media screen and (max-width: 900px) {
   .navbar {
     grid-template-columns: auto 1fr auto;
@@ -147,11 +153,11 @@
   /* ====================== About Section ============= */
   .about-section {
     width: 100%;
+    padding: 56px 16px 48px;
   }
 
   .about-boxes {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
   }
 
   .about-section h2 span {
@@ -159,8 +165,8 @@
   }
 
   .about-box {
-    width: 85%;
-    text-align: center;
+    width: 100%;
+    text-align: left;
   }
 
   .about-support a {
@@ -250,8 +256,8 @@
 /* ============= FOR CART ================== */
 @media screen and (max-width: 768px) {
   #cart-popup{
-    width: 96%;
-    margin: 0;
+    width: calc(100% - 24px);
+    bottom: 16px;
   }
   .cart-page {
     padding: 30px 5px;
@@ -522,7 +528,7 @@
   
   
     /* Current price */
-    .Product .dicounted-price {
+    .Product .discounted-price {
       font-size: 0.96rem;
     }
   
@@ -661,7 +667,7 @@
     }
   
   
-    .Product .dicounted-price {
+    .Product .discounted-price {
   
       font-size: 0.89rem;
     }

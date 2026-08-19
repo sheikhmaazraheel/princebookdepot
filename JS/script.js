@@ -366,7 +366,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="discount">${product.discount || 0}%</div>
       <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
-      <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
+      <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
       <button class="add-to-cart-button">Add to Cart</button>
       <div class="quantity-controls">
         <button class="decrease">−</button>
@@ -378,7 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
       div.innerHTML = `
       <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
-      <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
+      <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
       <button class="add-to-cart-button">Add to Cart</button>
       <div class="quantity-controls">
         <button class="decrease">−</button>
@@ -399,10 +399,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // ✅ PRODUCT PAGES + HOME PAGE PRODUCT RAILS
   const popularContainer = document.getElementById("popular-products");
   const bestsellerContainer = document.getElementById("bestseller-products");
+  const featuredContainer = document.getElementById("featured-products");
   const popularLoader = document.getElementById("popular-loader");
   const bestsellerLoader = document.getElementById("bestseller-loader");
+  const featuredLoader = document.getElementById("featured-loader");
 
-  if (document.body.dataset.category || popularContainer || bestsellerContainer) {
+  if (
+    document.body.dataset.category ||
+    popularContainer ||
+    bestsellerContainer ||
+    featuredContainer
+  ) {
     const category = document.body.dataset.category;
     const loader = document.getElementById("loader");
     const container = document.getElementById("Product-grid");
@@ -414,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (loader) {
         loader.innerHTML = "<p>Products are temporarily unavailable. Please refresh and try again.</p>";
       }
-      [popularLoader, bestsellerLoader].forEach((productLoader) => {
+      [popularLoader, bestsellerLoader, featuredLoader].forEach((productLoader) => {
         if (productLoader) {
           productLoader.innerHTML = "<p>Products are temporarily unavailable. Please refresh and try again.</p>";
         }
@@ -452,14 +459,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    function renderProducts(categoryProducts, popularProducts, bestsellerProducts) {
+    function renderProducts(categoryProducts, popularProducts, bestsellerProducts, featuredProducts) {
       if (container) container.innerHTML = "";
       if (popularContainer) popularContainer.innerHTML = "";
       if (bestsellerContainer) bestsellerContainer.innerHTML = "";
+      if (featuredContainer) featuredContainer.innerHTML = "";
 
-        allProducts = categoryProducts || [
+        allProducts = categoryProducts.length ? categoryProducts : [
           ...(popularProducts || []),
           ...(bestsellerProducts || []),
+          ...(featuredProducts || []),
         ];
 
         // ----- Category listing pages (English/Urdu novels, Poetry, Academic) -----
@@ -471,11 +480,20 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
-        // ----- Home page: Most Popular Novels / This Week's Best Sellers -----
-        if (popularContainer || bestsellerContainer) {
+        // ----- Home page: Featured For You / Most Popular / Best Sellers -----
+        if (popularContainer || bestsellerContainer || featuredContainer) {
           if (popularLoader) popularLoader.style.display = "none";
           if (bestsellerLoader) bestsellerLoader.style.display = "none";
+          if (featuredLoader) featuredLoader.style.display = "none";
 
+          if (featuredContainer) {
+            featuredContainer.style.display = "grid";
+            (featuredProducts || []).forEach((product) => {
+              featuredContainer.appendChild(
+                createProductCard(product, "featured-")
+              );
+            });
+          }
           if (popularContainer) {
             popularContainer.style.display = "grid";
             popularProducts.forEach((product) => {
@@ -491,6 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
           }
 
+          initAutoScrollRail(featuredContainer);
           initAutoScrollRail(popularContainer);
           initAutoScrollRail(bestsellerContainer);
         }
@@ -514,16 +533,17 @@ document.addEventListener("DOMContentLoaded", () => {
       : [
           fetchProducts({ category: "English-novels", mostPopular: "true" }),
           fetchProducts({ category: "English-novels", thisWeekBest: "true" }),
+          fetchProducts({ featured: "true" }),
         ];
 
     Promise.all(requests)
       .then((results) => {
         if (category) {
-          renderProducts(results[0], [], []);
+          renderProducts(results[0], [], [], []);
           return;
         }
 
-        renderProducts([], results[0], results[1]);
+        renderProducts([], results[0], results[1], results[2]);
       })
       .catch((error) => {
         console.error("Unable to load products:", error);
