@@ -1,6 +1,11 @@
 const githubURL = "https://sheikhmaazraheel.github.io/princebookdepot";
 let allProducts = [];
 
+function getProductImageUrl(product) {
+  const imageUrl = product.imageUrl || product.image || "";
+  return imageUrl.replace(/^http:\/\//i, "https://");
+}
+
 // Cards fade/slide into view the first time they enter the viewport.
 // One shared observer for the whole page (cheaper than one per card).
 const revealObserver =
@@ -359,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (product.discount > 0) {
       div.innerHTML = `
       <div class="discount">${product.discount || 0}%</div>
-      <img src="${product.imageUrl || product.image || ""}" alt="${product.name}" />
+      <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
       <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
       <button class="add-to-cart-button">Add to Cart</button>
@@ -371,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     } else {
       div.innerHTML = `
-      <img src="${product.imageUrl || product.image || ""}" alt="${product.name}" />
+      <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
       <div><span class="price">Rs.${basePrice}</span> <span class="dicounted-price">Rs.${finalPrice}</span></div>
       <button class="add-to-cart-button">Add to Cart</button>
@@ -672,7 +677,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <a href="#${
           product.id
         }" class="block p-3 hover:bg-gradient-to-r hover:from-#E6F0FA hover:to-#B3D4FF flex items-center gap-3 border-b border-gray-200">
-          <img src="${product.imageUrl || product.image || ""}" alt="${
+          <img src="${getProductImageUrl(product)}" alt="${
           product.name || "Product"
         }" class="w-12 h-12 object-cover rounded" onerror="this.style.display='none'">
           <div class="result-text">
