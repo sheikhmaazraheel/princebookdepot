@@ -101,6 +101,38 @@ function initAutoScrollRail(container) {
     start();
   }
 }
+// Applies the generic .fade-up / .fade-up-stagger scroll-reveal treatment
+// to section-level content (headings, About, footer, category rail) using
+// the same shared revealObserver as the product cards. Wrapped so that if
+// anything here goes wrong, the target elements are made visible rather
+// than silently staying hidden forever.
+document.addEventListener("DOMContentLoaded", () => {
+  const revealTargets = document.querySelectorAll(
+    ".home-section-header, .about-container > h2, .about-container > p"
+  );
+  const staggerTargets = document.querySelectorAll(
+    ".about-boxes, .category-circles, .footer-top"
+  );
+
+  try {
+    revealTargets.forEach((el) => {
+      el.classList.add("fade-up");
+      if (revealObserver) revealObserver.observe(el);
+      else el.classList.add("is-visible");
+    });
+
+    staggerTargets.forEach((el) => {
+      el.classList.add("fade-up-stagger");
+      if (revealObserver) revealObserver.observe(el);
+      else el.classList.add("is-visible");
+    });
+  } catch (err) {
+    console.error("Scroll-reveal setup failed, showing content as-is:", err);
+    revealTargets.forEach((el) => el.classList.add("is-visible"));
+    staggerTargets.forEach((el) => el.classList.add("is-visible"));
+  }
+});
+
 // ====== MODERN NAVBAR ======
 document.addEventListener("DOMContentLoaded", function () {
   const siteHeader = document.getElementById("site-header");
