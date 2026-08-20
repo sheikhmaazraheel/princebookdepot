@@ -1,4 +1,5 @@
 const githubURL = "https://sheikhmaazraheel.github.io/princebookdepot";
+const API_BASE_URL = "https://princebookdepot-backend.onrender.com";
 let allProducts = [];
 
 function getProductImageUrl(product) {
@@ -751,25 +752,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     zone.addEventListener("change", updateCheckoutTotal);
 
-    document.getElementById("use-location")?.addEventListener("click", () => {
-      const status = document.getElementById("location-status");
-      if (!navigator.geolocation) {
-        status.textContent = "Location is not available in this browser.";
-        return;
-      }
-      status.textContent = "Checking your current location...";
-      navigator.geolocation.getCurrentPosition(
-        ({ coords }) => { status.textContent = `Location captured (${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)}). Please select your delivery zone.`; },
-        () => { status.textContent = "We could not access your location. You can select your zone manually."; }
-      );
-    });
-
     checkoutForm.addEventListener("submit", (event) => {
       event.preventDefault();
       if (!checkoutForm.reportValidity() || !items.length) return;
-      message.textContent = "Your order details are ready. We will confirm availability and delivery with you shortly.";
-      message.classList.add("is-success");
-      checkoutForm.querySelector("button[type=submit]").textContent = "Order details saved ✓";
+
+      const submitButton = checkoutForm.querySelector("button[type=submit]");
+      const paymentMethod = checkoutForm.querySelector('input[name="payment"]:checked')?.value;
+      const payload = {
+        customer: {
+          name: document.getElementById("firstName").value.trim(),
+          contact: document.getElementById("contact").value.trim(),
+          email: document.getElementById("email").value.trim(),
+        },
+        delivery: {
+          city: "Karachi",
+          area: document.getElementById("area").value.trim(),
+          zone: zone.value,
+          address: document.getElementById("address").value.trim(),
+          landmark: document.getElementById("landmark").value.trim(),
+        },
+        paymentMethod,
+        items: items.map(([productId, item]) => ({
+          productId,
+          quantity: Number(item.quantity),
+        })),
+      };
+
+      if (locationFields.latitude.value && locationFields.longitude.value) {
+        payload.location = {
+          latitude: Number(locationFields.latitude.value),
+          longitude: Number(locationFields.longitude.value),
+          accuracy: Number(locationFields.accuracy.value),
+          capturedAt: locationFields.capturedAt.value,
+        };
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Saving your order...";
+      message.classList.remove("is-success");
+      message.textContent = "";
+
+      fetch(`${API_BASE_URL}/api/orders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(async (response) => {
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok || !data.success) {
+            throw new Error(data.message || "We could not save your order. Please try again.");
+          }
+          return data;
+        })
+        .then((data) => {
+          const savedOrderId = data.order.orderId;
+          checkoutOrderId.textContent = savedOrderId;
+          document.getElementById("orderId").value = savedOrderId;
+          message.textContent = `Order ${savedOrderId} has been received. We will contact you shortly to confirm delivery.`;
+          message.classList.add("is-success");
+          submitButton.textContent = "Order received ✓";
+          localStorage.removeItem("pbdcart");
+          localStorage.removeItem("pbdorderId");
+          localStorage.removeItem(locationStorageKey);
+          sessionStorage.removeItem("pbdLocationPermissionAsked");
+        })
+        .catch((error) => {
+          message.textContent = error.message;
+          submitButton.disabled = false;
+          submitButton.textContent = "Review and confirm order →";
+        });
     });
   }
   
