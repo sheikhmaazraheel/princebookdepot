@@ -38,6 +38,7 @@ function renderOrder(order) {
     <div class="order-details">
       <section class="detail-block"><h3>Customer and delivery</h3><p><strong>Contact:</strong> ${escapeHtml(order.customer?.contact || "Not provided")}</p><p><strong>Email:</strong> ${escapeHtml(order.customer?.email || "Not provided")}</p><p><strong>Address:</strong> ${escapeHtml(order.delivery?.address || "Not provided")}</p><p><strong>Landmark:</strong> ${escapeHtml(order.delivery?.landmark || "Not provided")}</p><p><strong>Zone:</strong> ${escapeHtml(order.delivery?.zone || "Not provided")} · ${money(order.pricing?.deliveryCharge)} delivery</p><p>${location}</p></section>
       <section class="detail-block"><h3>Order contents</h3><div class="order-items">${items || "<p>No items recorded.</p>"}</div><p><strong>Payment:</strong> ${escapeHtml(order.paymentMethod || "Not provided")}</p><p><strong>Subtotal:</strong> ${money(order.pricing?.subtotal)}</p></section>
+      <section class="detail-block order-status-control"><h3>Update order</h3><label for="status-${escapeHtml(order.orderId)}">Order status</label><select id="status-${escapeHtml(order.orderId)}" class="order-status-select" data-order-id="${escapeHtml(order.orderId)}"><option value="pending" ${status === "pending" ? "selected" : ""}>Pending</option><option value="confirmed" ${status === "confirmed" ? "selected" : ""}>Confirmed</option><option value="processing" ${status === "processing" ? "selected" : ""}>Processing</option><option value="shipped" ${status === "shipped" ? "selected" : ""}>Shipped</option><option value="delivered" ${status === "delivered" ? "selected" : ""}>Delivered</option><option value="completed" ${status === "completed" ? "selected" : ""}>Completed</option><option value="cancelled" ${status === "cancelled" ? "selected" : ""}>Cancelled</option><option value="returned" ${status === "returned" ? "selected" : ""}>Returned</option></select><small class="status-update-note">Last changed: ${formatDate(order.statusUpdatedAt || order.updatedAt)}</small></section>
     </div>
   </details>`;
 }
@@ -48,6 +49,31 @@ function updateMetrics(orders) {
   document.getElementById("metric-pending").textContent = orders.filter((order) => order.status === "pending").length;
   document.getElementById("metric-confirmed").textContent = orders.filter((order) => order.status === "confirmed").length;
   document.getElementById("metric-revenue").textContent = money(totalValue);
+}
+
+async function updateOrderStatus(select) {
+  const orderId = select.dataset.orderId;
+  const nextStatus = select.value;
+  const previousStatus = select.dataset.previousStatus || nextStatus;
+  select.disabled = true;
+  setStatus(`Updating ${orderId}...`);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/orders/${encodeURIComponent(orderId)}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: nextStatus }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.success) throw new Error(data.message || "Could not update order status.");
+    select.dataset.previousStatus = nextStatus;
+    setStatus(`${orderId} is now ${nextStatus}.`);
+    await loadOrders();
+  } catch (error) {
+    select.value = previousStatus;
+    setStatus(error.message, true);
+    select.disabled = false;
+  }
 }
 
 async function loadOrders() {
@@ -78,4 +104,8 @@ async function loadOrders() {
 
 statusFilter.addEventListener("change", loadOrders);
 refreshButton.addEventListener("click", loadOrders);
+ordersList.addEventListener("change", (event) => {
+  const select = event.target.closest(".order-status-select");
+  if (select) updateOrderStatus(select);
+});
 loadOrders();
