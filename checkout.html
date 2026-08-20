@@ -150,7 +150,7 @@
                 <div class="form-group"><label for="zone">Delivery zone</label><select id="zone" name="zone" required><option value="" disabled selected>Select your zone</option><option value="central" data-charge="150">Central Karachi · Rs.150</option><option value="south" data-charge="180">South Karachi · Rs.180</option><option value="east" data-charge="200">East Karachi · Rs.200</option><option value="west" data-charge="220">West Karachi · Rs.220</option><option value="malir" data-charge="250">Malir / Airport · Rs.250</option><option value="outside" data-charge="300">Outside Karachi · Rs.300</option></select></div>
                 <div class="form-group form-group-wide"><label for="address">Complete address</label><textarea id="address" name="address" autocomplete="street-address" required placeholder="House / flat, street, block, building and any useful directions"></textarea></div>
                 <div class="form-group"><label for="landmark">Nearest landmark</label><input type="text" id="landmark" name="landmark" required placeholder="e.g. near Nipa Chowrangi" /></div>
-                <div class="form-group location-helper"><label>Location helper</label><button type="button" id="use-location" class="location-button">Use my current location</button><small id="location-status">Optional: helps us confirm your delivery area.</small></div>
+                <div class="form-group location-helper"><label>Delivery location</label><button type="button" id="use-location" class="location-button">Allow location access</button><small id="location-status">We will ask for permission to capture your exact coordinates for delivery planning.</small></div>
               </div>
             </div>
           </div>
@@ -158,7 +158,7 @@
             <div class="section-number">03</div>
             <div class="section-content"><h2>Payment method</h2><p class="section-caption">Choose how you would like to pay.</p><div class="payment-options"><label class="payment-box"><input type="radio" name="payment" value="Cash on Delivery" required /><span><strong>Cash on Delivery</strong><small>Pay when your books arrive</small></span></label><label class="payment-box"><input type="radio" name="payment" value="Online Payment" /><span><strong>Online payment</strong><small>Payment instructions after confirmation</small></span></label></div></div>
           </div>
-          <input type="hidden" id="orderId" name="orderId" /><input type="hidden" id="cart-items" name="cartSummary" /><input type="hidden" id="total" name="total" />
+          <input type="hidden" id="orderId" name="orderId" /><input type="hidden" id="cart-items" name="cartSummary" /><input type="hidden" id="total" name="total" /><input type="hidden" id="latitude" name="latitude" /><input type="hidden" id="longitude" name="longitude" /><input type="hidden" id="locationAccuracy" name="locationAccuracy" /><input type="hidden" id="locationCapturedAt" name="locationCapturedAt" />
           <button type="submit" id="confirm-Order" class="primary-action">Review and confirm order <span aria-hidden="true">→</span></button>
           <p id="checkout-message" class="checkout-message" role="status"></p>
         </form>

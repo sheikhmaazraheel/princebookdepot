@@ -672,6 +672,77 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("orderId").value = getOrderId();
     document.getElementById("cart-items").value = items.map(([, item]) => `${item.name} (x${item.quantity})`).join(", ");
 
+    const locationStorageKey = "pbdCheckoutLocation";
+    const locationFields = {
+      latitude: document.getElementById("latitude"),
+      longitude: document.getElementById("longitude"),
+      accuracy: document.getElementById("locationAccuracy"),
+      capturedAt: document.getElementById("locationCapturedAt"),
+    };
+    const locationButton = document.getElementById("use-location");
+    const locationStatus = document.getElementById("location-status");
+
+    function setLocationFields(location) {
+      if (!location) return;
+      locationFields.latitude.value = location.latitude;
+      locationFields.longitude.value = location.longitude;
+      locationFields.accuracy.value = location.accuracy;
+      locationFields.capturedAt.value = location.capturedAt;
+    }
+
+    function requestCheckoutLocation() {
+      if (!navigator.geolocation) {
+        locationStatus.textContent = "Location access is not available in this browser. You can continue without it.";
+        return;
+      }
+
+      locationButton.disabled = true;
+      locationButton.textContent = "Requesting permission...";
+      locationStatus.textContent = "Please allow location access in your browser prompt.";
+
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => {
+          const location = {
+            latitude: Number(coords.latitude.toFixed(8)),
+            longitude: Number(coords.longitude.toFixed(8)),
+            accuracy: Math.round(coords.accuracy),
+            capturedAt: new Date().toISOString(),
+          };
+          localStorage.setItem(locationStorageKey, JSON.stringify(location));
+          setLocationFields(location);
+          locationButton.disabled = false;
+          locationButton.textContent = "Refresh my location";
+          locationStatus.textContent = `Location captured. Accuracy approximately ${location.accuracy} metres.`;
+        },
+        (error) => {
+          const statusMessage = error.code === error.PERMISSION_DENIED
+            ? "Location permission was not granted. You can allow it in browser settings and try again."
+            : "We could not determine your location. You can try again or continue without it.";
+          locationButton.disabled = false;
+          locationButton.textContent = "Allow location access";
+          locationStatus.textContent = statusMessage;
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    }
+
+    let savedLocation = null;
+    try {
+      savedLocation = JSON.parse(localStorage.getItem(locationStorageKey) || "null");
+    } catch (error) {
+      localStorage.removeItem(locationStorageKey);
+    }
+    if (savedLocation?.latitude && savedLocation?.longitude) {
+      setLocationFields(savedLocation);
+      locationButton.textContent = "Refresh my location";
+      locationStatus.textContent = `Saved location available. Accuracy approximately ${savedLocation.accuracy} metres.`;
+    } else if (!sessionStorage.getItem("pbdLocationPermissionAsked")) {
+      sessionStorage.setItem("pbdLocationPermissionAsked", "true");
+      setTimeout(requestCheckoutLocation, 350);
+    }
+
+    locationButton.addEventListener("click", requestCheckoutLocation);
+
     function updateCheckoutTotal() {
       const charge = Number(zone.selectedOptions[0]?.dataset.charge || 0);
       checkoutDelivery.textContent = charge ? money(charge) : "Select a zone";
