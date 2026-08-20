@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Prince Book Depot — Edit Product</title>
+
+  <!-- Your existing protected stylesheet -->
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- Page-specific styling -->
+  <style>
+    .edit-page {
+      width: min(980px, 94%);
+      margin: 40px auto;
+    }
+
+    .edit-panel {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(23, 50, 79, 0.10);
+      border-radius: 24px;
+      padding: clamp(20px, 4vw, 40px);
+      box-shadow:
+        0 18px 50px rgba(16, 37, 61, 0.12),
+        0 4px 12px rgba(16, 37, 61, 0.05);
+    }
+
+    .edit-heading {
+      margin-bottom: 28px;
+    }
+
+    .edit-heading small {
+      color: #2468a8;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .edit-heading h1 {
+      margin: 7px 0 8px;
+      color: #17324f;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .edit-heading p {
+      margin: 0;
+      color: #718096;
+    }
+
+    .product-search {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .product-search input {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px 14px;
+      border: 1px solid rgba(23, 50, 79, 0.14);
+      border-radius: 12px;
+      outline: none;
+      background: #fff;
+      color: #182536;
+      font-size: 0.95rem;
+    }
+
+    .product-search input:focus {
+      border-color: #2468a8;
+      box-shadow: 0 0 0 4px rgba(25, 183, 215, 0.10);
+    }
+
+    .product-search button {
+      min-height: 46px;
+      padding: 0 20px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(
+        135deg,
+        #17324f,
+        #2468a8,
+        #19b7d7
+      );
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .search-status {
+      margin: 8px 0 18px;
+      min-height: 20px;
+      color: #718096;
+      font-size: 0.88rem;
+    }
+
+    .edit-form {
+      display: none;
+    }
+
+    .edit-form.visible {
+      display: block;
+    }
+
+    .product-summary {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 26px;
+      padding: 14px;
+      border: 1px solid rgba(23, 50, 79, 0.08);
+      border-radius: 18px;
+      background: #f7fafc;
+    }
+
+    .product-summary img {
+      width: 86px;
+      height: 112px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px rgba(16, 37, 61, 0.12);
+      background: #e8eef4;
+    }
+
+    .summary-info strong {
+      display: block;
+      color: #17324f;
+      font-size: 1rem;
+    }
+
+    .summary-info span {
+      display: block;
+      margin-top: 5px;
+      color: #718096;
+      font-size: 0.84rem;
+    }
+
+    .edit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .edit-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .edit-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .edit-field label {
+      color: #17324f;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .edit-field input,
+    .edit-field select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid rgba(23, 50, 79, 0.13);
+      border-radius: 11px;
+      background: #fff;
+      color: #182536;
+      font: inherit;
+      outline: none;
+    }
+
+    .edit-field input:focus,
+    .edit-field select:focus {
+      border-color: #2468a8;
+      box-shadow: 0 0 0 4px rgba(25, 183, 215, 0.10);
+    }
+
+    .flags-box {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(23, 50, 79, 0.10);
+      border-radius: 16px;
+      background: #f7fafc;
+    }
+
+    .flag-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 9px 10px;
+      border-radius: 11px;
+      background: #fff;
+      border: 1px solid rgba(23, 50, 79, 0.08);
+      cursor: pointer;
+    }
+
+    .flag-option input {
+      width: 17px;
+      height: 17px;
+      accent-color: #2468a8;
+    }
+
+    .flag-option span {
+      color: #17324f;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .image-section {
+      grid-column: 1 / -1;
+      margin-top: 2px;
+    }
+
+    .image-section-title {
+      margin-bottom: 10px;
+      color: #17324f;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .current-image {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px;
+      border: 1px solid rgba(23, 50, 79, 0.10);
+      border-radius: 15px;
+      background: #f7fafc;
+      margin-bottom: 12px;
+    }
+
+    .current-image img {
+      width: 75px;
+      height: 98px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .current-image-info {
+      color: #718096;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .image-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px dashed rgba(36, 104, 168, 0.35);
+      border-radius: 13px;
+      background: #f9fbfd;
+    }
+
+    .new-image-preview {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .new-image-preview img {
+      width: 120px;
+      height: 156px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 18px rgba(16, 37, 61, 0.12);
+    }
+
+    .edit-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .save-btn,
+    .delete-btn {
+      min-height: 48px;
+      border: none;
+      border-radius: 13px;
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .save-btn {
+      background: linear-gradient(
+        135deg,
+        #17324f,
+        #2468a8,
+        #19b7d7
+      );
+      box-shadow: 0 9px 18px rgba(23, 50, 79, 0.16);
+    }
+
+    .delete-btn {
+      background: linear-gradient(
+        135deg,
+        #9f1d20,
+        #d13d3d
+      );
+      box-shadow: 0 9px 18px rgba(159, 29, 32, 0.14);
+    }
+
+    .save-btn:disabled,
+    .delete-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .edit-status {
+      min-height: 24px;
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    .edit-status.success {
+      color: #16734f;
+    }
+
+    .edit-status.error {
+      color: #b42318;
+    }
+
+    @media (max-width: 700px) {
+      .edit-page {
+        margin: 20px auto;
+      }
+
+      .product-search {
+        grid-template-columns: 1fr;
+      }
+
+      .edit-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .edit-field.full {
+        grid-column: auto;
+      }
+
+      .flags-box {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .edit-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .flags-box {
+        grid-template-columns: 1fr;
+      }
+
+      .product-summary {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <main class="edit-page">
+
+    <section class="edit-panel">
+
+      <div class="edit-heading">
+        <small>PRINCE BOOK DEPOT</small>
+
+        <h1>Edit Product</h1>
+
+        <p>
+          Search for a product, update its information,
+          replace its image, or permanently delete it.
+        </p>
+      </div>
+
+
+      <!-- =====================================================
+           SEARCH PRODUCT
+           ===================================================== -->
+
+      <form id="load-product-form">
+
+        <div class="product-search">
+
+          <input
+            type="text"
+            id="search-product"
+            autocomplete="off"
+            placeholder="Enter Product ID or Product Name"
+            required
+          >
+
+          <button
+            type="submit"
+            id="load-product-btn"
+          >
+            Load Product
+          </button>
+
+        </div>
+
+      </form>
+
+
+      <div
+        id="search-status"
+        class="search-status"
+      ></div>
+
+
+      <!-- =====================================================
+           EDIT FORM
+           ===================================================== -->
+
+      <form
+        id="edit-product-form"
+        class="edit-form"
+      >
+
+        <input
+          type="hidden"
+          name="id"
+          id="edit-id"
+        >
+
+
+        <!-- Product summary -->
+
+        <div class="product-summary">
+
+          <img
+            id="current-product-image"
+            src=""
+            alt="Current product"
+          >
+
+          <div class="summary-info">
+
+            <strong id="current-product-name">
+              Product
+            </strong>
+
+            <span id="current-product-id">
+              Product ID
+            </span>
+
+            <span id="current-product-price">
+              Price
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="edit-grid">
+
+          <!-- Name -->
+
+          <div class="edit-field full">
+
+            <label for="edit-name">
+              Product Name
+            </label>
+
+            <input
+              type="text"
+              id="edit-name"
+              name="name"
+              required
+            >
+
+          </div>
+
+
+          <!-- Price -->
+
+          <div class="edit-field">
+
+            <label for="edit-price">
+              Original Price (Rs.)
+            </label>
+
+            <input
+              type="number"
+              id="edit-price"
+              name="price"
+              min="0"
+              step="0.01"
+              required
+            >
+
+          </div>
+
+
+          <!-- Discount -->
+
+          <div class="edit-field">
+
+            <label for="edit-discount">
+              Discount (%)
+            </label>
+
+            <input
+              type="number"
+              id="edit-discount"
+              name="discount"
+              min="0"
+              max="100"
+              step="0.01"
+            >
+
+          </div>
+
+
+          <!-- Category -->
+
+          <div class="edit-field full">
+
+            <label for="edit-category">
+              Category
+            </label>
+
+            <select
+              id="edit-category"
+              name="category"
+              required
+            >
+
+              <option value="">
+                Select category
+              </option>
+
+              <option value="English-novels">
+                English Novels
+              </option>
+
+              <option value="Urdu-novels">
+                Urdu Novels
+              </option>
+
+              <option value="Poetry">
+                Poetry
+              </option>
+
+              <option value="Academic-books">
+                Academic Books
+              </option>
+
+              <option value="Bundle">
+                Bundle
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Merchandising flags -->
+
+          <div class="flags-box">
+
+            <label class="flag-option">
+
+              <input
+                type="checkbox"
+                id="edit-most-popular"
+                name="mostPopular"
+              >
+
+              <span>
+                Most Popular
+              </span>
+
+            </label>
+
+
+            <label class="flag-option">
+
+              <input
+                type="checkbox"
+                id="edit-this-week-best"
+                name="thisWeekBest"
+              >
+
+              <span>
+                This Week's Best
+              </span>
+
+            </label>
+
+
+            <label class="flag-option">
+
+              <input
+                type="checkbox"
+                id="edit-featured"
+                name="featured"
+              >
+
+              <span>
+                Featured
+              </span>
+
+            </label>
+
+
+            <label class="flag-option">
+
+              <input
+                type="checkbox"
+                id="edit-available"
+                name="available"
+              >
+
+              <span>
+                Available
+              </span>
+
+            </label>
+
+          </div>
+
+
+          <!-- Image -->
+
+          <div class="image-section">
+
+            <div class="image-section-title">
+              Product Image
+            </div>
+
+
+            <div class="current-image">
+
+              <img
+                id="current-product-image-large"
+                src=""
+                alt="Current product image"
+              >
+
+              <div class="current-image-info">
+                Current image is stored on Cloudinary.
+                <br>
+                Choose a new image below only when
+                you want to replace it.
+              </div>
+
+            </div>
+
+
+            <input
+              type="file"
+              id="new-image"
+              class="image-input"
+              accept="image/*"
+            >
+
+
+            <div
+              id="new-image-preview"
+              class="new-image-preview"
+            >
+
+              <img
+                id="new-image-preview-img"
+                src=""
+                alt="New image preview"
+              >
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="edit-actions">
+
+          <button
+            type="submit"
+            id="save-product-btn"
+            class="save-btn"
+          >
+            Save Changes
+          </button>
+
+          <button
+            type="button"
+            id="delete-product-btn"
+            class="delete-btn"
+          >
+            Delete Product
+          </button>
+
+        </div>
+
+
+        <div
+          id="edit-status"
+          class="edit-status"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+      </form>
+
+    </section>
+
+  </main>
+
+
+  <script src="./script.js"></script>
+
+</body>
+
+</html>
