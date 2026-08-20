@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prince Book Depot - Orders</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./orders.css" />
+  </head>
+  <body class="orders-body">
+    <main class="orders-page">
+      <header class="orders-header">
+        <div>
+          <span class="eyebrow">PRINCE BOOK DEPOT / OPERATIONS</span>
+          <h1>Orders</h1>
+          <p class="muted">A clear view of every order, delivery detail, and payment preference.</p>
+        </div>
+        <button type="button" id="refresh-orders" class="refresh-button">Refresh orders <span aria-hidden="true">↻</span></button>
+      </header>
+
+      <section class="order-metrics" aria-label="Order overview">
+        <article class="metric-card"><span>Total orders</span><strong id="metric-total">0</strong><small>All recorded orders</small></article>
+        <article class="metric-card metric-pending"><span>Pending</span><strong id="metric-pending">0</strong><small>Need attention</small></article>
+        <article class="metric-card metric-confirmed"><span>Confirmed</span><strong id="metric-confirmed">0</strong><small>Ready to process</small></article>
+        <article class="metric-card metric-revenue"><span>Order value</span><strong id="metric-revenue">Rs.0</strong><small>Loaded orders</small></article>
+      </section>
+
+      <section class="orders-panel" aria-labelledby="orders-list-title">
+        <div class="orders-toolbar">
+          <div><h2 id="orders-list-title">Order queue</h2><span id="orders-updated">Not loaded yet</span></div>
+          <div class="orders-filters"><label for="status-filter">Status</label><select id="status-filter"><option value="">All orders</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
+        </div>
+        <p id="orders-status" class="orders-status" role="status"></p>
+        <div id="orders-list" class="orders-list"></div>
+        <div id="orders-empty" class="orders-empty" hidden><span aria-hidden="true">◎</span><h2>No orders found</h2><p>New orders will appear here when customers complete checkout.</p></div>
+      </section>
+    </main>
+    <script src="./orders.js"></script>
+  </body>
+</html>
