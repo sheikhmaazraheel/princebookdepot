@@ -432,15 +432,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const popularContainer = document.getElementById("popular-products");
   const bestsellerContainer = document.getElementById("bestseller-products");
   const featuredContainer = document.getElementById("featured-products");
+  const bundlesContainer = document.getElementById("bundles-products");
   const popularLoader = document.getElementById("popular-loader");
   const bestsellerLoader = document.getElementById("bestseller-loader");
   const featuredLoader = document.getElementById("featured-loader");
+  const bundlesLoader = document.getElementById("bundles-loader");
 
   if (
     document.body.dataset.category ||
     popularContainer ||
     bestsellerContainer ||
-    featuredContainer
+    featuredContainer ||
+    bundlesContainer
   ) {
     const category = document.body.dataset.category;
     const loader = document.getElementById("loader");
@@ -453,7 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (loader) {
         loader.innerHTML = "<p>Products are temporarily unavailable. Please refresh and try again.</p>";
       }
-      [popularLoader, bestsellerLoader, featuredLoader].forEach((productLoader) => {
+      [popularLoader, bestsellerLoader, featuredLoader, bundlesLoader].forEach((productLoader) => {
         if (productLoader) {
           productLoader.innerHTML = "<p>Products are temporarily unavailable. Please refresh and try again.</p>";
         }
@@ -491,16 +494,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    function renderProducts(categoryProducts, popularProducts, bestsellerProducts, featuredProducts) {
+    function renderProducts(categoryProducts, popularProducts, bestsellerProducts, featuredProducts, bundleProducts) {
       if (container) container.innerHTML = "";
       if (popularContainer) popularContainer.innerHTML = "";
       if (bestsellerContainer) bestsellerContainer.innerHTML = "";
       if (featuredContainer) featuredContainer.innerHTML = "";
+      if (bundlesContainer) bundlesContainer.innerHTML = "";
 
         allProducts = categoryProducts.length ? categoryProducts : [
           ...(popularProducts || []),
           ...(bestsellerProducts || []),
           ...(featuredProducts || []),
+          ...(bundleProducts || []),
         ];
 
         // ----- Category listing pages (English/Urdu novels, Poetry, Academic) -----
@@ -512,11 +517,12 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
-        // ----- Home page: Featured For You / Most Popular / Best Sellers -----
-        if (popularContainer || bestsellerContainer || featuredContainer) {
+        // ----- Home page: Featured For You / Most Popular / Best Sellers / Bundles -----
+        if (popularContainer || bestsellerContainer || featuredContainer || bundlesContainer) {
           if (popularLoader) popularLoader.style.display = "none";
           if (bestsellerLoader) bestsellerLoader.style.display = "none";
           if (featuredLoader) featuredLoader.style.display = "none";
+          if (bundlesLoader) bundlesLoader.style.display = "none";
 
           if (featuredContainer) {
             featuredContainer.style.display = "grid";
@@ -540,10 +546,19 @@ document.addEventListener("DOMContentLoaded", () => {
               );
             });
           }
+          if (bundlesContainer) {
+            bundlesContainer.style.display = "grid";
+            (bundleProducts || []).forEach((product) => {
+              bundlesContainer.appendChild(
+                createProductCard(product, "bundle-")
+              );
+            });
+          }
 
           initAutoScrollRail(featuredContainer);
           initAutoScrollRail(popularContainer);
           initAutoScrollRail(bestsellerContainer);
+          initAutoScrollRail(bundlesContainer);
         }
 
         // Show cart popup if cart contains items and this page has one
@@ -566,16 +581,17 @@ document.addEventListener("DOMContentLoaded", () => {
           fetchProducts({ category: "English-novels", mostPopular: "true" }),
           fetchProducts({ category: "English-novels", thisWeekBest: "true" }),
           fetchProducts({ featured: "true" }),
+          fetchProducts({ category: "Bundle" }),
         ];
 
     Promise.all(requests)
       .then((results) => {
         if (category) {
-          renderProducts(results[0], [], [], []);
+          renderProducts(results[0], [], [], [], []);
           return;
         }
 
-        renderProducts([], results[0], results[1], results[2]);
+        renderProducts([], results[0], results[1], results[2], results[3]);
       })
       .catch((error) => {
         console.error("Unable to load products:", error);
