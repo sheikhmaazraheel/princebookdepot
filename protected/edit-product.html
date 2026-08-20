@@ -55,6 +55,7 @@
     }
 
     .product-search {
+      position: relative;
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 12px;
@@ -64,7 +65,7 @@
     .product-search input {
       width: 100%;
       min-height: 46px;
-      padding: 12px 14px;
+      padding: 12px 14px 12px 44px;
       border: 1px solid rgba(23, 50, 79, 0.14);
       border-radius: 12px;
       outline: none;
@@ -76,6 +77,19 @@
     .product-search input:focus {
       border-color: #2468a8;
       box-shadow: 0 0 0 4px rgba(25, 183, 215, 0.10);
+    }
+
+    .product-search::before {
+      content: "⌕";
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      z-index: 1;
+      color: #2468a8;
+      font-size: 1.45rem;
+      line-height: 1;
+      transform: translateY(-55%);
+      pointer-events: none;
     }
 
     .product-search button {
@@ -99,6 +113,57 @@
       min-height: 20px;
       color: #718096;
       font-size: 0.88rem;
+    }
+
+    .edit-search-results {
+      position: absolute;
+      top: calc(100% - 10px);
+      left: 0;
+      right: 132px;
+      z-index: 5;
+      display: none;
+      max-height: 260px;
+      overflow-y: auto;
+      padding: 6px;
+      border: 1px solid rgba(36, 104, 168, 0.16);
+      border-radius: 13px;
+      background: #fff;
+      box-shadow: 0 16px 32px rgba(16, 37, 61, 0.16);
+    }
+
+    .edit-search-results.show {
+      display: grid;
+      gap: 3px;
+    }
+
+    .edit-search-result {
+      display: grid;
+      gap: 3px;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #17324f;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .edit-search-result:hover,
+    .edit-search-result:focus-visible {
+      background: #eef8fb;
+      outline: none;
+    }
+
+    .edit-search-result strong {
+      overflow: hidden;
+      font-size: 0.84rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .edit-search-result small {
+      color: #718096;
+      font-size: 0.72rem;
     }
 
     .edit-form {
@@ -342,6 +407,11 @@
         grid-template-columns: 1fr;
       }
 
+      .edit-search-results {
+        right: 0;
+        top: calc(100% - 22px);
+      }
+
       .edit-grid {
         grid-template-columns: 1fr;
       }
@@ -402,6 +472,9 @@
             type="text"
             id="search-product"
             autocomplete="off"
+            aria-label="Search products by ID or name"
+            aria-controls="edit-search-results"
+            aria-expanded="false"
             placeholder="Enter Product ID or Product Name"
             required
           >
@@ -485,6 +558,8 @@
               name="name"
               required
             >
+
+            <div id="edit-search-results" class="edit-search-results" role="listbox" aria-label="Product suggestions"></div>
 
           </div>
 

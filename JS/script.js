@@ -705,48 +705,59 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============== Search Functionality ===============
   const searchInput = document.getElementById("searchInput");
   const searchResults = document.getElementById("searchResults");
+  const searchClear = document.getElementById("searchClear");
 
   function filterProducts(query, products) {
-    if (!products) return [];
-    return products.filter(
-      (product) =>
-        product.name?.toLowerCase().includes(query.toLowerCase()) &&
-        product.category.trim().toLowerCase() ===
-          document.body.dataset.category.trim().toLocaleLowerCase()
-    );
+    const normalizedQuery = query.toLocaleLowerCase();
+    const activeCategory = document.body.dataset.category?.trim().toLocaleLowerCase();
+    const seenIds = new Set();
+
+    return (products || []).filter((product) => {
+      const productId = String(product.id || "");
+      const category = String(product.category || "").trim().toLocaleLowerCase();
+      const searchableText = [product.name, product.category, product.id]
+        .filter(Boolean)
+        .join(" ")
+        .toLocaleLowerCase();
+      const matchesCategory = !activeCategory || category === activeCategory;
+      const isDuplicate = seenIds.has(productId);
+      if (productId) seenIds.add(productId);
+      return matchesCategory && !isDuplicate && searchableText.includes(normalizedQuery);
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>'"]/g, (character) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
+    }[character]));
   }
 
   function displayResults(products, resultsContainer) {
     if (!resultsContainer) return;
 
     if (products.length === 0) {
-      resultsContainer.innerHTML = `<p class="no-results" style="color: #2E5077; font-weight: bold;">No products found.</p>`;
+      resultsContainer.innerHTML = `<p class="no-results">No books matched that search.</p>`;
       resultsContainer.classList.add("show");
+      searchInput?.setAttribute("aria-expanded", "true");
       return;
     }
 
     resultsContainer.innerHTML = products
       .map(
         (product) => `
-        <a href="#${
-          product.id
-        }" class="block p-3 hover:bg-gradient-to-r hover:from-#E6F0FA hover:to-#B3D4FF flex items-center gap-3 border-b border-gray-200">
-          <img src="${getProductImageUrl(product)}" alt="${
-          product.name || "Product"
-        }" class="w-12 h-12 object-cover rounded" onerror="this.style.display='none'">
+        <a href="#${escapeHtml(product.id)}" class="search-result" data-product-id="${escapeHtml(product.id)}" role="option">
+          <img src="${escapeHtml(getProductImageUrl(product))}" alt="" onerror="this.style.display='none'">
           <div class="result-text">
-            <p class="result-name" style="color: #2E5077; font-weight: bold;">${
-              product.name || "Unnamed Product"
-            }</p>
-            <p class="result-details" style="color: #1D3758; font-size: 0.9rem;">${
-              product.category || "Unknown"
-            } - Rs. ${product.price?.toFixed(2) || "N/A"}</p>
+            <p class="result-name">${escapeHtml(product.name || "Unnamed Product")}</p>
+            <p class="result-details">${escapeHtml(product.category || "Collection")} <span>·</span> Rs. ${Number(product.price || 0).toLocaleString("en-PK")}</p>
           </div>
+          <span class="result-arrow" aria-hidden="true">↗</span>
         </a>
       `
       )
       .join("");
     resultsContainer.classList.add("show");
+    searchInput?.setAttribute("aria-expanded", "true");
   }
 
   // Debounce function to limit search processing
@@ -764,6 +775,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (query.length < 1) {
       resultsContainer.classList.remove("show");
       resultsContainer.innerHTML = "";
+      searchInput?.setAttribute("aria-expanded", "false");
       return;
     }
     const filteredProducts = filterProducts(query, allProducts);
@@ -782,6 +794,15 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("input", (e) =>
       debouncedSearch(e.target.value.trim())
     );
+    searchClear?.addEventListener("click", () => {
+      input.value = "";
+      searchClear.hidden = true;
+      handleSearch("", results);
+      input.focus();
+    });
+    input.addEventListener("input", () => {
+      if (searchClear) searchClear.hidden = input.value.trim().length === 0;
+    });
     input.addEventListener("focus", () => {
       if (input.value.trim().length >= 1) {
         debouncedSearch(input.value.trim());
@@ -793,8 +814,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!input.contains(document.activeElement)) {
           results.classList.remove("show");
           results.innerHTML = "";
+          input.setAttribute("aria-expanded", "false");
         }
       }, 200);
+    });
+
+    results.addEventListener("click", (event) => {
+      const result = event.target.closest(".search-result");
+      if (!result) return;
+      const product = [...document.querySelectorAll(".Product")].find(
+        (card) => card.dataset.id === result.dataset.productId
+      );
+      if (product) {
+        event.preventDefault();
+        product.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+        product.classList.add("search-result-focus");
+        setTimeout(() => product.classList.remove("search-result-focus"), 1200);
+      }
     });
   }
 
@@ -810,6 +846,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       searchResults.classList.remove("show");
       searchResults.innerHTML = "";
+      searchInput.setAttribute("aria-expanded", "false");
     }
   });
 });

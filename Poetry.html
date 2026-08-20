@@ -121,10 +121,16 @@
     </header>
 
     <!-- ============= Search BAR ======================= -->
-    <div class="search-bar-container">
-      <input type="text" id="searchInput" placeholder="Search products..." />
-      <div id="searchResults" class="search-results"></div>
-    </div>
+    <section class="storefront-search storefront-search-compact" aria-label="Search poetry">
+      <div class="search-bar-container">
+        <div class="search-field">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input type="search" id="searchInput" placeholder="Search poetry..." autocomplete="off" aria-label="Search poetry" aria-controls="searchResults" aria-expanded="false" />
+          <button type="button" class="search-clear" id="searchClear" aria-label="Clear search" hidden>&times;</button>
+          <div id="searchResults" class="search-results" role="listbox" aria-label="Search results"></div>
+        </div>
+      </div>
+    </section>
     <!-- ================= FOR PRODUCTS SECTION ============== -->
     <section id="" class="">
       <h2 class="heading">Explore Poetry Here</h2>

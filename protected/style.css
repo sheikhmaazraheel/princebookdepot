@@ -11,6 +11,13 @@ body {
   padding: 28px 14px;
 }
 
+/* Keep protected pages aligned with the storefront search language. */
+.product-search button:focus-visible,
+.edit-search-result:focus-visible {
+  outline: 3px solid rgba(25, 183, 215, 0.28);
+  outline-offset: 2px;
+}
+
 .page {
   width: min(860px, 100%);
   margin: auto;

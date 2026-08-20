@@ -409,6 +409,11 @@ if (
       "search-status"
     );
 
+  const searchResults =
+    document.getElementById(
+      "edit-search-results"
+    );
+
   const editStatus =
     document.getElementById(
       "edit-status"
@@ -467,6 +472,69 @@ if (
 
   let currentProductIdValue =
     null;
+
+  let suggestionTimer =
+    null;
+
+  function escapeSearchText(value) {
+    return String(value || "").replace(/[&<>'"]/g, (character) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
+    }[character]));
+  }
+
+  function hideSearchResults() {
+    if (!searchResults) return;
+    searchResults.classList.remove("show");
+    searchResults.innerHTML = "";
+    searchInput.setAttribute("aria-expanded", "false");
+  }
+
+  async function showSearchSuggestions(query) {
+    if (!searchResults || query.length < 2) {
+      hideSearchResults();
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/api/products?search=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      const products = Array.isArray(data.products) ? data.products.slice(0, 6) : [];
+
+      if (!products.length) {
+        hideSearchResults();
+        return;
+      }
+
+      searchResults.innerHTML = products.map((product) => `
+        <button type="button" class="edit-search-result" data-product-query="${escapeSearchText(product.id || product.name)}" role="option">
+          <strong>${escapeSearchText(product.name || "Unnamed product")}</strong>
+          <small>${escapeSearchText(product.id || "No ID")} · ${escapeSearchText(product.category || "Uncategorised")}</small>
+        </button>
+      `).join("");
+      searchResults.classList.add("show");
+      searchInput.setAttribute("aria-expanded", "true");
+    } catch (error) {
+      hideSearchResults();
+    }
+  }
+
+  searchInput.addEventListener("input", () => {
+    clearTimeout(suggestionTimer);
+    const query = searchInput.value.trim();
+    suggestionTimer = setTimeout(() => showSearchSuggestions(query), 250);
+  });
+
+  searchResults?.addEventListener("click", (event) => {
+    const result = event.target.closest(".edit-search-result");
+    if (!result) return;
+    searchInput.value = result.dataset.productQuery;
+    hideSearchResults();
+    loadProductForm.requestSubmit();
+  });
+
+  searchInput.addEventListener("blur", () => {
+    setTimeout(hideSearchResults, 180);
+  });
 
 
   // ----------------------------------------------------------
@@ -572,9 +640,9 @@ if (
         const exactMatch =
           products.find(
             (product) =>
-              product.id?.toLowerCase() ===
+              String(product.id || "").toLowerCase() ===
                 normalizedQuery ||
-              product.name?.toLowerCase() ===
+              String(product.name || "").toLowerCase() ===
                 normalizedQuery
           );
 

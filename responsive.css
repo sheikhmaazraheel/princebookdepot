@@ -184,12 +184,27 @@
 
 /* ================ PRODUCTS ================= */
 @media screen and (max-width: 768px) {
+  .storefront-search {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding: 22px 16px;
+  }
+
+  .storefront-search-compact {
+    display: block;
+    padding: 0 12px;
+  }
+
+  .search-band-copy {
+    max-width: none;
+  }
+
   #searchInput {
-    width: 350px;
+    width: 100%;
   }
   .search-results {
-    width: 350px;
-    top: 76px;
+    width: 100%;
   }
     .Product-grid {
     grid-template-columns: repeat(2, 1fr);

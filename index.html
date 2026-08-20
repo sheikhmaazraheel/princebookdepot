@@ -168,6 +168,21 @@
         <!-- Add more circles here -->
       </div>
     </section>
+    <section class="storefront-search" aria-labelledby="storefront-search-title">
+      <div class="search-band-copy">
+        <span class="search-eyebrow">Find your next read</span>
+        <h2 id="storefront-search-title">Search the collection</h2>
+        <p>Look up a title, author, category, or product ID.</p>
+      </div>
+      <div class="search-bar-container">
+        <div class="search-field">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input type="search" id="searchInput" placeholder="Search books, authors, categories..." autocomplete="off" enterkeyhint="search" aria-label="Search the book collection" aria-controls="searchResults" aria-expanded="false" />
+          <button type="button" class="search-clear" id="searchClear" aria-label="Clear search" hidden>&times;</button>
+          <div id="searchResults" class="search-results" role="listbox" aria-label="Search results"></div>
+        </div>
+      </div>
+    </section>
     <!-- ================== Most Popular Novels ===================== -->
     <section class="home-section" id="popular-section">
       <div class="home-section-header">
