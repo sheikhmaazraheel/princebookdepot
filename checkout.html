@@ -120,78 +120,51 @@
       </aside>
     </header>
 
-    <div class="checkout-container">
-      <h2>Checkout</h2>
-      <form
-        id="checkout-form"
-        action="https://script.google.com/macros/s/AKfycbz_dm6NXP5Dex2ZvxB6dnd5NcQ035hndRjZCBmzZCsttalPjQ0yAHZJYYxlbGWKgtQ/exec"
-        method="POST"
-        onsubmit="return handleCheckout();"
-      >
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="firstName" name="name" required />
-        </div>
-
-        <div class="form-group">
-          <label for="contact">Contact Number</label>
-          <input
-            type="tel"
-            id="contact"
-            name="contact"
-            required
-            placeholder="e.g., 03xx-xxxxxxx"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="city">City</label>
-          <select id="city" name="city" required>
-            <option value="" disabled selected>Select City</option>
-            <option value="Karachi">Karachi</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="house">House Number</label>
-          <input type="text" id="house" name="house" required />
-        </div>
-
-        <div class="form-group">
-          <label for="block">Block Number</label>
-          <input type="text" id="block" name="block" required />
-        </div>
-
-        <div class="form-group">
-          <label for="landmark">Nearest Landmark</label>
-          <input type="text" id="landmark" name="landmark" required />
-        </div>
-
-        <div class="form-group">
-          <label for="area">Area</label>
-          <input type="text" id="area" name="area" required />
-        </div>
-
-        <div class="form-group">
-          <label>Payment Method</label>
-          <div class="payment-options">
-            <div class="payment-box" data-method="Cash on Delivery">
-              Cash on Delivery
-            </div>
-            <div class="payment-box" data-method="Online Payment">
-              Online Payment
+    <main class="checkout-shell">
+      <div class="checkout-heading">
+        <div class="page-kicker">Final step</div>
+        <h1>Complete your order</h1>
+        <p>Tell us where to deliver your next favourite book.</p>
+      </div>
+      <div class="checkout-layout">
+        <form id="checkout-form" class="checkout-container" novalidate>
+          <div class="checkout-section">
+            <div class="section-number">01</div>
+            <div class="section-content">
+              <h2>Personal details</h2>
+              <p class="section-caption">We will use these details to coordinate delivery.</p>
+              <div class="form-grid">
+                <div class="form-group form-group-wide"><label for="firstName">Full name</label><input type="text" id="firstName" name="name" autocomplete="name" required placeholder="e.g. Maaz Raheel" /></div>
+                <div class="form-group"><label for="contact">Mobile number</label><input type="tel" id="contact" name="contact" autocomplete="tel" required placeholder="03xx-xxxxxxx" /></div>
+                <div class="form-group"><label for="email">Email <span>(optional)</span></label><input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" /></div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <input type="hidden" id="paymentMethod" name="payment" />
-        <input type="hidden" id="orderId" name="orderId" />
-        <input type="hidden" id="cart-items" name="cartSummary" />
-        <input type="hidden" id="total" name="total" />
-
-        <button type="submit" id="confirm-Order">Confirm Order</button>
-      </form>
-    </div>
+          <div class="checkout-section">
+            <div class="section-number">02</div>
+            <div class="section-content">
+              <h2>Delivery address</h2>
+              <p class="section-caption">Currently delivering across Karachi.</p>
+              <div class="form-grid">
+                <div class="form-group"><label for="area">Area / neighbourhood</label><input type="text" id="area" name="area" autocomplete="address-level2" required placeholder="e.g. Gulshan-e-Iqbal" /></div>
+                <div class="form-group"><label for="zone">Delivery zone</label><select id="zone" name="zone" required><option value="" disabled selected>Select your zone</option><option value="central" data-charge="150">Central Karachi · Rs.150</option><option value="south" data-charge="180">South Karachi · Rs.180</option><option value="east" data-charge="200">East Karachi · Rs.200</option><option value="west" data-charge="220">West Karachi · Rs.220</option><option value="malir" data-charge="250">Malir / Airport · Rs.250</option><option value="outside" data-charge="300">Outside Karachi · Rs.300</option></select></div>
+                <div class="form-group form-group-wide"><label for="address">Complete address</label><textarea id="address" name="address" autocomplete="street-address" required placeholder="House / flat, street, block, building and any useful directions"></textarea></div>
+                <div class="form-group"><label for="landmark">Nearest landmark</label><input type="text" id="landmark" name="landmark" required placeholder="e.g. near Nipa Chowrangi" /></div>
+                <div class="form-group location-helper"><label>Location helper</label><button type="button" id="use-location" class="location-button">Use my current location</button><small id="location-status">Optional: helps us confirm your delivery area.</small></div>
+              </div>
+            </div>
+          </div>
+          <div class="checkout-section">
+            <div class="section-number">03</div>
+            <div class="section-content"><h2>Payment method</h2><p class="section-caption">Choose how you would like to pay.</p><div class="payment-options"><label class="payment-box"><input type="radio" name="payment" value="Cash on Delivery" required /><span><strong>Cash on Delivery</strong><small>Pay when your books arrive</small></span></label><label class="payment-box"><input type="radio" name="payment" value="Online Payment" /><span><strong>Online payment</strong><small>Payment instructions after confirmation</small></span></label></div></div>
+          </div>
+          <input type="hidden" id="orderId" name="orderId" /><input type="hidden" id="cart-items" name="cartSummary" /><input type="hidden" id="total" name="total" />
+          <button type="submit" id="confirm-Order" class="primary-action">Review and confirm order <span aria-hidden="true">→</span></button>
+          <p id="checkout-message" class="checkout-message" role="status"></p>
+        </form>
+        <aside class="checkout-summary" aria-labelledby="checkout-summary-title"><div class="panel-heading"><h2 id="checkout-summary-title">Your order</h2><span id="checkout-order-id">Pending</span></div><div id="checkout-items" class="checkout-items"></div><div class="summary-line"><span>Subtotal</span><strong id="checkout-subtotal">Rs.0</strong></div><div class="summary-line"><span>Delivery</span><strong id="checkout-delivery">Select a zone</strong></div><div class="summary-total"><span>Total</span><strong id="checkout-total">Rs.0</strong></div><a href="cart.html" class="back-cart-link">← Edit cart</a></aside>
+      </div>
+    </main>
 
 
     <!-- =================== Footer Section ===================== -->
@@ -264,6 +237,5 @@
     <!-- ===================  Script =============== -->
 
     <script src="JS/script.js"></script>
-    <script src="JS/checkout.js"></script>
   </body>
 </html>

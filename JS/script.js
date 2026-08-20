@@ -598,122 +598,108 @@ document.addEventListener("DOMContentLoaded", () => {
         showProductLoadError();
       });
   }
-  // ✅ CART PAGE
-  const cartItemsTbody = document.getElementById("cart-items");
-  const orderIdSpan = document.getElementById("order-id");
-  const Quantity = document.getElementById("Quantity-heading");
-  const cartSummary = document.getElementById("cart-summary");
-  const cartTable = document.getElementById("cart-table");
-  const cartHeadings = document.getElementById("summary-headings");
-  const totalRow = document.getElementById("total");
-  const totalColumn = document.getElementById("totalColumn");
+  // ============== Cart and checkout =================
+  const cartItems = document.getElementById("cart-items");
+  const checkoutForm = document.getElementById("checkout-form");
+  const money = (value) => `Rs.${Number(value).toLocaleString("en-PK")}`;
+  const getCartSubtotal = () => Object.values(pbdcart).reduce(
+    (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0), 0
+  );
 
-  let subtotal = 0;
-  let total = 0;
-  if (cartItemsTbody) {
-    cartItemsTbody.innerHTML = "";
-// Loop through cart items and create rows
-    Object.keys(pbdcart).forEach((id) => {
-      const item = pbdcart[id];
-      const price = item.price || 0;
-      const qty = item.quantity || 0;
-      const amount = price * qty;
-      subtotal += amount;
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${item.name || "Unnamed"}</td>
-        <td>${price}</td>
-        <td class="qty-cell">
-          <button class="qty-btn decrease" data-id="${id}">−</button>
-          <span class="quantity" id="qty-${id}">${qty}</span>
-          <button class="qty-btn increase" data-id="${id}">+</button>
-        </td>
-        <td >${amount}</td>
-      `;
-
-      cartItemsTbody.appendChild(row);
-    });
-
-    // ======= SYNC COLUMNS WIDTH
-    function syncColumnWidths() {
-      // Get first row of cartTable
-      const cartTableRow = cartTable.rows[0];
-      // Sum width of first three columns
-      const width1 = cartTableRow.cells[0].getBoundingClientRect().width;
-      const width2 = cartTableRow.cells[1].getBoundingClientRect().width;
-      const width3 = cartTableRow.cells[2].getBoundingClientRect().width;
-      const totalWidth = width1 + width2 + width3;
-
-      // Apply the calculated width
-      cartHeadings.style.width = totalWidth + "px";
-      totalColumn.style.width = totalWidth + "px";
+  function getOrderId() {
+    let orderId = localStorage.getItem("pbdorderId");
+    if (!orderId && Object.keys(pbdcart).length) {
+      orderId = generateOrderId();
+      localStorage.setItem("pbdorderId", orderId);
     }
-
-    // Run on load and on resize
-    window.addEventListener("load", syncColumnWidths);
-    window.addEventListener("resize", syncColumnWidths);
-
-    //  ======== ADDING CART SUMMARY
-    let deliveryCharges = 0;
-    if (subtotal != 0) {
-      deliveryCharges = 150;
-    }
-    total = subtotal + deliveryCharges;
-    const deliveryCell = document.getElementById("delivery-charges");
-
-    const Summaryrow = document.createElement("tr");
-    Summaryrow.innerHTML = ` 
-          <td id="summary-headings">Sub-total :</td>
-          <td id="summary-data">Rs.${subtotal}</td>
-    `;
-    deliveryCell.innerHTML = `Rs.${deliveryCharges}`;
-    cartSummary.prepend(Summaryrow);
-    const Row = document.createElement("tr");
-    Row.innerHTML = ` 
-          <td id="summary-headings">Total :</td>
-          <td id="summary-data">Rs.${total}</td>
-        
-    `;
-    totalRow.appendChild(Row);
-
-    const smallScreenQuery = window.matchMedia("(max-width:768px)").matches;
-    // Update quantity text based on screen size
-    changeQuantityText(smallScreenQuery, Quantity);
-    // Cart quantity buttons
-    document.querySelectorAll(".qty-btn").forEach((button) => {
-      button.addEventListener("click", () => {
-        const id = button.dataset.id;
-        const isIncrease = button.classList.contains("increase");
-        const pbdcart = JSON.parse(localStorage.getItem("pbdcart")) || {};
-        const item = pbdcart[id];
-
-        if (!item) return;
-
-        // Update quantity
-        item.quantity += isIncrease ? 1 : -1;
-
-        // If quantity is 0, remove item
-        if (item.quantity <= 0) {
-          delete pbdcart[id];
-        } else {
-          pbdcart[id] = item;
-        }
-
-        // Save and reload
-        localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
-        updateCartCountDisplay(getCartProductCount());
-        location.reload();
-      });
-    });
-    let pbdorderId = localStorage.getItem("pbdorderId");
-  if (Object.keys(pbdcart).length) {
-    if (!pbdorderId) {
-      pbdorderId = generateOrderId();
-    }
-    localStorage.setItem("pbdorderId", pbdorderId);
+    return orderId || "Pending";
   }
-  orderIdSpan.textContent = pbdorderId;
+
+  function createCartItem(id, item, compact = false) {
+    const row = document.createElement("article");
+    row.className = compact ? "checkout-item" : "cart-item";
+    const amount = Number(item.price || 0) * Number(item.quantity || 0);
+    row.innerHTML = `
+      <div class="cart-item-cover" aria-hidden="true">▦</div>
+      <div class="cart-item-info"><strong>${item.name || "Unnamed book"}</strong><span>${money(item.price || 0)} each</span></div>
+      ${compact ? `<span class="checkout-item-qty">×${item.quantity}</span>` : `<div class="cart-quantity"><button type="button" class="qty-btn" data-id="${id}" data-change="-1" aria-label="Decrease quantity">−</button><strong>${item.quantity}</strong><button type="button" class="qty-btn" data-id="${id}" data-change="1" aria-label="Increase quantity">+</button></div>`}
+      <strong class="cart-item-amount">${money(amount)}</strong>`;
+    return row;
+  }
+
+  if (cartItems) {
+    const emptyCart = document.getElementById("empty-cart");
+    const itemCount = document.getElementById("cart-item-count");
+    const orderId = document.getElementById("order-id");
+    const subtotal = getCartSubtotal();
+    const items = Object.entries(pbdcart);
+    items.forEach(([id, item]) => cartItems.appendChild(createCartItem(id, item)));
+    if (emptyCart) emptyCart.hidden = items.length > 0;
+    if (itemCount) itemCount.textContent = `${items.reduce((sum, [, item]) => sum + Number(item.quantity || 0), 0)} items`;
+    if (orderId) orderId.textContent = getOrderId();
+    const subtotalElement = document.getElementById("summary-subtotal");
+    const totalElement = document.getElementById("summary-total");
+    if (subtotalElement) subtotalElement.textContent = money(subtotal);
+    if (totalElement) totalElement.textContent = money(subtotal);
+    const continueButton = document.getElementById("place-order");
+    if (continueButton && !items.length) continueButton.setAttribute("aria-disabled", "true");
+
+    cartItems.addEventListener("click", (event) => {
+      const button = event.target.closest(".qty-btn");
+      if (!button || !pbdcart[button.dataset.id]) return;
+      pbdcart[button.dataset.id].quantity += Number(button.dataset.change);
+      if (pbdcart[button.dataset.id].quantity <= 0) delete pbdcart[button.dataset.id];
+      localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
+      window.location.reload();
+    });
+  }
+
+  if (checkoutForm) {
+    const checkoutItems = document.getElementById("checkout-items");
+    const checkoutOrderId = document.getElementById("checkout-order-id");
+    const checkoutSubtotal = document.getElementById("checkout-subtotal");
+    const checkoutDelivery = document.getElementById("checkout-delivery");
+    const checkoutTotal = document.getElementById("checkout-total");
+    const zone = document.getElementById("zone");
+    const message = document.getElementById("checkout-message");
+    const subtotal = getCartSubtotal();
+    const items = Object.entries(pbdcart);
+
+    items.forEach(([id, item]) => checkoutItems.appendChild(createCartItem(id, item, true)));
+    checkoutOrderId.textContent = getOrderId();
+    checkoutSubtotal.textContent = money(subtotal);
+    checkoutTotal.textContent = money(subtotal);
+    document.getElementById("orderId").value = getOrderId();
+    document.getElementById("cart-items").value = items.map(([, item]) => `${item.name} (x${item.quantity})`).join(", ");
+
+    function updateCheckoutTotal() {
+      const charge = Number(zone.selectedOptions[0]?.dataset.charge || 0);
+      checkoutDelivery.textContent = charge ? money(charge) : "Select a zone";
+      checkoutTotal.textContent = money(subtotal + charge);
+      document.getElementById("total").value = subtotal + charge;
+    }
+    zone.addEventListener("change", updateCheckoutTotal);
+
+    document.getElementById("use-location")?.addEventListener("click", () => {
+      const status = document.getElementById("location-status");
+      if (!navigator.geolocation) {
+        status.textContent = "Location is not available in this browser.";
+        return;
+      }
+      status.textContent = "Checking your current location...";
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => { status.textContent = `Location captured (${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)}). Please select your delivery zone.`; },
+        () => { status.textContent = "We could not access your location. You can select your zone manually."; }
+      );
+    });
+
+    checkoutForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!checkoutForm.reportValidity() || !items.length) return;
+      message.textContent = "Your order details are ready. We will confirm availability and delivery with you shortly.";
+      message.classList.add("is-success");
+      checkoutForm.querySelector("button[type=submit]").textContent = "Order details saved ✓";
+    });
   }
   
   // ============== Search Functionality ===============

@@ -120,41 +120,43 @@
       </aside>
     </header>
 
-    <main class="cart-page">
-      <p style="text-align: left; margin: 0 10px">
-        <strong>Order ID:</strong> <span id="order-id"></span>
-      </p>
-      <h1 class="cart-heading">Your Cart</h1>
+    <main class="cart-page cart-page-modern">
+      <div class="page-kicker">Your reading list</div>
+      <div class="cart-title-row">
+        <div>
+          <h1 class="cart-heading">Shopping cart</h1>
+          <p class="cart-intro">Review your books before we prepare them for delivery.</p>
+        </div>
+        <span class="order-reference">Order <strong id="order-id">Pending</strong></span>
+      </div>
 
-      <table class="cart-table" id="cart-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Price (Rs.)</th>
-            <th id="Quantity-heading">Quantity</th>
-            <th>Amount (Rs.)</th>
-          </tr>
-        </thead>
+      <div class="cart-layout">
+        <section class="cart-items-panel" aria-labelledby="cart-items-title">
+          <div class="panel-heading">
+            <h2 id="cart-items-title">Selected books</h2>
+            <span id="cart-item-count">0 items</span>
+          </div>
+          <div id="cart-items" class="cart-items-list"></div>
+          <div id="empty-cart" class="empty-cart" hidden>
+            <span class="empty-cart-mark" aria-hidden="true">+</span>
+            <h2>Your cart is waiting for a good story</h2>
+            <p>Explore the collection and add something worth turning the page for.</p>
+            <a class="secondary-action" href="index.html#Shop-Now">Browse books</a>
+          </div>
+        </section>
 
-        <tbody id="cart-items">
-          <hr />
-        </tbody>
-      </table>
-      <hr />
-      <table id="cart-summary" class="cart-summary">
-        <tr>
-          <td id="summary-headings">Delivery Charges :</td>
-          <td id="delivery-charges">Rs 150</td>
-        </tr>
-      </table>
-      <hr />
-      <table id="total" class="cart-summary">
-        <tr>
-          <td id="totalColumn"></td>
-          <td></td>
-        </tr>
-      </table>
-      <button id="place-order" href="checkout.html">Place Order</button>
+        <aside class="order-summary-panel" aria-labelledby="summary-title">
+          <div class="panel-heading">
+            <h2 id="summary-title">Order summary</h2>
+            <span class="secure-note">Ready to ship</span>
+          </div>
+          <div class="summary-line"><span>Subtotal</span><strong id="summary-subtotal">Rs.0</strong></div>
+          <div class="summary-line"><span>Delivery</span><strong id="summary-delivery">Calculated at checkout</strong></div>
+          <div class="summary-total"><span>Total</span><strong id="summary-total">Rs.0</strong></div>
+          <a id="place-order" class="primary-action" href="checkout.html">Continue to checkout <span aria-hidden="true">→</span></a>
+          <p class="summary-footnote">Delivery charges are based on your Karachi location and are shown before confirmation.</p>
+        </aside>
+      </div>
     </main>
 
 
