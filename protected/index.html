@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prince Book Depot - Dashboard</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./dashboard.css" />
+    <link rel="stylesheet" href="./analytics.css" />
+  </head>
+  <body class="dashboard-body">
+    <main class="dashboard-page">
+      <header class="dashboard-header">
+        <div>
+          <span class="eyebrow">PRINCE BOOK DEPOT / CONTROL CENTRE</span>
+          <h1>Good day, let&apos;s keep the shelves moving.</h1>
+          <p class="muted">Manage products, orders, and daily store operations from one calm workspace.</p>
+        </div>
+        <div class="dashboard-header-actions"><a class="outline-action" href="../index.html" target="_blank" rel="noopener">View storefront <span aria-hidden="true">↗</span></a><button type="button" id="refresh-dashboard" class="refresh-button">Refresh <span aria-hidden="true">↻</span></button></div>
+      </header>
+
+      <nav class="dashboard-nav" aria-label="Dashboard navigation"><a class="active" href="./index.html">Overview</a><a href="./orders.html">Orders</a><a href="./add-product.html">Add product</a><a href="./edit-product.html">Edit product</a></nav>
+
+      <section class="dashboard-metrics" aria-label="Store overview">
+        <article class="dashboard-metric"><span class="metric-icon">▦</span><div><small>Catalogue</small><strong id="product-count">--</strong><span id="product-caption">Products listed</span></div></article>
+        <article class="dashboard-metric metric-blue"><span class="metric-icon">◌</span><div><small>Available now</small><strong id="available-count">--</strong><span id="available-caption">Ready for customers</span></div></article>
+        <article class="dashboard-metric metric-gold"><span class="metric-icon">⌁</span><div><small>Pending orders</small><strong id="pending-count">--</strong><span>Need attention</span></div></article>
+        <article class="dashboard-metric metric-green"><span class="metric-icon">↗</span><div><small>Active order value</small><strong id="order-value">--</strong><span>Excludes cancelled / returned</span></div></article>
+      </section>
+
+      <section class="dashboard-grid">
+        <section class="workspace-panel quick-panel" aria-labelledby="quick-actions-title"><div class="panel-topline"><div><span class="step-label">WORKSPACE</span><h2 id="quick-actions-title">Quick actions</h2></div><span class="panel-mark">01</span></div><div class="quick-actions"><a class="quick-action action-primary" href="./add-product.html"><span class="action-symbol">＋</span><span><strong>Add a product</strong><small>Put a new title on the shelf</small></span><b aria-hidden="true">→</b></a><a class="quick-action" href="./edit-product.html"><span class="action-symbol">✎</span><span><strong>Edit catalogue</strong><small>Update pricing, covers, and placement</small></span><b aria-hidden="true">→</b></a><a class="quick-action" href="./orders.html"><span class="action-symbol">◫</span><span><strong>Review orders</strong><small>Track delivery, status, and order slips</small></span><b aria-hidden="true">→</b></a></div></section>
+
+        <section class="workspace-panel attention-panel" aria-labelledby="attention-title"><div class="panel-topline"><div><span class="step-label">ATTENTION</span><h2 id="attention-title">Order pulse</h2></div><a class="panel-link" href="./orders.html">Open queue →</a></div><div class="pulse-row"><div class="pulse-ring"><strong id="pulse-pending">--</strong><span>pending</span></div><div class="pulse-copy"><strong id="pulse-message">Checking your orders...</strong><p id="pulse-detail">The latest order activity will appear here.</p></div></div><div class="pulse-track"><span id="pulse-progress"></span></div></section>
+
+        <section class="workspace-panel recent-panel" aria-labelledby="recent-title"><div class="panel-topline"><div><span class="step-label">LATEST ACTIVITY</span><h2 id="recent-title">Recent orders</h2></div><a class="panel-link" href="./orders.html">View all →</a></div><div id="recent-orders" class="recent-orders"></div><div id="dashboard-status" class="dashboard-status" role="status"></div></section>
+
+        <section class="workspace-panel guide-panel" aria-labelledby="guide-title"><div class="panel-topline"><div><span class="step-label">ROUTE MAP</span><h2 id="guide-title">Your workspace</h2></div><span class="panel-mark">04</span></div><div class="route-list"><a href="./add-product.html"><span>01</span><div><strong>Build the catalogue</strong><small>Add books with covers, prices, and categories.</small></div><b>→</b></a><a href="./edit-product.html"><span>02</span><div><strong>Keep it current</strong><small>Adjust availability and merchandising flags.</small></div><b>→</b></a><a href="./orders.html"><span>03</span><div><strong>Complete the loop</strong><small>Process orders and print A5 parcel slips.</small></div><b>→</b></a></div></section>
+      </section>
+
+      <section class="analytics-section" aria-labelledby="analytics-title">
+        <div class="analytics-heading"><div><span class="step-label">STORE INTELLIGENCE</span><h2 id="analytics-title">A sharper read on the week</h2></div><span id="analytics-updated">Live overview</span></div>
+        <div class="analytics-grid">
+          <section class="chart-card status-chart-card" aria-labelledby="status-chart-title"><div class="chart-card-heading"><div><h3 id="status-chart-title">Order status</h3><p>Where each order currently sits</p></div><span class="chart-period">ALL TIME</span></div><div class="status-chart-body"><div id="status-donut" class="status-donut"><div><strong id="status-total">0</strong><span>orders</span></div></div><div id="status-legend" class="status-legend"></div></div></section>
+          <section class="chart-card activity-chart-card" aria-labelledby="activity-chart-title"><div class="chart-card-heading"><div><h3 id="activity-chart-title">Order activity</h3><p>Orders received over the last 7 days</p></div><span class="chart-period">7 DAYS</span></div><div id="activity-chart" class="activity-chart" aria-label="Seven day order activity"></div></section>
+          <section class="chart-card category-chart-card" aria-labelledby="category-chart-title"><div class="chart-card-heading"><div><h3 id="category-chart-title">Catalogue mix</h3><p>Available titles by category</p></div><span class="chart-period">CATALOGUE</span></div><div id="category-chart" class="category-chart"></div></section>
+        </div>
+      </section>
+    </main>
+    <script src="./dashboard.js"></script>
+  </body>
+</html>

@@ -221,6 +221,8 @@ button:disabled {
 
 /* Shared product administration system */
 .product-admin-page { width: min(1040px, 100%); }
+.back-dashboard { display: inline-flex; margin-bottom: 22px; color: #0e7490; font-size: .76rem; font-weight: 800; text-decoration: none; }
+.back-dashboard:hover { color: #17324f; }
 .product-admin-panel { padding: clamp(22px, 4vw, 46px); }
 .admin-heading { margin-bottom: 34px; }
 .admin-heading h1 { margin: 8px 0 7px; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -.05em; }
