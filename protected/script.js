@@ -101,7 +101,12 @@ if (productForm) {
 
   const imagePreview =
     document.getElementById(
-      "image-preview"
+      "preview-img"
+    );
+
+  const previewBox =
+    document.getElementById(
+      "preview-box"
     );
 
   const statusBox =
@@ -142,6 +147,8 @@ if (productForm) {
               "none";
           }
 
+          if (previewBox) previewBox.hidden = true;
+
           return;
         }
 
@@ -179,6 +186,8 @@ if (productForm) {
 
           imagePreview.style.display =
             "block";
+
+          if (previewBox) previewBox.hidden = false;
         }
 
       }
@@ -337,6 +346,8 @@ if (productForm) {
 
           imagePreview.style.display =
             "none";
+
+          if (previewBox) previewBox.hidden = true;
         }
 
 
