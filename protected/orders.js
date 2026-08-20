@@ -5,6 +5,7 @@ const emptyState = document.getElementById("orders-empty");
 const statusMessage = document.getElementById("orders-status");
 const statusFilter = document.getElementById("status-filter");
 const refreshButton = document.getElementById("refresh-orders");
+const loadedOrders = new Map();
 
 const money = (value) => `Rs.${Number(value || 0).toLocaleString("en-PK")}`;
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({
@@ -18,6 +19,30 @@ const formatDate = (value) => {
 function setStatus(message, isError = false) {
   statusMessage.textContent = message;
   statusMessage.classList.toggle("error", isError);
+}
+
+function openOrderSlip(order) {
+  if (!order) return;
+
+  const items = (order.items || []).map((item) => `
+    <tr><td>${escapeHtml(item.name)}</td><td>${item.quantity}</td><td>${money(item.unitPrice)}</td><td>${money(item.lineTotal)}</td></tr>
+  `).join("");
+  const location = order.location?.latitude !== undefined && order.location?.longitude !== undefined
+    ? `${order.location.latitude}, ${order.location.longitude} (accuracy: ${escapeHtml(order.location.accuracy || "unknown")}m)`
+    : "Not shared";
+  const slipWindow = window.open("", "_blank", "width=900,height=1000");
+
+  if (!slipWindow) {
+    setStatus("Please allow pop-ups to print or download the order slip.", true);
+    return;
+  }
+
+  slipWindow.document.write(`<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Order Slip ${escapeHtml(order.orderId)}</title><style>
+    :root{color-scheme:light}*{box-sizing:border-box}body{margin:0;padding:28px;background:#e8f0f6;color:#182536;font-family:Arial,Helvetica,sans-serif}.slip{width:min(780px,100%);margin:0 auto;background:#fff;padding:42px;box-shadow:0 18px 50px rgba(16,37,61,.14)}.slip-header{display:flex;justify-content:space-between;gap:24px;padding-bottom:24px;border-bottom:3px solid #17324f}.brand{color:#17324f;font-size:23px;font-weight:800;letter-spacing:.08em}.brand span{display:block;margin-top:7px;color:#0e7490;font-size:10px;letter-spacing:.16em}.slip-title{text-align:right}.slip-title h1{margin:0;color:#0e7490;font-size:25px}.slip-title p{margin:7px 0 0;color:#718096;font-size:12px}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;padding:16px;border-radius:10px;background:#f4f8fb}.meta span{display:block;margin-bottom:5px;color:#8492a2;font-size:10px;text-transform:uppercase;letter-spacing:.08em}.meta strong{color:#30465f;font-size:12px}.section-title{margin:24px 0 9px;color:#17324f;font-size:11px;letter-spacing:.1em;text-transform:uppercase} .address{padding:13px;border-left:3px solid #19aeca;background:#f7fafc;color:#52677c;font-size:12px;line-height:1.6}table{width:100%;border-collapse:collapse;font-size:12px}th{padding:10px 8px;background:#17324f;color:#fff;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.05em}td{padding:11px 8px;border-bottom:1px solid #e2eaf1;color:#52677c}th:not(:first-child),td:not(:first-child){text-align:right}.totals{width:280px;margin:18px 0 0 auto}.totals td{border:0;padding:6px 8px}.totals tr:last-child td{padding-top:12px;border-top:2px solid #17324f;color:#0e7490;font-size:15px;font-weight:800}.footer{display:flex;justify-content:space-between;gap:20px;margin-top:30px;padding-top:16px;border-top:1px solid #e2eaf1;color:#8492a2;font-size:10px;line-height:1.5}.print-action{display:block;width:100%;max-width:780px;margin:18px auto 0;padding:13px;border:0;border-radius:8px;background:#0e7490;color:#fff;font-weight:800;cursor:pointer}@media print{body{padding:0;background:#fff}.slip{width:100%;padding:0;box-shadow:none}.print-action{display:none}}@media(max-width:600px){body{padding:0}.slip{padding:24px}.meta{grid-template-columns:1fr 1fr}.slip-header{display:block}.slip-title{text-align:left;margin-top:18px}.totals{width:100%}}
+  </style></head><body><main class="slip"><header class="slip-header"><div class="brand">PRINCE BOOK DEPOT<span>BOOKS WORTH DELIVERING</span></div><div class="slip-title"><h1>Order Slip</h1><p>Thank you for shopping with us</p></div></header><section class="meta"><div><span>Order ID</span><strong>${escapeHtml(order.orderId)}</strong></div><div><span>Order date</span><strong>${formatDate(order.createdAt)}</strong></div><div><span>Status</span><strong>${escapeHtml(order.status)}</strong></div></section><h2 class="section-title">Customer</h2><div class="address"><strong>${escapeHtml(order.customer?.name)}</strong><br>${escapeHtml(order.customer?.contact)}${order.customer?.email ? `<br>${escapeHtml(order.customer.email)}` : ""}</div><h2 class="section-title">Deliver to</h2><div class="address">${escapeHtml(order.delivery?.address)}<br>${escapeHtml(order.delivery?.area)}, ${escapeHtml(order.delivery?.city)}<br>Landmark: ${escapeHtml(order.delivery?.landmark)}<br>Zone: ${escapeHtml(order.delivery?.zone)}<br>Coordinates: ${location}</div><h2 class="section-title">Items</h2><table><thead><tr><th>Book</th><th>Qty.</th><th>Unit price</th><th>Amount</th></tr></thead><tbody>${items}</tbody></table><table class="totals"><tr><td>Subtotal</td><td>${money(order.pricing?.subtotal)}</td></tr><tr><td>Delivery</td><td>${money(order.pricing?.deliveryCharge)}</td></tr><tr><td>Total</td><td>${money(order.pricing?.total)}</td></tr></table><div class="footer"><span>Payment: ${escapeHtml(order.paymentMethod)}</span><span>Prince Book Depot · Karachi</span></div></main><button class="print-action" onclick="window.print()">Print / Save as PDF</button></body></html>`);
+  slipWindow.document.close();
+  slipWindow.focus();
+  setTimeout(() => slipWindow.print(), 300);
 }
 
 function renderOrder(order) {
@@ -37,7 +62,7 @@ function renderOrder(order) {
     </summary>
     <div class="order-details">
       <section class="detail-block"><h3>Customer and delivery</h3><p><strong>Contact:</strong> ${escapeHtml(order.customer?.contact || "Not provided")}</p><p><strong>Email:</strong> ${escapeHtml(order.customer?.email || "Not provided")}</p><p><strong>Address:</strong> ${escapeHtml(order.delivery?.address || "Not provided")}</p><p><strong>Landmark:</strong> ${escapeHtml(order.delivery?.landmark || "Not provided")}</p><p><strong>Zone:</strong> ${escapeHtml(order.delivery?.zone || "Not provided")} · ${money(order.pricing?.deliveryCharge)} delivery</p><p>${location}</p></section>
-      <section class="detail-block"><h3>Order contents</h3><div class="order-items">${items || "<p>No items recorded.</p>"}</div><p><strong>Payment:</strong> ${escapeHtml(order.paymentMethod || "Not provided")}</p><p><strong>Subtotal:</strong> ${money(order.pricing?.subtotal)}</p></section>
+      <section class="detail-block"><h3>Order contents</h3><div class="order-items">${items || "<p>No items recorded.</p>"}</div><p><strong>Payment:</strong> ${escapeHtml(order.paymentMethod || "Not provided")}</p><p><strong>Subtotal:</strong> ${money(order.pricing?.subtotal)}</p><button type="button" class="order-slip-button" data-order-id="${escapeHtml(order.orderId)}">Print / Save order slip</button></section>
       <section class="detail-block order-status-control"><h3>Update order</h3><label for="status-${escapeHtml(order.orderId)}">Order status</label><select id="status-${escapeHtml(order.orderId)}" class="order-status-select" data-order-id="${escapeHtml(order.orderId)}"><option value="pending" ${status === "pending" ? "selected" : ""}>Pending</option><option value="confirmed" ${status === "confirmed" ? "selected" : ""}>Confirmed</option><option value="processing" ${status === "processing" ? "selected" : ""}>Processing</option><option value="shipped" ${status === "shipped" ? "selected" : ""}>Shipped</option><option value="delivered" ${status === "delivered" ? "selected" : ""}>Delivered</option><option value="completed" ${status === "completed" ? "selected" : ""}>Completed</option><option value="cancelled" ${status === "cancelled" ? "selected" : ""}>Cancelled</option><option value="returned" ${status === "returned" ? "selected" : ""}>Returned</option></select><small class="status-update-note">Last changed: ${formatDate(order.statusUpdatedAt || order.updatedAt)}</small></section>
     </div>
   </details>`;
@@ -87,6 +112,8 @@ async function loadOrders() {
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data.success) throw new Error(data.message || "Could not load orders.");
     const orders = Array.isArray(data.orders) ? data.orders : [];
+    loadedOrders.clear();
+    orders.forEach((order) => loadedOrders.set(order.orderId, order));
     ordersList.innerHTML = orders.map(renderOrder).join("");
     emptyState.hidden = orders.length > 0;
     updateMetrics(orders);
@@ -107,5 +134,12 @@ refreshButton.addEventListener("click", loadOrders);
 ordersList.addEventListener("change", (event) => {
   const select = event.target.closest(".order-status-select");
   if (select) updateOrderStatus(select);
+});
+ordersList.addEventListener("click", (event) => {
+  const button = event.target.closest(".order-slip-button");
+  if (!button) return;
+  event.preventDefault();
+  event.stopPropagation();
+  openOrderSlip(loadedOrders.get(button.dataset.orderId));
 });
 loadOrders();
