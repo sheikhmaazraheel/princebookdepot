@@ -2,136 +2,132 @@ const API_BASE =
   "https://princebookdepot-backend.onrender.com";
 
 const form =
-  document.getElementById(
-    "product-form"
-  );
+  document.getElementById("product-form");
 
 const imageInput =
-  form.elements.image;
+  form?.elements?.image;
 
 const imagePreview =
-  document.getElementById(
-    "image-preview"
-  );
+  document.getElementById("image-preview");
 
 const statusBox =
-  document.getElementById(
-    "status"
-  );
+  document.getElementById("status");
 
 const submitButton =
-  document.getElementById(
-    "submit-button"
+  document.getElementById("submit-button");
+
+
+// ============================================================
+// SAFETY CHECK
+// ============================================================
+
+if (!form) {
+  console.error(
+    "❌ Product form not found. Expected #product-form."
   );
+}
 
 
 // ============================================================
 // IMAGE PREVIEW
 // ============================================================
 
-imageInput.addEventListener(
-  "change",
-  () => {
+if (imageInput) {
+  imageInput.addEventListener(
+    "change",
+    () => {
+      const file =
+        imageInput.files?.[0];
 
-    const file =
-      imageInput.files?.[0];
+      if (!file) {
+        if (imagePreview) {
+          imagePreview.removeAttribute("src");
+          imagePreview.style.display = "none";
+        }
 
+        return;
+      }
 
-    if (!file) {
+      if (!file.type.startsWith("image/")) {
+        if (statusBox) {
+          statusBox.className = "error";
+          statusBox.textContent =
+            "Please select an image file.";
+        }
 
-      imagePreview.removeAttribute(
-        "src"
-      );
+        imageInput.value = "";
 
-      imagePreview.style.display =
-        "none";
+        if (imagePreview) {
+          imagePreview.removeAttribute("src");
+          imagePreview.style.display = "none";
+        }
 
-      return;
+        return;
+      }
+
+      /*
+       * The preview is optional.
+       * If your HTML has #image-preview it will show.
+       * If it does not, uploading will still work.
+       */
+      if (imagePreview) {
+        const previewUrl =
+          URL.createObjectURL(file);
+
+        imagePreview.src =
+          previewUrl;
+
+        imagePreview.style.display =
+          "block";
+      }
     }
-
-
-    // Only images
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-
-      statusBox.className =
-        "error";
-
-      statusBox.textContent =
-        "Please select an image file.";
-
-      imageInput.value =
-        "";
-
-      imagePreview.style.display =
-        "none";
-
-      return;
-    }
-
-
-    const previewUrl =
-      URL.createObjectURL(
-        file
-      );
-
-
-    imagePreview.src =
-      previewUrl;
-
-    imagePreview.style.display =
-      "block";
-  }
-);
+  );
+}
 
 
 // ============================================================
 // FILE → BASE64 DATA URI
 // ============================================================
 
-function fileToDataUrl(
-  file
-) {
-
+function fileToDataUrl(file) {
   return new Promise(
-    (
-      resolve,
-      reject
-    ) => {
-
+    (resolve, reject) => {
       const reader =
         new FileReader();
 
-
       reader.onload = () => {
-
-        resolve(
-          reader.result
-        );
-
+        resolve(reader.result);
       };
 
-
       reader.onerror = () => {
-
         reject(
           new Error(
             "Could not read the selected image."
           )
         );
-
       };
 
-
-      reader.readAsDataURL(
-        file
-      );
+      reader.readAsDataURL(file);
     }
   );
+}
 
+
+// ============================================================
+// STATUS HELPER
+// ============================================================
+
+function setStatus(
+  message,
+  type = ""
+) {
+  if (!statusBox) return;
+
+  statusBox.className =
+    type;
+
+  statusBox.textContent =
+    message;
 }
 
 
@@ -139,253 +135,239 @@ function fileToDataUrl(
 // SUBMIT PRODUCT
 // ============================================================
 
-form.addEventListener(
-  "submit",
-  async (event) => {
+if (form) {
+  form.addEventListener(
+    "submit",
+    async (event) => {
+      event.preventDefault();
 
-    event.preventDefault();
+      setStatus("");
 
-
-    statusBox.className =
-      "";
-
-    statusBox.textContent =
-      "";
-
-
-    const file =
-      imageInput.files?.[0];
-
-
-    if (!file) {
-
-      statusBox.className =
-        "error";
-
-      statusBox.textContent =
-        "Please choose a product image.";
-
-      return;
-    }
-
-
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-
-      statusBox.className =
-        "error";
-
-      statusBox.textContent =
-        "Only image files are allowed.";
-
-      return;
-    }
-
-
-    // 5 MB frontend safety check
-    if (
-      file.size >
-      5 * 1024 * 1024
-    ) {
-
-      statusBox.className =
-        "error";
-
-      statusBox.textContent =
-        "Image must be 5 MB or smaller.";
-
-      return;
-    }
-
-
-    submitButton.disabled =
-      true;
-
-    submitButton.textContent =
-      "Uploading image...";
-
-
-    try {
-
-      // --------------------------------------------------------
-      // Convert image to Base64
-      // --------------------------------------------------------
-
-      const imageData =
-        await fileToDataUrl(
-          file
+      if (!imageInput) {
+        setStatus(
+          "Image input was not found.",
+          "error"
         );
 
-
-      submitButton.textContent =
-        "Saving product...";
-
-
-      // --------------------------------------------------------
-      // Build JSON payload
-      // --------------------------------------------------------
-
-      const productData = {
-
-        id:
-          form.elements.id.value
-            .trim(),
-
-        name:
-          form.elements.name.value
-            .trim(),
-
-        price:
-          form.elements.price.value,
-
-        discount:
-          form.elements.discount.value,
-
-        category:
-          form.elements.category.value,
-
-        mostPopular:
-          form.elements.mostPopular.checked,
-
-        thisWeekBest:
-          form.elements.thisWeekBest.checked,
-
-        featured:
-          form.elements.featured.checked,
-
-        available:
-          form.elements.available.checked,
-
-        image:
-          imageData,
-
-      };
-
-
-      // --------------------------------------------------------
-      // Send to Render
-      // --------------------------------------------------------
-
-      const response =
-        await fetch(
-          `${API_BASE}/api/products`,
-          {
-            method:
-              "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body:
-              JSON.stringify(
-                productData
-              ),
-          }
-        );
-
-
-      let data;
-
-      try {
-
-        data =
-          await response.json();
-
-      } catch {
-
-        throw new Error(
-          "The server returned an invalid response."
-        );
-
+        return;
       }
 
+      const file =
+        imageInput.files?.[0];
 
-      if (
-        !response.ok
-      ) {
-
-        throw new Error(
-          data.message ||
-          `Server returned ${response.status}.`
+      if (!file) {
+        setStatus(
+          "Please choose a product image.",
+          "error"
         );
 
+        return;
       }
 
-
-      // --------------------------------------------------------
-      // SUCCESS
-      // --------------------------------------------------------
-
-      statusBox.className =
-        "success";
-
-      statusBox.textContent =
-        `Product ${data.product.id} saved successfully.`;
-
-
-      form.reset();
-
-
-      // Keep Available checked
+      // Only images
       if (
-        form.elements.available
+        !file.type.startsWith("image/")
       ) {
+        setStatus(
+          "Only image files are allowed.",
+          "error"
+        );
 
-        form.elements.available.checked =
+        return;
+      }
+
+      // 5 MB frontend safety limit
+      if (
+        file.size >
+        5 * 1024 * 1024
+      ) {
+        setStatus(
+          "Image must be 5 MB or smaller.",
+          "error"
+        );
+
+        return;
+      }
+
+      if (submitButton) {
+        submitButton.disabled =
           true;
 
+        submitButton.textContent =
+          "Uploading image...";
       }
 
+      try {
+        // ------------------------------------------------------
+        // Convert image to Base64
+        // ------------------------------------------------------
 
-      imagePreview.removeAttribute(
-        "src"
-      );
-
-      imagePreview.style.display =
-        "none";
-
-
-      console.log(
-        "✅ Product saved:",
-        data.product
-      );
+        const imageData =
+          await fileToDataUrl(file);
 
 
-      console.log(
-        "☁️ Cloudinary image:",
-        data.product.image
-      );
+        if (submitButton) {
+          submitButton.textContent =
+            "Saving product...";
+        }
 
 
-    } catch (error) {
+        // ------------------------------------------------------
+        // Build product object
+        // ------------------------------------------------------
 
-      console.error(
-        "Product upload error:",
-        error
-      );
+        const productData = {
+          id:
+            form.elements.id?.value
+              .trim(),
+
+          name:
+            form.elements.name?.value
+              .trim(),
+
+          price:
+            form.elements.price?.value,
+
+          discount:
+            form.elements.discount?.value,
+
+          category:
+            form.elements.category?.value,
+
+          mostPopular:
+            form.elements.mostPopular?.checked ||
+            false,
+
+          thisWeekBest:
+            form.elements.thisWeekBest?.checked ||
+            false,
+
+          featured:
+            form.elements.featured?.checked ||
+            false,
+
+          available:
+            form.elements.available?.checked ??
+            true,
+
+          image:
+            imageData
+        };
 
 
-      statusBox.className =
-        "error";
+        // ------------------------------------------------------
+        // Send JSON to Render
+        // ------------------------------------------------------
 
-      statusBox.textContent =
-        error.message ||
-        "Something went wrong.";
+        const response =
+          await fetch(
+            `${API_BASE}/api/products`,
+            {
+              method: "POST",
 
-    } finally {
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
 
-      submitButton.disabled =
-        false;
+              body:
+                JSON.stringify(
+                  productData
+                )
+            }
+          );
 
-      submitButton.textContent =
-        "Save Product";
 
+        let data;
+
+        try {
+          data =
+            await response.json();
+        } catch {
+          throw new Error(
+            "The server returned an invalid response."
+          );
+        }
+
+
+        // ------------------------------------------------------
+        // Server error
+        // ------------------------------------------------------
+
+        if (!response.ok) {
+          throw new Error(
+            data.message ||
+            `Server returned ${response.status}.`
+          );
+        }
+
+
+        // ------------------------------------------------------
+        // SUCCESS
+        // ------------------------------------------------------
+
+        setStatus(
+          `Product ${data.product.id} saved successfully.`,
+          "success"
+        );
+
+        console.log(
+          "✅ Product saved:",
+          data.product
+        );
+
+        console.log(
+          "☁️ Cloudinary image:",
+          data.product.image
+        );
+
+
+        // ------------------------------------------------------
+        // Reset form
+        // ------------------------------------------------------
+
+        form.reset();
+
+
+        // Available should remain checked
+        if (form.elements.available) {
+          form.elements.available.checked =
+            true;
+        }
+
+
+        // Image preview is optional
+        if (imagePreview) {
+          imagePreview.removeAttribute(
+            "src"
+          );
+
+          imagePreview.style.display =
+            "none";
+        }
+
+
+      } catch (error) {
+        console.error(
+          "Product upload error:",
+          error
+        );
+
+        setStatus(
+          error.message ||
+          "Something went wrong.",
+          "error"
+        );
+
+      } finally {
+        if (submitButton) {
+          submitButton.disabled =
+            false;
+
+          submitButton.textContent =
+            "Save Product";
+        }
+      }
     }
-
-  }
-);
+  );
+}
