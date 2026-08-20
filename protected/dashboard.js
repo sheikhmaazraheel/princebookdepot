@@ -5,6 +5,11 @@ const money = (value) => `Rs.${Number(value || 0).toLocaleString("en-PK")}`;
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
 }[character]));
+
+async function logout() {
+  await fetch(`${API_BASE_URL}/api/auth/logout`, { method: "POST", credentials: "include" }).catch(() => {});
+  window.location.replace("../login.html");
+}
 const formatDate = (value) => {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "Unknown date" : date.toLocaleDateString("en-PK", { day: "numeric", month: "short" });
@@ -96,8 +101,8 @@ async function loadDashboard() {
 
   try {
     const [productsResponse, ordersResponse] = await Promise.all([
-      fetch(`${API_BASE_URL}/api/products?limit=200`),
-      fetch(`${API_BASE_URL}/api/orders?limit=200`),
+      fetch(`${API_BASE_URL}/api/products?limit=200`, { credentials: "include" }),
+      fetch(`${API_BASE_URL}/api/orders?limit=200`, { credentials: "include" }),
     ]);
     const productsData = await productsResponse.json().catch(() => ({}));
     const ordersData = await ordersResponse.json().catch(() => ({}));
@@ -134,4 +139,5 @@ async function loadDashboard() {
 }
 
 $("refresh-dashboard").addEventListener("click", loadDashboard);
+$("logout-dashboard").addEventListener("click", logout);
 loadDashboard();

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./style.css" />
     <link rel="stylesheet" href="./dashboard.css" />
     <link rel="stylesheet" href="./analytics.css" />
+    <link rel="stylesheet" href="./auth-ui.css" />
   </head>
   <body class="dashboard-body">
     <main class="dashboard-page">
@@ -16,7 +17,7 @@
           <h1>Good day, let&apos;s keep the shelves moving.</h1>
           <p class="muted">Manage products, orders, and daily store operations from one calm workspace.</p>
         </div>
-        <div class="dashboard-header-actions"><a class="outline-action" href="../index.html" target="_blank" rel="noopener">View storefront <span aria-hidden="true">↗</span></a><button type="button" id="refresh-dashboard" class="refresh-button">Refresh <span aria-hidden="true">↻</span></button></div>
+        <div class="dashboard-header-actions"><a class="outline-action" href="../index.html" target="_blank" rel="noopener">View storefront <span aria-hidden="true">↗</span></a><button type="button" id="refresh-dashboard" class="refresh-button">Refresh <span aria-hidden="true">↻</span></button><button type="button" id="logout-dashboard" class="logout-button">Sign out</button></div>
       </header>
 
       <nav class="dashboard-nav" aria-label="Dashboard navigation"><a class="active" href="./index.html">Overview</a><a href="./orders.html">Orders</a><a href="./add-product.html">Add product</a><a href="./edit-product.html">Edit product</a></nav>
@@ -47,6 +48,7 @@
         </div>
       </section>
     </main>
+    <script src="./auth.js"></script>
     <script src="./dashboard.js"></script>
   </body>
 </html>

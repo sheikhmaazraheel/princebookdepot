@@ -292,6 +292,9 @@ if (productForm) {
               method:
                 "POST",
 
+              credentials:
+                "include",
+
               headers: {
                 "Content-Type":
                   "application/json",
@@ -601,7 +604,8 @@ if (
 
         const response =
           await fetch(
-            `${API_BASE}/api/products?search=${encodeURIComponent(query)}`
+            `${API_BASE}/api/products?search=${encodeURIComponent(query)}`,
+            { credentials: "include" }
           );
 
 
@@ -1005,6 +1009,9 @@ if (
               method:
                 "PUT",
 
+              credentials:
+                "include",
+
               headers: {
                 "Content-Type":
                   "application/json",
@@ -1177,6 +1184,8 @@ if (
               currentProductIdValue
             )}`,
             {
+              credentials:
+                "include",
               method:
                 "DELETE",
             }

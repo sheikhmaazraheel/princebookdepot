@@ -87,6 +87,7 @@ async function updateOrderStatus(select) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/orders/${encodeURIComponent(orderId)}/status`, {
       method: "PATCH",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: nextStatus }),
     });
@@ -109,7 +110,7 @@ async function loadOrders() {
   const query = statusFilter.value ? `?status=${encodeURIComponent(statusFilter.value)}&limit=200` : "?limit=200";
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/orders${query}`);
+    const response = await fetch(`${API_BASE_URL}/api/orders${query}`, { credentials: "include" });
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data.success) throw new Error(data.message || "Could not load orders.");
     const orders = Array.isArray(data.orders) ? data.orders : [];
