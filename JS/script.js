@@ -808,7 +808,9 @@ document.addEventListener("DOMContentLoaded", () => {
           const savedOrderId = data.order.orderId;
           checkoutOrderId.textContent = savedOrderId;
           document.getElementById("orderId").value = savedOrderId;
-          message.textContent = `Order ${savedOrderId} has been received. We will contact you shortly to confirm delivery.`;
+          message.textContent = data.order.whatsapp?.sent
+            ? `Order ${savedOrderId} has been received. Please confirm it from the WhatsApp message we sent to your phone.`
+            : `Order ${savedOrderId} has been received. We will contact you shortly to confirm delivery.`;
           message.classList.add("is-success");
           submitButton.textContent = "Order received ✓";
           localStorage.removeItem("pbdcart");
