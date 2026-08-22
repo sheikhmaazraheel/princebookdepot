@@ -5,6 +5,34 @@ const money = (value) => `Rs.${Number(value || 0).toLocaleString("en-PK")}`;
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
 }[character]));
+const orderAlertButton = $("enable-order-alerts");
+let knownOrderIds = null;
+
+function updateOrderAlertButton() {
+  if (!orderAlertButton || !("Notification" in window)) return;
+  orderAlertButton.textContent = Notification.permission === "granted" ? "Order alerts on" : "Enable order alerts";
+  orderAlertButton.disabled = Notification.permission === "granted";
+}
+
+async function enableOrderAlerts() {
+  if (!("Notification" in window)) {
+    setDashboardStatus("This browser does not support website notifications.", true);
+    return;
+  }
+  const permission = await Notification.requestPermission();
+  updateOrderAlertButton();
+  setDashboardStatus(permission === "granted" ? "Private order alerts enabled for this dashboard." : "Order alerts were not enabled.", permission !== "granted");
+}
+
+function notifyForNewOrders(orders) {
+  const currentIds = new Set(orders.map((order) => order.orderId));
+  if (knownOrderIds && "Notification" in window && Notification.permission === "granted") {
+    orders.filter((order) => !knownOrderIds.has(order.orderId)).forEach((order) => {
+      new Notification("New Prince Book Depot order", { body: `${order.orderId} from ${order.customer?.name || "a customer"}` });
+    });
+  }
+  knownOrderIds = currentIds;
+}
 
 async function logout() {
   await fetch(`${API_BASE_URL}/api/auth/logout`, { method: "POST", credentials: "include" }).catch(() => {});
@@ -111,6 +139,7 @@ async function loadDashboard() {
 
     const products = Array.isArray(productsData.products) ? productsData.products : [];
     const orders = Array.isArray(ordersData.orders) ? ordersData.orders : [];
+    notifyForNewOrders(orders);
     const activeOrders = orders.filter((order) => !["cancelled", "returned"].includes(order.status));
     const pending = orders.filter((order) => order.status === "pending").length;
     const activeValue = activeOrders.reduce((sum, order) => sum + Number(order.pricing?.total || 0), 0);
@@ -140,4 +169,7 @@ async function loadDashboard() {
 
 $("refresh-dashboard").addEventListener("click", loadDashboard);
 $("logout-dashboard").addEventListener("click", logout);
+orderAlertButton?.addEventListener("click", enableOrderAlerts);
+updateOrderAlertButton();
 loadDashboard();
+setInterval(loadDashboard, 30000);
