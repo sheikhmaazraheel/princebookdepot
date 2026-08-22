@@ -32,6 +32,11 @@ function finalPrice(price, discount) {
   return Math.round(Number(price || 0) - (Number(price || 0) * Number(discount || 0)) / 100);
 }
 
+function discountFromFinalPrice(price, value) {
+  if (!Number(price)) return 0;
+  return Math.max(0, Math.min(100, Math.round(((Number(price) - Number(value)) / Number(price)) * 10000) / 100));
+}
+
 function updateChangeState() {
   const count = dirtyIds.size;
   saveButton.disabled = count === 0;
@@ -46,7 +51,7 @@ function render() {
       <td><input class="cell-input" data-field="author" maxlength="120" value="${escapeHtml(product.author || "")}" placeholder="Add author" aria-label="Author name for ${escapeHtml(product.name)}" /></td>
       <td><input class="cell-input number-input" data-field="price" type="number" min="0" step="0.01" value="${Number(product.price || 0)}" aria-label="Price for ${escapeHtml(product.name)}" /></td>
       <td><input class="cell-input number-input" data-field="discount" type="number" min="0" max="100" step="0.01" value="${Number(product.discount || 0)}" aria-label="Discount for ${escapeHtml(product.name)}" /></td>
-      <td class="final-price">${money(product.finalPrice ?? finalPrice(product.price, product.discount))}</td>
+      <td><input class="cell-input number-input final-price-input" data-field="finalPrice" type="number" min="0" step="0.01" value="${Number(product.finalPrice ?? finalPrice(product.price, product.discount))}" aria-label="Final price for ${escapeHtml(product.name)}" /></td>
       <td><span class="category-chip">${escapeHtml(String(product.category || "").replaceAll("-", " "))}</span></td>
     </tr>
   `).join("");
@@ -58,11 +63,16 @@ function markDirty(input) {
   const row = input.closest("tr");
   const product = products.find((item) => item.id === row.dataset.id);
   if (!product) return;
-  product[input.dataset.field] = input.dataset.field === "author" || input.dataset.field === "name" ? input.value : Number(input.value);
-  row.classList.add("is-dirty");
-  if (input.dataset.field === "price" || input.dataset.field === "discount") {
-    row.querySelector(".final-price").textContent = money(finalPrice(product.price, product.discount));
+  const field = input.dataset.field;
+  product[field] = field === "author" || field === "name" ? input.value : Number(input.value);
+  if (field === "finalPrice") {
+    product.discount = discountFromFinalPrice(product.price, product.finalPrice);
+    row.querySelector('[data-field="discount"]').value = product.discount;
+  } else if (field === "price" || field === "discount") {
+    product.finalPrice = finalPrice(product.price, product.discount);
+    row.querySelector('[data-field="finalPrice"]').value = product.finalPrice;
   }
+  row.classList.add("is-dirty");
   dirtyIds.add(product.id);
   updateChangeState();
 }
@@ -83,7 +93,7 @@ document.querySelectorAll(".category-tab").forEach((tab) => tab.addEventListener
 searchInput.addEventListener("input", render);
 
 saveButton.addEventListener("click", async () => {
-  const updates = products.filter((product) => dirtyIds.has(product.id)).map(({ id, name, author, price, discount }) => ({ id, name, author, price, discount }));
+  const updates = products.filter((product) => dirtyIds.has(product.id)).map(({ id, name, author, price, discount, finalPrice }) => ({ id, name, author, price, discount, finalPrice }));
   if (!updates.length) return;
   saveButton.disabled = true;
   saveButton.textContent = "Saving...";

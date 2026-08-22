@@ -83,6 +83,43 @@ function validateImage(
   }
 }
 
+function roundedFinalPrice(price, discount) {
+  return Math.round(Number(price || 0) - (Number(price || 0) * Number(discount || 0)) / 100);
+}
+
+function discountFromFinalPrice(price, finalPrice) {
+  if (!Number(price) || !Number.isFinite(Number(finalPrice))) return 0;
+  return Math.max(0, Math.min(100, Math.round(((Number(price) - Number(finalPrice)) / Number(price)) * 10000) / 100));
+}
+
+function bindPricingFields(priceInput, discountInput, finalPriceInput) {
+  if (!priceInput || !discountInput || !finalPriceInput) return;
+
+  const updateFinalPrice = () => {
+    const price = Number(priceInput.value);
+    const discount = Number(discountInput.value || 0);
+    if (Number.isFinite(price) && price >= 0 && Number.isFinite(discount)) {
+      finalPriceInput.value = roundedFinalPrice(price, discount);
+    }
+  };
+
+  const updateDiscount = () => {
+    const price = Number(priceInput.value);
+    const finalPrice = Number(finalPriceInput.value);
+    if (!Number.isFinite(price) || price < 0 || !Number.isFinite(finalPrice)) return;
+    if (finalPrice > price) {
+      discountInput.value = "";
+      return;
+    }
+    discountInput.value = discountFromFinalPrice(price, finalPrice);
+  };
+
+  priceInput.addEventListener("input", updateFinalPrice);
+  discountInput.addEventListener("input", updateFinalPrice);
+  finalPriceInput.addEventListener("input", updateDiscount);
+  updateFinalPrice();
+}
+
 
 // ============================================================
 // ADD PRODUCT PAGE
@@ -118,6 +155,12 @@ if (productForm) {
     document.getElementById(
       "submit-button"
     );
+
+  bindPricingFields(
+    productForm.elements.price,
+    productForm.elements.discount,
+    productForm.elements.finalPrice
+  );
 
 
   // ----------------------------------------------------------
@@ -256,6 +299,10 @@ if (productForm) {
 
           discount:
             productForm.elements.discount
+              ?.value,
+
+          finalPrice:
+            productForm.elements.finalPrice
               ?.value,
 
           category:
@@ -487,6 +534,12 @@ if (
       "current-product-price"
     );
 
+  const editPriceInput = editProductForm.elements.price;
+  const editDiscountInput = editProductForm.elements.discount;
+  const editFinalPriceInput = editProductForm.elements.finalPrice;
+
+  bindPricingFields(editPriceInput, editDiscountInput, editFinalPriceInput);
+
 
   let currentProductIdValue =
     null;
@@ -693,6 +746,9 @@ if (
 
         editProductForm.elements.discount.value =
           product.discount ?? 0;
+
+        editFinalPriceInput.value =
+          product.finalPrice ?? roundedFinalPrice(product.price, product.discount);
 
         editProductForm.elements.category.value =
           product.category || "";
@@ -961,6 +1017,9 @@ if (
           discount:
             editProductForm.elements.discount
               .value,
+
+          finalPrice:
+            editFinalPriceInput.value,
 
           category:
             editProductForm.elements.category
