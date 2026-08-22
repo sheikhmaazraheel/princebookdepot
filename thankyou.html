@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10253d" />
+    <title>Order received | Prince Book Depot</title>
+    <link rel="stylesheet" href="thankyou.css" />
+  </head>
+  <body>
+    <main class="thankyou-page">
+      <div class="ambient-mark ambient-mark-one" aria-hidden="true"></div>
+      <div class="ambient-mark ambient-mark-two" aria-hidden="true"></div>
+      <section class="confirmation-panel" aria-labelledby="confirmation-title">
+        <a class="brand" href="index.html" aria-label="Prince Book Depot home"><span class="brand-mark">P</span><span>PRINCE BOOK DEPOT</span></a>
+        <div class="confirmation-content">
+          <div class="success-symbol" aria-hidden="true"><span>✓</span></div>
+          <p class="eyebrow">ORDER CONFIRMED</p>
+          <h1 id="confirmation-title">Your next chapter is on its way.</h1>
+          <p class="lead">Thank you for shopping with Prince Book Depot. We have received your order and will be in touch shortly to arrange delivery.</p>
+          <div class="order-ticket">
+            <span>Order reference</span>
+            <strong id="order-reference">Loading...</strong>
+          </div>
+          <p id="whatsapp-note" class="whatsapp-note"></p>
+          <div class="confirmation-actions"><a class="primary-action" href="index.html">Continue browsing <span aria-hidden="true">→</span></a><a class="secondary-action" href="https://wa.me/+923392702008?text=I%20want%20to%20ask%20about%20my%20order%20" target="_blank" rel="noopener">Chat with us <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <footer><span>Thank you for choosing independent bookselling.</span><span>Prince Book Depot · Karachi</span></footer>
+      </section>
+    </main>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get("order");
+      const reference = document.getElementById("order-reference");
+      const note = document.getElementById("whatsapp-note");
+      reference.textContent = orderId || "Order received";
+      note.textContent = params.get("whatsapp") === "1"
+        ? "A confirmation request has been sent to your WhatsApp."
+        : "We will contact you shortly to confirm your delivery details.";
+    </script>
+  </body>
+</html>
