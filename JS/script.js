@@ -415,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="discount">${product.discount || 0}%</div>
       <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
-      ${product.author ? `<div class="Product-author">by ${product.author}</div>` : ""}
+      ${product.author ? `<div class="Product-author">by ${escapeHtml(product.author)}</div>` : ""}
       <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
       <div class="product-actions"><button class="add-to-cart-button">Add to Cart</button><button class="buy-now-button">Buy Now</button></div>
       <div class="quantity-controls">
@@ -428,7 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
       div.innerHTML = `
       <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
-      ${product.author ? `<div class="Product-author">by ${product.author}</div>` : ""}
+      ${product.author ? `<div class="Product-author">by ${escapeHtml(product.author)}</div>` : ""}
       <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
       <div class="product-actions"><button class="add-to-cart-button">Add to Cart</button><button class="buy-now-button">Buy Now</button></div>
       <div class="quantity-controls">

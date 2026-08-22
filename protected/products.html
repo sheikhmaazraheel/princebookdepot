@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prince Book Depot - Catalogue Editor</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./products.css" />
+  </head>
+  <body class="catalogue-body">
+    <main class="catalogue-page">
+      <a class="back-dashboard" href="./index.html">← Dashboard</a>
+      <header class="catalogue-header">
+        <div><span class="eyebrow">PRINCE BOOK DEPOT / CATALOGUE</span><h1>Catalogue editor</h1><p class="muted">Update the details that change most, all from one fast table.</p></div>
+        <div class="catalogue-actions"><span id="change-count" class="change-count">No unsaved changes</span><button id="save-products" class="save-btn" type="button" disabled>Save changes <span aria-hidden="true">→</span></button></div>
+      </header>
+      <section class="catalogue-toolbar" aria-label="Catalogue filters">
+        <div class="category-tabs" role="tablist" aria-label="Filter by category">
+          <button class="category-tab active" type="button" data-category="all" role="tab" aria-selected="true">All books</button>
+          <button class="category-tab" type="button" data-category="English-novels" role="tab" aria-selected="false">English Novels</button>
+          <button class="category-tab" type="button" data-category="Urdu-novels" role="tab" aria-selected="false">Urdu Novels</button>
+          <button class="category-tab" type="button" data-category="Poetry" role="tab" aria-selected="false">Poetry</button>
+          <button class="category-tab" type="button" data-category="Academic-books" role="tab" aria-selected="false">Academic Books</button>
+          <button class="category-tab" type="button" data-category="Bundle" role="tab" aria-selected="false">Bundles</button>
+        </div>
+        <label class="catalogue-search">Search<input id="catalogue-search" type="search" placeholder="Title, author, or ID" autocomplete="off" /></label>
+      </section>
+      <div id="catalogue-status" class="catalogue-status" role="status" aria-live="polite">Loading catalogue...</div>
+      <section class="table-shell" aria-label="Editable product catalogue">
+        <table class="catalogue-table">
+          <thead><tr><th scope="col">Product name</th><th scope="col">Author name</th><th scope="col">Price (Rs.)</th><th scope="col">Discount (%)</th><th scope="col">Final price</th><th scope="col">Category</th></tr></thead>
+          <tbody id="product-rows"></tbody>
+        </table>
+        <div id="empty-table" class="empty-table" hidden>No products match this filter.</div>
+      </section>
+    </main>
+    <script src="./auth.js"></script>
+    <script src="./products.js"></script>
+  </body>
+</html>
