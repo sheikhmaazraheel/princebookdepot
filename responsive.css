@@ -528,7 +528,7 @@
   
     /* Price row */
     .Product >
-    div:not(.discount):not(.Product-name):not(.quantity-controls) {
+    div:not(.discount):not(.Product-name):not(.Product-author):not(.product-actions):not(.quantity-controls) {
   
       gap: 4px;
   
@@ -551,17 +551,29 @@
     /* Add to cart */
     .Product .add-to-cart-button {
   
-      width: calc(100% - 6px);
+      width: 100%;
   
       height: 40px;
   
-      margin: 10px 3px 0;
+      margin: 0;
   
       padding: 0 12px;
   
       border-radius: 11px;
   
       font-size: 0.76rem;
+    }
+
+    .Product .product-actions {
+      gap: 5px;
+      margin: 10px 3px 0;
+    }
+
+    .Product .buy-now-button {
+      height: 40px;
+      padding: 0 5px;
+      border-radius: 11px;
+      font-size: 0.68rem;
     }
   
   

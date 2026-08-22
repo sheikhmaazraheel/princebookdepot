@@ -246,6 +246,10 @@ if (productForm) {
             productForm.elements.name
               ?.value.trim(),
 
+          author:
+            productForm.elements.author
+              ?.value.trim(),
+
           price:
             productForm.elements.price
               ?.value,
@@ -681,6 +685,9 @@ if (
         editProductForm.elements.name.value =
           product.name || "";
 
+        editProductForm.elements.author.value =
+          product.author || "";
+
         editProductForm.elements.price.value =
           product.price ?? "";
 
@@ -941,6 +948,10 @@ if (
 
           name:
             editProductForm.elements.name
+              .value.trim(),
+
+          author:
+            editProductForm.elements.author
               .value.trim(),
 
           price:

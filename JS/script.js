@@ -288,6 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Shared Cart Logic Setup
   function setupCartForProduct(product) {
     const addToCartBtn = product.querySelector(".add-to-cart-button");
+    const buyNowBtn = product.querySelector(".buy-now-button");
     const qtyControls = product.querySelector(".quantity-controls");
     const qtyDisplay = product.querySelector(".quantity");
     const increaseBtn = product.querySelector(".increase");
@@ -296,6 +297,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const productId = product.dataset.id;
     const productName = product.dataset.name;
     const productPrice = parseFloat(product.dataset.price);
+
+    function saveProductToCart() {
+      pbdcart[productId] = {
+        name: productName,
+        author: product.dataset.author || "",
+        price: productPrice,
+        quantity: 1,
+      };
+      localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
+    }
 
     // ✅ Load cart from localStorage
 
@@ -311,14 +322,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // ➕ Add to Cart
     addToCartBtn.addEventListener("click", () => {
       quantity = 1;
-      pbdcart[productId] = { name: productName, price: productPrice, quantity };
-      localStorage.setItem("pbdcart", JSON.stringify(pbdcart));
+      saveProductToCart();
 
       addToCartBtn.style.display = "none";
       qtyControls.classList.add("active");
       qtyDisplay.textContent = quantity;
       const cartPopup = document.getElementById("cart-popup");
-      if (!cartPopup.classList.contains("show")) {
+      if (cartPopup && !cartPopup.classList.contains("show")) {
         cartPopup.classList.add("show-before");
         updateCartPopup();
 
@@ -330,6 +340,11 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCartPopup();
       }
       updateCartCountDisplay(getCartProductCount());
+    });
+
+    buyNowBtn?.addEventListener("click", () => {
+      saveProductToCart();
+      window.location.href = "checkout.html";
     });
 
     // ➕ Increase Quantity
@@ -393,14 +408,16 @@ document.addEventListener("DOMContentLoaded", () => {
     div.id = `${idPrefix}${product.id}`;
     div.dataset.id = product.id;
     div.dataset.name = product.name;
+    div.dataset.author = product.author || "";
     div.dataset.price = finalPrice;
     if (product.discount > 0) {
       div.innerHTML = `
       <div class="discount">${product.discount || 0}%</div>
       <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
+      ${product.author ? `<div class="Product-author">by ${product.author}</div>` : ""}
       <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
-      <button class="add-to-cart-button">Add to Cart</button>
+      <div class="product-actions"><button class="add-to-cart-button">Add to Cart</button><button class="buy-now-button">Buy Now</button></div>
       <div class="quantity-controls">
         <button class="decrease">−</button>
         <span class="quantity">1</span>
@@ -411,8 +428,9 @@ document.addEventListener("DOMContentLoaded", () => {
       div.innerHTML = `
       <img src="${getProductImageUrl(product)}" alt="${product.name}" />
       <div class="Product-name">${product.name}</div>
+      ${product.author ? `<div class="Product-author">by ${product.author}</div>` : ""}
       <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
-      <button class="add-to-cart-button">Add to Cart</button>
+      <div class="product-actions"><button class="add-to-cart-button">Add to Cart</button><button class="buy-now-button">Buy Now</button></div>
       <div class="quantity-controls">
         <button class="decrease">−</button>
         <span class="quantity">1</span>
