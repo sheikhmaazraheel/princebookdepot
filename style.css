@@ -599,6 +599,23 @@ body.nav-locked {
   .hero-content { animation: none !important; }
 }
 
+.motion-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1200;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--pbd-teal-400), var(--pbd-gold), var(--pbd-coral));
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-scroll-progress { display: none; }
+}
+
 /* Variable-height About and footer content must never be mask-clipped. */
 .fade-up-stagger > * { clip-path: none; }
 .fade-up-stagger.is-visible > * {
@@ -641,8 +658,10 @@ body.nav-locked {
     ), url("./images/hero-banner.jpg") center/cover no-repeat,
     linear-gradient(135deg, #0c1626 0%, #17324f 45%, #19aeca 100%);
   background-size: cover, cover, cover;
+  --hero-x: 0%;
+  --hero-y: 0%;
   animation: heroDrift 18s ease-in-out infinite alternate;
-  background-position: 0% 50%, center, 0% 50%;
+  background-position: var(--hero-x) calc(50% + var(--hero-y)), center, var(--hero-x) calc(50% + var(--hero-y));
 }
 
 @keyframes heroDrift {
