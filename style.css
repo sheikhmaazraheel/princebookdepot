@@ -720,6 +720,24 @@ body.nav-locked {
   animation: heroContentIn 900ms var(--pbd-ease) both;
 }
 
+.motion-ready .hero-content {
+  will-change: transform, opacity;
+}
+
+.motion-ready .categories,
+.motion-ready .storefront-search,
+.motion-ready .home-section,
+.motion-ready .about-container,
+.motion-ready .footer-top {
+  transform: translate3d(0, var(--scroll-depth, 0px), 0);
+  will-change: transform;
+}
+
+.motion-ready .Product {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
 @keyframes heroContentIn {
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: translateY(0); }

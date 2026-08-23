@@ -4,6 +4,9 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 if (!prefersReducedMotion) {
   const ease = [0.2, 0.8, 0.2, 1];
+  document.documentElement.classList.add("motion-ready");
+
+  animate("body", { opacity: [0, 1] }, { duration: 0.55, ease });
 
   animate(
     ".hero-content",
@@ -15,6 +18,18 @@ if (!prefersReducedMotion) {
     ".hero-badge",
     { opacity: [0, 1], scale: [0.8, 1], rotate: [12, 4] },
     { duration: 0.75, delay: 0.28, ease }
+  );
+
+  animate(
+    ".hero-title",
+    { opacity: [0, 1], y: [22, 0], letterSpacing: ["0.04em", "0em"] },
+    { duration: 0.9, delay: 0.08, ease }
+  );
+
+  animate(
+    ".hero-cta",
+    { opacity: [0, 1], scale: [0.92, 1], y: [16, 0] },
+    { duration: 0.65, delay: 0.42, ease }
   );
 
   const hero = document.querySelector(".hero");
@@ -36,7 +51,7 @@ if (!prefersReducedMotion) {
     animate(
       element.querySelectorAll(".heading, .home-section-header, .about-box, .footer-col"),
       { opacity: [0, 1], y: [18, 0] },
-      { duration: 0.55, delay: stagger(0.06), ease: [0.2, 0.8, 0.2, 1] }
+      { duration: 0.55, delay: stagger(0.06), ease }
     );
   }, { amount: 0.18 });
 
@@ -47,7 +62,7 @@ if (!prefersReducedMotion) {
     animate(
       cards,
       { opacity: [0, 1], scale: [0.96, 1], y: [18, 0] },
-      { duration: 0.45, delay: stagger(0.055), ease: [0.2, 0.8, 0.2, 1] }
+      { duration: 0.45, delay: stagger(0.055), ease }
     );
 
     cards.forEach((card) => {
@@ -70,10 +85,30 @@ if (!prefersReducedMotion) {
     });
   };
 
-  document.querySelectorAll(".nav-link, .hero-cta, .see-all-link, .floating-cart").forEach((element) => {
-    element.addEventListener("pointerenter", () => animate(element, { y: -2 }, { duration: 0.2, ease }));
-    element.addEventListener("pointerleave", () => animate(element, { y: 0 }, { duration: 0.3, ease }));
+  document.querySelectorAll(".nav-link, .hero-cta, .see-all-link, .floating-cart, .whatsapp-button, .instagram-button, .facebook-button").forEach((element) => {
+    element.addEventListener("pointermove", (event) => {
+      const bounds = element.getBoundingClientRect();
+      const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 5;
+      const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 5;
+      animate(element, { x, y }, { duration: 0.18, ease });
+    });
+    element.addEventListener("pointerleave", () => animate(element, { x: 0, y: 0 }, { duration: 0.35, ease }));
   });
+
+  const depthTargets = [...document.querySelectorAll(".hero-content, .categories, .storefront-search, .home-section, .about-container, .footer-top")];
+  let depthFrame = null;
+  window.addEventListener("scroll", () => {
+    if (depthFrame) return;
+    depthFrame = requestAnimationFrame(() => {
+      const viewportCenter = window.innerHeight * 0.5;
+      depthTargets.forEach((element) => {
+        const bounds = element.getBoundingClientRect();
+        const distance = (bounds.top + bounds.height * 0.5 - viewportCenter) / window.innerHeight;
+        element.style.setProperty("--scroll-depth", `${Math.max(-1, Math.min(1, distance)) * -10}px`);
+      });
+      depthFrame = null;
+    });
+  }, { passive: true });
 
   const progressBar = document.createElement("div");
   progressBar.className = "motion-scroll-progress";
