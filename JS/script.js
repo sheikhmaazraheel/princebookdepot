@@ -10,7 +10,7 @@ function getProductImageUrl(product) {
   // of downloading the original camera-sized cover on every page.
   return secureUrl.replace(
     /\/upload\//i,
-    "/upload/f_auto,q_auto,w_640,dpr_auto/"
+    "/upload/f_auto,q_auto:eco,w_480,c_limit,fl_progressive,dpr_auto/"
   );
 }
 
@@ -418,7 +418,8 @@ document.addEventListener("DOMContentLoaded", () => {
     div.dataset.author = product.author || "";
     div.dataset.price = finalPrice;
     const imageUrl = getProductImageUrl(product);
-    const imageAttributes = `src="${escapeHtml(imageUrl)}" alt="${escapeHtml(product.name || "Book cover")}" loading="lazy" decoding="async" sizes="(max-width: 768px) 45vw, 235px"`;
+    const isFirstCard = !document.querySelector('img[fetchpriority="high"]');
+    const imageAttributes = `src="${escapeHtml(imageUrl)}" alt="${escapeHtml(product.name || "Book cover")}" loading="${isFirstCard ? "eager" : "lazy"}" fetchpriority="${isFirstCard ? "high" : "auto"}" decoding="async" sizes="(max-width: 768px) 45vw, 235px"`;
 
     if (product.discount > 0) {
       div.innerHTML = `
@@ -466,6 +467,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const bestsellerLoader = document.getElementById("bestseller-loader");
   const featuredLoader = document.getElementById("featured-loader");
   const bundlesLoader = document.getElementById("bundles-loader");
+
+    function focusRequestedProduct() {
+      const requestedId = new URLSearchParams(window.location.search).get("product");
+      if (!requestedId) return;
+      const product = [...document.querySelectorAll(".Product")].find(
+        (card) => card.dataset.id === requestedId.toUpperCase()
+      );
+      if (!product) return;
+      setTimeout(() => {
+        product.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+        product.classList.add("search-result-focus");
+        setTimeout(() => product.classList.remove("search-result-focus"), 1600);
+      }, 80);
+    }
 
   if (
     document.body.dataset.category ||
@@ -544,6 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
           categoryProducts.forEach((product) => {
             container.appendChild(createProductCard(product));
           });
+          focusRequestedProduct();
         }
 
         // ----- Home page: Featured For You / Most Popular / Best Sellers / Bundles -----
@@ -583,6 +599,8 @@ document.addEventListener("DOMContentLoaded", () => {
               );
             });
           }
+
+          focusRequestedProduct();
 
           initAutoScrollRail(featuredContainer);
           initAutoScrollRail(popularContainer);
@@ -856,20 +874,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function filterProducts(query, products) {
     const normalizedQuery = query.toLocaleLowerCase();
-    const activeCategory = document.body.dataset.category?.trim().toLocaleLowerCase();
     const seenIds = new Set();
 
     return (products || []).filter((product) => {
       const productId = String(product.id || "");
       const category = String(product.category || "").trim().toLocaleLowerCase();
-      const searchableText = [product.name, product.category, product.id]
+      const searchableText = [product.name, product.author, product.category, product.id]
         .filter(Boolean)
         .join(" ")
         .toLocaleLowerCase();
-      const matchesCategory = !activeCategory || category === activeCategory;
       const isDuplicate = seenIds.has(productId);
       if (productId) seenIds.add(productId);
-      return matchesCategory && !isDuplicate && searchableText.includes(normalizedQuery);
+      return !isDuplicate && searchableText.includes(normalizedQuery);
     });
   }
 
@@ -877,6 +893,19 @@ document.addEventListener("DOMContentLoaded", () => {
     return String(value || "").replace(/[&<>'"]/g, (character) => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
     }[character]));
+  }
+
+  const categoryPages = {
+    "English-novels": "English-novels.html",
+    "Urdu-novels": "Urdu-novels.html",
+    Poetry: "Poetry.html",
+    "Academic-books": "Academic-books.html",
+    Bundle: "index.html",
+  };
+
+  function getProductDestination(product) {
+    const page = categoryPages[product.category] || "index.html";
+    return `${page}?product=${encodeURIComponent(product.id)}`;
   }
 
   function displayResults(products, resultsContainer) {
@@ -892,11 +921,11 @@ document.addEventListener("DOMContentLoaded", () => {
     resultsContainer.innerHTML = products
       .map(
         (product) => `
-        <a href="#${escapeHtml(product.id)}" class="search-result" data-product-id="${escapeHtml(product.id)}" role="option">
-          <img src="${escapeHtml(getProductImageUrl(product))}" alt="" onerror="this.style.display='none'">
+        <a href="${escapeHtml(getProductDestination(product))}" class="search-result" data-product-id="${escapeHtml(product.id)}" data-product-category="${escapeHtml(product.category || "")}" role="option">
+          <img src="${escapeHtml(getProductImageUrl(product))}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
           <div class="result-text">
             <p class="result-name">${escapeHtml(product.name || "Unnamed Product")}</p>
-            <p class="result-details">${escapeHtml(product.category || "Collection")} <span>·</span> Rs. ${Number(product.price || 0).toLocaleString("en-PK")}</p>
+            <p class="result-details">${escapeHtml(product.author || product.category || "Collection")} <span>·</span> ${escapeHtml(product.category || "Collection")} <span>·</span> Rs. ${Number(product.price || 0).toLocaleString("en-PK")}</p>
           </div>
           <span class="result-arrow" aria-hidden="true">↗</span>
         </a>
@@ -916,6 +945,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  let searchRequestId = 0;
+
   async function handleSearch(query, resultsContainer) {
     if (!resultsContainer) return;
 
@@ -925,8 +956,15 @@ document.addEventListener("DOMContentLoaded", () => {
       searchInput?.setAttribute("aria-expanded", "false");
       return;
     }
-    const filteredProducts = filterProducts(query, allProducts);
-    displayResults(filteredProducts, resultsContainer);
+    const requestId = ++searchRequestId;
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products?available=true&search=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      if (!response.ok || !Array.isArray(data.products)) throw new Error("Search request failed.");
+      if (requestId === searchRequestId) displayResults(data.products, resultsContainer);
+    } catch (error) {
+      if (requestId === searchRequestId) displayResults(filterProducts(query, allProducts), resultsContainer);
+    }
   }
 
   function setupSearch(input, results) {
