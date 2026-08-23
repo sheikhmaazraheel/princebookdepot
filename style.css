@@ -556,14 +556,16 @@ body.nav-locked {
 .Product.reveal {
   opacity: 0;
   transform: translateY(24px) scale(.985);
-  clip-path: inset(0 0 14% 0 round 2px);
   transition: opacity 700ms var(--pbd-ease), transform 700ms var(--pbd-ease), clip-path 850ms var(--pbd-ease);
   transition-delay: calc(var(--reveal-index, 0) * 55ms);
 }
+.Product.reveal { clip-path: none; }
 .fade-up.is-visible,
 .Product.reveal.is-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+.fade-up.is-visible {
   clip-path: inset(0 0 0 0 round 2px);
 }
 .fade-up-stagger > * { opacity: 0; transform: translateY(22px); clip-path: inset(0 0 20% 0); }
