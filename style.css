@@ -29,6 +29,10 @@ html {
   --pbd-card: #fffdf8;
   --pbd-copper: #b56b45;
   --pbd-line: rgba(21, 27, 27, 0.12);
+  --pbd-surface: rgba(255, 253, 248, 0.72);
+  --pbd-shadow: 0 18px 48px rgba(16, 37, 61, 0.12);
+  --pbd-display: "Playfair Display", Georgia, serif;
+  --pbd-body: "DM Sans", sans-serif;
 }
 
 body {
@@ -37,9 +41,12 @@ body {
 }
 
 h1, h2, h3, .Product-name, .circle-label {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--pbd-display);
   letter-spacing: 0;
 }
+
+a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button, a { touch-action: manipulation; }
 
 html,
 body {
@@ -61,6 +68,15 @@ footer,
   top: 0;
   z-index: 1000;
   transition: box-shadow 0.35s ease;
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 209, 102, 0.7), transparent);
+  opacity: 0.55;
 }
 
 .site-header.is-scrolled {
@@ -531,12 +547,15 @@ body.nav-locked {
 .search-field { border-radius: 2px; border-color: var(--pbd-line); background: rgba(255, 253, 248, .72); box-shadow: 0 12px 28px rgba(21, 27, 27, .06); }
 .search-field input { background: transparent; }
 
-.home-section { margin-block: 76px; padding: 0; }
+.home-section { margin-block: 76px; padding: 0; content-visibility: auto; contain-intrinsic-size: 420px; }
 .home-section-header { align-items: baseline; border-bottom: 1px solid var(--pbd-line); }
 .home-section-header .heading { margin: 0 0 15px; font-size: clamp(1.75rem, 3vw, 2.5rem); }
 .see-all-link { color: var(--pbd-copper); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
 .product-scroller { grid-auto-columns: minmax(210px, 235px); gap: 16px; padding: 28px 4px 32px; }
 .Product-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; padding: 10px 20px 60px; }
+.Product-grid, .product-scroller { perspective: 900px; }
+.Product .discount { z-index: 3; white-space: nowrap; }
+.footer-contact p, .footer-contact a, .about-box p { word-break: normal; overflow-wrap: anywhere; }
 
 .Product :is(button, a):focus-visible, .category-circle:focus-visible, .hero-cta:focus-visible { outline: 2px solid var(--pbd-copper); outline-offset: 4px; }
 
@@ -577,6 +596,7 @@ body.nav-locked {
 
 @media (prefers-reduced-motion: reduce) {
   .fade-up, .Product.reveal, .fade-up-stagger > * { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; animation: none !important; }
+  .hero-content { animation: none !important; }
 }
 
 /* Variable-height About and footer content must never be mask-clipped. */
@@ -678,6 +698,12 @@ body.nav-locked {
   max-width: 640px;
   padding: 0 clamp(20px, 6vw, 80px);
   color: #fff;
+  animation: heroContentIn 900ms var(--pbd-ease) both;
+}
+
+@keyframes heroContentIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-eyebrow {
