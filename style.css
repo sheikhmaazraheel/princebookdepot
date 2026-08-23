@@ -1062,16 +1062,17 @@ body.nav-locked {
   border-radius: 25px;
   color: white;
   text-decoration: none;
-  transition: background 0.3s;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  transition: transform 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
 }
+
+.about-support a:hover { transform: translateY(-3px); filter: saturate(1.12) brightness(1.06); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22); }
+.about-support a:focus-visible { outline: 3px solid rgba(255, 255, 255, 0.75); outline-offset: 3px; }
 
 /* WhatsApp button */
 .whatsapp-button {
-  background-color: #25d366;
-}
-
-.whatsapp-button:hover {
-  background-color: #1eb255;
+  background: linear-gradient(135deg, #128c7e 0%, #25d366 52%, #7bed9f 100%);
 }
 
 /* Instagram button with gradient */
@@ -1085,6 +1086,13 @@ body.nav-locked {
     #bc1888
   );
 }
+
+.facebook-button {
+  background: linear-gradient(135deg, #1877f2 0%, #4267b2 55%, #6ea8fe 100%);
+}
+
+.about-social-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
+.about-social-links a { margin-top: 0; }
 
 /* ========================= Footer Section =================== */
 .site-footer {
@@ -1163,6 +1171,9 @@ body.nav-locked {
 .footer-social-icon.instagram:hover {
   background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
 }
+
+.footer-social-icon.facebook { background: linear-gradient(135deg, #1877f2, #4267b2); }
+.footer-social-icon.facebook:hover { background: linear-gradient(135deg, #0d65d9, #6ea8fe); }
 
 .footer-col h4 {
   color: #fff;
