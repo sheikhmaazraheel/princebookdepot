@@ -7,14 +7,16 @@ function getProductImageUrl(product) {
   return imageUrl.replace(/^http:\/\//i, "https://");
 }
 
-// Cards fade/slide into view the first time they enter the viewport.
-// One shared observer for the whole page (cheaper than one per card).
+// One shared observer drives all content reveals, keeping scroll work small.
 const revealObserver =
   "IntersectionObserver" in window
     ? new IntersectionObserver(
         (entries, obs) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
+              const siblings = entry.target.parentElement?.children || [];
+              const siblingIndex = Array.prototype.indexOf.call(siblings, entry.target);
+              entry.target.style.setProperty("--reveal-index", String(Math.min(siblingIndex, 7)));
               entry.target.classList.add("is-visible");
               obs.unobserve(entry.target);
             }
@@ -102,11 +104,7 @@ function initAutoScrollRail(container) {
     start();
   }
 }
-// Applies the generic .fade-up / .fade-up-stagger scroll-reveal treatment
-// to section-level content (headings, About, footer, category rail) using
-// the same shared revealObserver as the product cards. Wrapped so that if
-// anything here goes wrong, the target elements are made visible rather
-// than silently staying hidden forever.
+// Applies the shared reveal treatment to section-level content.
 document.addEventListener("DOMContentLoaded", () => {
   const revealTargets = document.querySelectorAll(
     ".home-section-header, .about-container > h2, .about-container > p"
@@ -118,12 +116,14 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     revealTargets.forEach((el) => {
       el.classList.add("fade-up");
+      el.style.setProperty("--reveal-index", "0");
       if (revealObserver) revealObserver.observe(el);
       else el.classList.add("is-visible");
     });
 
     staggerTargets.forEach((el) => {
       el.classList.add("fade-up-stagger");
+      el.style.setProperty("--reveal-index", "0");
       if (revealObserver) revealObserver.observe(el);
       else el.classList.add("is-visible");
     });
