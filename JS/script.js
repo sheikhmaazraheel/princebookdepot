@@ -2,6 +2,96 @@ const githubURL = "https://sheikhmaazraheel.github.io/princebookdepot";
 const API_BASE_URL = "https://princebookdepot-backend.onrender.com";
 let allProducts = [];
 
+document.addEventListener("DOMContentLoaded", () => {
+  const hero = document.getElementById("hero");
+  if (!hero) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const textTargets = hero.querySelectorAll(".hero-eyebrow, .hero-title, .hero-subtext");
+
+  let wordIndex = 0;
+
+  function splitWords(element) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach((node) => {
+      const fragment = document.createDocumentFragment();
+      node.textContent.split(/(\s+)/).forEach((part) => {
+        if (/\s+/.test(part)) {
+          fragment.appendChild(document.createTextNode(part));
+          return;
+        }
+        const word = document.createElement("span");
+        word.className = "hero-word";
+        word.style.setProperty("--word-index", String(wordIndex));
+        wordIndex += 1;
+        word.textContent = part;
+        fragment.appendChild(word);
+      });
+      node.parentNode.replaceChild(fragment, node);
+    });
+  }
+
+  textTargets.forEach(splitWords);
+  hero.insertAdjacentHTML("beforeend", `
+    <span class="hero-aurora hero-aurora-one" aria-hidden="true"></span>
+    <span class="hero-aurora hero-aurora-two" aria-hidden="true"></span>
+    <span class="hero-aurora hero-aurora-three" aria-hidden="true"></span>
+    <svg class="hero-line-art hero-line-art-book" viewBox="0 0 120 90" aria-hidden="true">
+      <path d="M10 24c18-7 33-5 50 5v48C43 67 28 65 10 72V24Zm100 0c-18-7-33-5-50 5v48c17-10 32-12 50-5V24ZM60 29v48" />
+    </svg>
+    <svg class="hero-line-art hero-line-art-page" viewBox="0 0 90 120" aria-hidden="true">
+      <path d="M18 10h48l16 16v84H18V10Zm48 0v18h16M31 51h38M31 68h38M31 85h25" />
+    </svg>
+    <svg class="hero-line-art hero-line-art-quill" viewBox="0 0 100 120" aria-hidden="true">
+      <path d="M24 101 43 57C51 38 69 20 88 12c-2 22-12 42-30 55L24 101Zm0 0 25-7M42 58l24 24M55 43l21 21" />
+    </svg>
+    <svg class="hero-line-art hero-line-art-mark" viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M50 12v76M12 50h76M23 23l54 54M77 23 23 77" />
+    </svg>
+  `);
+
+  hero.classList.add("hero-entered");
+  if (reduceMotion) return;
+
+  if (canHover) {
+    const content = hero.querySelector(".hero-content");
+    const cta = hero.querySelector(".hero-cta");
+    let frame = null;
+    let pointer = { x: 0, y: 0 };
+
+    hero.addEventListener("pointermove", (event) => {
+      pointer = { x: event.clientX, y: event.clientY };
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        const bounds = hero.getBoundingClientRect();
+        const x = (pointer.x - bounds.left) / bounds.width - 0.5;
+        const y = (pointer.y - bounds.top) / bounds.height - 0.5;
+        content?.style.setProperty("--hero-tilt-x", `${y * -5}deg`);
+        content?.style.setProperty("--hero-tilt-y", `${x * 5}deg`);
+
+        if (cta) {
+          const ctaBounds = cta.getBoundingClientRect();
+          const near = pointer.x >= ctaBounds.left - 40 && pointer.x <= ctaBounds.right + 40 && pointer.y >= ctaBounds.top - 40 && pointer.y <= ctaBounds.bottom + 40;
+          cta.style.setProperty("--cta-x", near ? `${((pointer.x - (ctaBounds.left + ctaBounds.width / 2)) / ctaBounds.width) * 10}px` : "0px");
+          cta.style.setProperty("--cta-y", near ? `${((pointer.y - (ctaBounds.top + ctaBounds.height / 2)) / ctaBounds.height) * 10}px` : "0px");
+        }
+        frame = null;
+      });
+    }, { passive: true });
+
+    hero.addEventListener("pointerleave", () => {
+      content?.style.setProperty("--hero-tilt-x", "0deg");
+      content?.style.setProperty("--hero-tilt-y", "0deg");
+      cta?.style.setProperty("--cta-x", "0px");
+      cta?.style.setProperty("--cta-y", "0px");
+    }, { passive: true });
+  }
+});
+
 function getProductImageUrl(product) {
   const imageUrl = product.imageUrl || product.image || "";
   const secureUrl = imageUrl.replace(/^http:\/\//i, "https://");

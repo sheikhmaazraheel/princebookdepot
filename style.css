@@ -616,6 +616,76 @@ body.nav-locked {
   .motion-scroll-progress { display: none; }
 }
 
+/* ===================== CINEMATIC HERO ENTRANCE ===================== */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  animation-name: heroDrift, heroCurtainReveal;
+  animation-duration: 18s, 850ms;
+  animation-timing-function: ease-in-out, cubic-bezier(.77, 0, .18, 1);
+  animation-delay: 0s, 0s;
+  animation-iteration-count: infinite, 1;
+  animation-direction: alternate, normal;
+  animation-fill-mode: none, forwards;
+}
+
+.hero-content {
+  transform: perspective(900px) rotateX(var(--hero-tilt-x, 0deg)) rotateY(var(--hero-tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease-out;
+  will-change: transform;
+}
+
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  filter: blur(4px);
+  animation: heroWordReveal 560ms var(--pbd-ease) forwards;
+  animation-delay: calc(80ms + var(--word-index, 0) * 42ms);
+  will-change: transform, opacity, filter;
+}
+
+.hero-title .hero-word { text-shadow: 0 5px 20px rgba(0, 0, 0, .18); }
+.hero-cta { transform: translate3d(var(--cta-x, 0px), var(--cta-y, 0px), 0); transition: transform 180ms ease-out, box-shadow 250ms ease; will-change: transform; }
+
+.hero-aurora { position: absolute; z-index: -2; width: clamp(260px, 34vw, 560px); aspect-ratio: 1; border-radius: 50%; filter: blur(55px); opacity: .4; pointer-events: none; will-change: transform; }
+.hero-aurora-one { top: -25%; left: 32%; background: radial-gradient(circle, rgba(25, 174, 202, .72), transparent 68%); animation: auroraDriftOne 15s ease-in-out infinite alternate; }
+.hero-aurora-two { right: -12%; bottom: -36%; background: radial-gradient(circle, rgba(255, 209, 102, .58), transparent 67%); animation: auroraDriftTwo 19s ease-in-out 1.5s infinite alternate; }
+.hero-aurora-three { left: -18%; bottom: -30%; background: radial-gradient(circle, rgba(36, 104, 168, .65), transparent 68%); animation: auroraDriftThree 23s ease-in-out 3s infinite alternate; }
+
+.hero-line-art { position: absolute; z-index: -1; fill: none; stroke: rgba(255, 255, 255, .18); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.2; pointer-events: none; will-change: transform; }
+.hero-line-art-book { top: 12%; right: 11%; width: clamp(70px, 10vw, 140px); animation: lineArtFloatOne 11s ease-in-out infinite alternate; }
+.hero-line-art-page { right: 36%; bottom: 12%; width: clamp(50px, 7vw, 100px); animation: lineArtFloatTwo 14s ease-in-out 1s infinite alternate; }
+.hero-line-art-quill { left: 8%; bottom: 8%; width: clamp(55px, 8vw, 110px); animation: lineArtFloatThree 17s ease-in-out 2s infinite alternate; }
+.hero-line-art-mark { top: 20%; left: 38%; width: clamp(40px, 5vw, 74px); opacity: .6; animation: lineArtFloatFour 13s ease-in-out 3s infinite alternate; }
+
+@keyframes heroWordReveal { to { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); } }
+@keyframes heroCurtainReveal { from { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); } to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); } }
+@keyframes auroraDriftOne { to { transform: translate3d(12%, 14%, 0) scale(1.12); } }
+@keyframes auroraDriftTwo { to { transform: translate3d(-16%, -12%, 0) scale(.9); } }
+@keyframes auroraDriftThree { to { transform: translate3d(20%, -10%, 0) scale(1.15); } }
+@keyframes lineArtFloatOne { to { transform: translate3d(-16px, 13px, 0) rotate(-7deg); } }
+@keyframes lineArtFloatTwo { to { transform: translate3d(12px, -16px, 0) rotate(8deg); } }
+@keyframes lineArtFloatThree { to { transform: translate3d(15px, 10px, 0) rotate(10deg); } }
+@keyframes lineArtFloatFour { to { transform: translate3d(-10px, -12px, 0) rotate(45deg); } }
+
+@media (max-width: 768px) {
+  .hero-content { transform: none; transition: none; }
+  .hero-line-art { opacity: .1; }
+  .hero-aurora { filter: blur(42px); opacity: .3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .hero-content,
+  .hero-word,
+  .hero-cta,
+  .hero-aurora,
+  .hero-line-art { animation: none !important; transition: none !important; transform: none !important; filter: none !important; opacity: 1 !important; clip-path: none !important; }
+}
+
 /* Variable-height About and footer content must never be mask-clipped. */
 .fade-up-stagger > * { clip-path: none; }
 .fade-up-stagger.is-visible > * {
@@ -2493,4 +2563,21 @@ input:focus{
   background: #d6a23a;
   color: #fff;
   transform: translateY(-2px);
+}
+
+.hero {
+  animation-name: heroDrift, heroCurtainReveal;
+  animation-duration: 18s, 850ms;
+  animation-timing-function: ease-in-out, cubic-bezier(.77, 0, .18, 1);
+  animation-delay: 0s, 0s;
+  animation-iteration-count: infinite, 1;
+  animation-direction: alternate, normal;
+  animation-fill-mode: none, forwards;
+}
+
+.hero-content { transform: perspective(900px) rotateX(var(--hero-tilt-x, 0deg)) rotateY(var(--hero-tilt-y, 0deg)); transition: transform 180ms ease-out; }
+.hero-cta { transform: translate3d(var(--cta-x, 0px), var(--cta-y, 0px), 0); transition: transform 180ms ease-out, box-shadow 250ms ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero, .hero-content, .hero-word, .hero-cta, .hero-aurora, .hero-line-art { animation: none !important; transition: none !important; transform: none !important; filter: none !important; opacity: 1 !important; clip-path: none !important; }
 }
