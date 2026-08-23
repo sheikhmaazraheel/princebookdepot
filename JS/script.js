@@ -4,7 +4,14 @@ let allProducts = [];
 
 function getProductImageUrl(product) {
   const imageUrl = product.imageUrl || product.image || "";
-  return imageUrl.replace(/^http:\/\//i, "https://");
+  const secureUrl = imageUrl.replace(/^http:\/\//i, "https://");
+
+  // Ask Cloudinary for the size and format the card actually needs instead
+  // of downloading the original camera-sized cover on every page.
+  return secureUrl.replace(
+    /\/upload\//i,
+    "/upload/f_auto,q_auto,w_640,dpr_auto/"
+  );
 }
 
 // One shared observer drives all content reveals, keeping scroll work small.
@@ -410,10 +417,13 @@ document.addEventListener("DOMContentLoaded", () => {
     div.dataset.name = product.name;
     div.dataset.author = product.author || "";
     div.dataset.price = finalPrice;
+    const imageUrl = getProductImageUrl(product);
+    const imageAttributes = `src="${escapeHtml(imageUrl)}" alt="${escapeHtml(product.name || "Book cover")}" loading="lazy" decoding="async" sizes="(max-width: 768px) 45vw, 235px"`;
+
     if (product.discount > 0) {
       div.innerHTML = `
       <div class="discount">${product.discount || 0}%</div>
-      <img src="${getProductImageUrl(product)}" alt="${product.name}" />
+      <img ${imageAttributes} />
       <div class="Product-name">${product.name}</div>
       ${product.author ? `<div class="Product-author">by ${escapeHtml(product.author)}</div>` : ""}
       <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
@@ -426,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     } else {
       div.innerHTML = `
-      <img src="${getProductImageUrl(product)}" alt="${product.name}" />
+      <img ${imageAttributes} />
       <div class="Product-name">${product.name}</div>
       ${product.author ? `<div class="Product-author">by ${escapeHtml(product.author)}</div>` : ""}
       <div><span class="price">Rs.${basePrice}</span> <span class="discounted-price">Rs.${finalPrice}</span></div>
