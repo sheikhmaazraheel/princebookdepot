@@ -578,6 +578,17 @@ body.nav-locked {
 @media (prefers-reduced-motion: reduce) {
   .fade-up, .Product.reveal, .fade-up-stagger > * { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; animation: none !important; }
 }
+
+/* Variable-height About and footer content must never be mask-clipped. */
+.fade-up-stagger > * { clip-path: none; }
+.fade-up-stagger.is-visible > * {
+  animation: premiumStaggerEntry 800ms var(--pbd-ease) both;
+  animation-delay: calc(var(--reveal-index, 0) * 65ms);
+}
+@keyframes premiumStaggerEntry {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 /* ============================= For Hero Section ==================== */
 @keyframes fadeInUp {
   from {
