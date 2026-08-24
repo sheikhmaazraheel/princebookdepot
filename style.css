@@ -23,6 +23,9 @@ html {
   --pbd-teal-400: #19aeca;
   --pbd-gold: #ffd166;
   --pbd-coral: #ff6a88;
+  --pbd-heading-navy: #142d49;
+  --pbd-heading-teal: #168fa8;
+  --pbd-heading-gold: #e4b84f;
   --pbd-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --pbd-ink: #151b1b;
   --pbd-paper: #f5f2eb;
@@ -916,9 +919,9 @@ body.nav-locked {
   padding: 10px 0;
   background: linear-gradient(
     90deg,
-    var(--pbd-navy-700) 0%,
-    var(--pbd-teal-400) 55%,
-    var(--pbd-gold) 100%
+    var(--pbd-heading-navy) 0%,
+    var(--pbd-heading-teal) 55%,
+    var(--pbd-heading-gold) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
