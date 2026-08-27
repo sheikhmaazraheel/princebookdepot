@@ -6,6 +6,9 @@ const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character
   "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
 }[character]));
 const orderAlertButton = $("enable-order-alerts");
+const notificationRegistration = "serviceWorker" in navigator
+  ? navigator.serviceWorker.register("../sw.js").then(() => navigator.serviceWorker.ready)
+  : Promise.reject(new Error("Service worker notifications are not supported."));
 let knownOrderIds = null;
 
 function updateOrderAlertButton() {
@@ -24,11 +27,19 @@ async function enableOrderAlerts() {
   setDashboardStatus(permission === "granted" ? "Private order alerts enabled for this dashboard." : "Order alerts were not enabled.", permission !== "granted");
 }
 
+async function showOrderNotification(order) {
+  const registration = await notificationRegistration;
+  await registration.showNotification("New Prince Book Depot order", {
+    body: `${order.orderId} from ${order.customer?.name || "a customer"}`,
+    tag: order.orderId,
+  });
+}
+
 function notifyForNewOrders(orders) {
   const currentIds = new Set(orders.map((order) => order.orderId));
   if (knownOrderIds && "Notification" in window && Notification.permission === "granted") {
     orders.filter((order) => !knownOrderIds.has(order.orderId)).forEach((order) => {
-      new Notification("New Prince Book Depot order", { body: `${order.orderId} from ${order.customer?.name || "a customer"}` });
+      showOrderNotification(order).catch(() => {});
     });
   }
   knownOrderIds = currentIds;
